@@ -1,0 +1,29 @@
+{
+  "compilerOptions": {
+    "target": "esnext",
+    "skipLibCheck": true,
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+    "strict": true,
+    "forceConsistentCasingInFileNames": true,
+    "module": "esnext",
+    "moduleResolution": "node",
+    "resolveJsonModule": true,
+    "noEmit": true,
+    "jsx": "preserve",
+    "noFallthroughCasesInSwitch": true,
+    "importsNotUsedAsValues": "error",
+    "baseUrl": "src",
+    "paths": {
+      "hooks/*": ["hooks/*"],
+      "app/*": ["app/*"]
+    }
+  },
+  "include": [
+    "src",
+    "util",
+    "vite.config.ts",
+    "playwright.config.ts",
+    "playwright"
+  ]
+}

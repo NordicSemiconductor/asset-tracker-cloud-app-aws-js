@@ -1,0 +1,10 @@
+{
+  "compilerOptions": {
+    "target": "ESNext",
+    "module": "esnext",
+    "moduleResolution": "Node",
+    "sourceMap": true,
+    "outDir": "../e2e-tests-out",
+    "esModuleInterop": true
+  }
+}

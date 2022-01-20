@@ -2,7 +2,7 @@ pull_request_rules:
   - name: Automatic merge security PRs when all status checks pass
     conditions:
       - author~=^(dependabot\[bot\]|renovate\[bot\])$
-      - status-success=tests
+      - status-success=test-and-release
     actions:
       merge:
         method: rebase

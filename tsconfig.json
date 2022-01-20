@@ -24,6 +24,6 @@
     "util",
     "vite.config.ts",
     "playwright.config.ts",
-    "playwright"
+    "e2e-tests"
   ]
 }

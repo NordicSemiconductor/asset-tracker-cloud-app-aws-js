@@ -37,7 +37,7 @@ allow re-use when changing the UI framework.
 
 ## End-to-end tests using Playwright
 
-The frontend provides [end-to-end tests](./playwright) using
+The frontend provides [end-to-end tests](./e2e-tests) using
 [Playwright](https://playwright.dev/).
 
 You can then run the tests using

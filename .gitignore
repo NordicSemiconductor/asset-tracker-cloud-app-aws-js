@@ -6,3 +6,4 @@ node_modules/
 npm-debug.log
 build/
 test-results/
+e2e-tests-out/

@@ -6,9 +6,10 @@ import {
 import { expect, test } from '@playwright/test'
 import Chance from 'chance'
 import fs from 'fs'
-import { Ulid } from 'id128'
+import id128 from 'id128'
 import path from 'path'
-import { fromEnv } from '../util/fromEnv'
+import { fromEnv } from '../util/fromEnv.js'
+const { Ulid } = id128
 
 const chance = new Chance()
 const { short_name, name, theme_color } = JSON.parse(

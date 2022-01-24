@@ -5,6 +5,10 @@
     "moduleResolution": "Node",
     "sourceMap": true,
     "outDir": "../e2e-tests-out",
-    "esModuleInterop": true
+    "esModuleInterop": true,
+    "baseUrl": "../src",
+    "paths": {
+      "util/*": ["util/*"]
+    }
   }
 }

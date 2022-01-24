@@ -1,5 +1,5 @@
 {
-  "short_name": "nRF Asset Tracker (AWS)",
+  "short_name": "nRF Asset Tracker",
   "name": "nRF Asset Tracker Web Application for AWS",
   "icons": [
     {
@@ -11,5 +11,5 @@
   "start_url": ".",
   "display": "standalone",
   "theme_color": "#ff9900",
-  "background_color": "#ffffff"
+  "background_color": "#232f3e"
 }

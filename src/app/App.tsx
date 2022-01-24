@@ -1,21 +1,22 @@
-import { useAuth } from 'hooks/useAuth'
+import { Assets } from 'app/pages/Assets'
+import { Navbar } from 'components/Navbar'
+import { useAppConfig } from 'hooks/useAppConfig'
+import {
+	BrowserRouter as Router,
+	Navigate,
+	Route,
+	Routes,
+} from 'react-router-dom'
 
 export const App = () => {
-	const { attributes, signOut } = useAuth()
-
+	const { basename } = useAppConfig()
 	return (
-		<>
-			<p>Hello {attributes.email}!</p>
-			<p>
-				<button
-					type="button"
-					onClick={() => {
-						signOut()
-					}}
-				>
-					Sign out
-				</button>
-			</p>
-		</>
+		<Router basename={basename}>
+			<Navbar />
+			<Routes>
+				<Route index element={<Navigate to="/assets" />} />
+				<Route path="/assets" element={<Assets />} />
+			</Routes>
+		</Router>
 	)
 }

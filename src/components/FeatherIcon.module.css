@@ -1,0 +1,14 @@
+.iconContainer {
+  line-height: 1px;
+  display: inline-block;
+}
+
+.iconWithText {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+.iconWithText .iconContainer {
+  margin-right: 0.25rem;
+}

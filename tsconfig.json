@@ -16,12 +16,14 @@
     "baseUrl": "src",
     "paths": {
       "hooks/*": ["hooks/*"],
-      "app/*": ["app/*"]
+      "components/*": ["components/*"],
+      "app/*": ["app/*"],
+      "util/*": ["util/*"]
     }
   },
   "include": [
     "src",
-    "util",
+    "src/util",
     "vite.config.ts",
     "playwright.config.ts",
     "e2e-tests"

@@ -37,3 +37,22 @@ main h4 {
     margin-top: 1.5rem;
   }
 }
+
+.card > .table {
+  margin-bottom: 0;
+}
+.card > .table tbody tr:last-child td {
+  border-bottom: 0;
+}
+.card > .table td:first-child,
+.card > .table th:first-child {
+  padding-left: 1rem;
+}
+.card > .table td:last-child,
+.card > .table th:last-child {
+  padding-right: 1rem;
+}
+
+a {
+  text-decoration: none;
+}

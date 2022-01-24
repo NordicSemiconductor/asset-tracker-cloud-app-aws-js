@@ -5,6 +5,19 @@
     "plugin:jsx-a11y/recommended"
   ],
   "plugins": ["jsx-a11y"],
+  "rules": {
+    "no-restricted-imports": [
+      "error",
+      {
+        "patterns": [
+          {
+            "group": [".*"],
+            "message": "Usage of relative imports is not allowed. Use aliased imports."
+          }
+        ]
+      }
+    ]
+  },
   "overrides": [
     {
       "files": ["*.tsx"],

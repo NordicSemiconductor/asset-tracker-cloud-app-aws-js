@@ -1,4 +1,4 @@
-import { fromEnv } from './fromEnv'
+import { fromEnv } from 'util/fromEnv'
 
 describe('fromEnv()', () => {
 	it('should return environment variables if defined', () => {

@@ -8,11 +8,11 @@ import Chance from 'chance'
 import fs from 'fs'
 import id128 from 'id128'
 import path from 'path'
-import { fromEnv } from '../util/fromEnv.js'
+import { fromEnv } from 'util/fromEnv.js'
 const { Ulid } = id128
 
 const chance = new Chance()
-const { short_name, name, theme_color } = JSON.parse(
+const { short_name } = JSON.parse(
 	fs.readFileSync(path.join(process.cwd(), 'public', 'manifest.json'), 'utf-8'),
 )
 
@@ -45,7 +45,7 @@ test('Register a new account', async ({ page }) => {
 	const email = chance.email({ domain: 'example.com' })
 
 	// Open start page
-	await page.goto('http://localhost:3000/')
+	await page.goto('http://localhost:8080/')
 	await expect(page.locator('div#root')).toContainText(short_name)
 	await expect(page.locator('div#root')).toContainText('Sign In')
 	await page.screenshot({ path: `./test-results/login.png` })
@@ -66,18 +66,28 @@ test('Register a new account', async ({ page }) => {
 	await confirmSignUp(email)
 
 	// confirm user account
-	await page.goto('http://localhost:3000/')
+	await page.goto('http://localhost:8080/')
 
 	// log in
 	await page.click('text=Sign In')
 	await page.fill('[placeholder="Email"]', email)
 	await page.fill('[placeholder="Password"]', password)
 	await page.click('button:has-text("Sign in")')
-	await expect(page.locator('div#root')).toContainText(`Hello ${email}!`)
-	await page.screenshot({ path: `./test-results/dashboard.png` })
+	await page.waitForNavigation({
+		url: 'http://localhost:8080/assets',
+	})
+	await expect(page.locator('main')).toContainText(`Assets`)
 
-	// log out
+	// FIXME: move to separate step
+	await page.waitForSelector('[data-test-id=assets-list] a')
+	const assetsLinksCount = await page
+		.locator('[data-test-id=assets-list] a')
+		.count()
+	expect(assetsLinksCount).toBeGreaterThan(1)
+	await page.screenshot({ path: `./test-results/assets.png` })
+
+	// sign out
 	await page.click('text=Sign out')
 	await expect(page.locator('div#root')).toContainText(short_name)
-	await expect(page.locator('div#root')).toContainText('Sign In')
+	await expect(page.locator('div#root')).toContainText('Sign in')
 })

@@ -95,6 +95,9 @@
     "testPathIgnorePatterns": [
       "/node_modules/",
       "/e2e-tests/"
-    ]
+    ],
+    "moduleNameMapper": {
+      "^util/(.*)$": "<rootDir>/src/util/$1"
+    }
   }
 }

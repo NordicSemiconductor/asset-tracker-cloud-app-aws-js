@@ -8,7 +8,7 @@ import Chance from 'chance'
 import fs from 'fs'
 import id128 from 'id128'
 import path from 'path'
-import { fromEnv } from 'util/fromEnv.js'
+import { fromEnv } from '../src/util/fromEnv.js'
 const { Ulid } = id128
 
 const chance = new Chance()

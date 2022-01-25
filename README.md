@@ -52,3 +52,34 @@ For developing tests it is helpful to run the
 Then launch the inspector **on your local machine** using
 
     PWDEBUG=1 npx playwright test
+
+### Running end-to-end tests using GitHub Actions
+
+[This workflow](./.github/workflows/test-and-release.yaml) runs the end-to-end
+tests for every commit. For this to work a running instance of
+[nRF Asset Tracker for AWS](https://github.com/NordicSemiconductor/asset-tracker-cloud-aws-js)
+is needed. The tests will be run agains this instance. Typically it will be the
+production instance, to ensure that the web application works with the current
+production setup.
+
+In order for the test runner to interact with the instance for retrieving the
+app configuration and for providing test data you need to configure AWS
+credentials as
+[GitHub environment secrets](https://docs.github.com/en/actions/security-guides/encrypted-secrets#creating-encrypted-secrets-for-an-environment).
+
+This can be done through the GitHub UI (make sure to create the `production`
+[environment](https://docs.github.com/en/actions/deployment/targeting-different-environments/using-environments-for-deployment)
+in your repository first).
+
+Set these secrets:
+
+- `AWS_REGION`
+- `AWS_ACCESS_KEY_ID`
+- `AWS_SECRET_ACCESS_KEY`
+
+If you have enabled the web application CI you can acquire them using the nRF
+Asset Tracker for AWS CLI:
+
+```bash
+node cli webapp-ci -s
+```

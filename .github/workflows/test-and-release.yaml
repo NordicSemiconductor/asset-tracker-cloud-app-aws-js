@@ -50,6 +50,11 @@ jobs:
           PUBLIC_VERSION: ${{ github.sha }}
         run: npm run build
 
+      - uses: actions/upload-artifact@v2
+        with:
+          name: asset-tracker-cloud-app-aws-${{ github.sha }}
+          path: build
+
       - name: Start server
         run: npx node-static build > server.log 2>&1 &
 
@@ -61,8 +66,8 @@ jobs:
 
       - uses: actions/upload-artifact@v2
         with:
-          name: asset-tracker-cloud-app-aws-${{ github.sha }}
-          path: build
+          name: server.log
+          path: server.log
 
       - name: Semantic release
         continue-on-error: true

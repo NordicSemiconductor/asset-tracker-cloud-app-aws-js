@@ -8,26 +8,35 @@ const { stackName, region } = fromEnv({
 	region: 'AWS_REGION',
 })(process.env)
 
-const Path = `/${stackName}/config/stack`
-const stackConfig = (
-	await new SSMClient({}).send(
+const paginateParameters = async (parameters = [], startToken) => {
+	const { Parameters, NextToken } = await new SSMClient({}).send(
 		new GetParametersByPathCommand({
 			Path,
 			Recursive: true,
+			NextToken: startToken,
 		}),
 	)
-).Parameters.map(({ Name, ...rest }) => ({
-	...rest,
-	Name: Name?.replace(`${Path}/`, ''),
-})).reduce(
-	(settings, { Name, Value }) => ({
-		...settings,
-		[Name ?? '']: Value ?? '',
-	}),
-	{},
-)
+	if (Parameters.length > 0) parameters.push(...Parameters)
+	if (NextToken !== undefined) return paginateParameters(parameters, NextToken)
+	return parameters
+}
+
+const Path = `/${stackName}/config/stack`
+const stackConfig = (await paginateParameters())
+	.map(({ Name, ...rest }) => ({
+		...rest,
+		Name: Name?.replace(`${Path}/`, ''),
+	}))
+	.reduce(
+		(settings, { Name, Value }) => ({
+			...settings,
+			[Name ?? '']: Value ?? '',
+		}),
+		{},
+	)
 
 const prefix = process.env.PREFIX ?? 'PUBLIC_'
+
 console.log(
 	objectToEnv(
 		{

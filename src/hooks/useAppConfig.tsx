@@ -1,6 +1,6 @@
+import { fromEnv } from '@nordicsemiconductor/from-env'
 import Amplify from 'aws-amplify'
 import { createContext, useContext } from 'react'
-import { fromEnv } from 'util/fromEnv'
 
 const {
 	identityPoolId,

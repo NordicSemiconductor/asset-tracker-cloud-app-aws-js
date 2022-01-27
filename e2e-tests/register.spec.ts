@@ -3,12 +3,12 @@ import {
 	AdminUpdateUserAttributesCommand,
 	CognitoIdentityProviderClient,
 } from '@aws-sdk/client-cognito-identity-provider'
+import { fromEnv } from '@nordicsemiconductor/from-env'
 import { expect, test } from '@playwright/test'
 import Chance from 'chance'
 import fs from 'fs'
 import id128 from 'id128'
 import path from 'path'
-import { fromEnv } from '../src/util/fromEnv.js'
 const { Ulid } = id128
 
 const chance = new Chance()

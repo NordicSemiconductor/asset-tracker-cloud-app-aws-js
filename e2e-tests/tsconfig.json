@@ -6,9 +6,6 @@
     "sourceMap": true,
     "outDir": "../e2e-tests-out",
     "esModuleInterop": true,
-    "baseUrl": "../src",
-    "paths": {
-      "util/*": ["util/*"]
-    }
+    "baseUrl": "../src"
   }
 }

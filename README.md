@@ -31,6 +31,29 @@ allow re-use when changing the UI framework.
 
     npm ci
 
+## Configuration
+
+In the
+[nRF Asset Tracker for AWS](https://github.com/NordicSemiconductor/asset-tracker-cloud-aws-js)
+folder, run `node cli web-app-config` and store the output in a local `.envrc`
+file. Then run `direnv allow` to allow it.
+
+```bash
+# .envrc
+export PUBLIC_AVATAR_BUCKET_NAME=...
+export PUBLIC_FOTA_BUCKET_NAME=...
+export PUBLIC_GEOLOCATION_API_URL=...
+export PUBLIC_HISTORICALDATA_TABLE_INFO=...
+export PUBLIC_NCELLMEAS_STORAGE_TABLE_NAME=...
+export PUBLIC_NEIGHBOR_CELL_GEOLOCATION_API_URL=...
+export PUBLIC_USER_IOT_POLICY_ARN=...
+export PUBLIC_USER_POOL_CLIENT_ID=...
+export PUBLIC_USER_POOL_ID=...
+export PUBLIC_WEB_APP_BUCKET_NAME=...
+export PUBLIC_REGION=...
+export PUBLIC_MQTT_ENDPOINT=...
+```
+
 ## Running
 
     npm start
@@ -67,19 +90,30 @@ app configuration and for providing test data you need to configure AWS
 credentials as
 [GitHub environment secrets](https://docs.github.com/en/actions/security-guides/encrypted-secrets#creating-encrypted-secrets-for-an-environment).
 
-This can be done through the GitHub UI (make sure to create the `production`
-[environment](https://docs.github.com/en/actions/deployment/targeting-different-environments/using-environments-for-deployment)
-in your repository first).
-
 Set these secrets:
 
 - `AWS_REGION`
 - `AWS_ACCESS_KEY_ID`
 - `AWS_SECRET_ACCESS_KEY`
+- `WEBAPP_STACK_NAME`
 
 If you have enabled the web application CI you can acquire them using the nRF
 Asset Tracker for AWS CLI:
 
 ```bash
 node cli webapp-ci -s
+```
+
+You can set the secrets through the GitHub UI (make sure to create the
+`production`
+[environment](https://docs.github.com/en/actions/deployment/targeting-different-environments/using-environments-for-deployment)
+in your repository first).
+
+Alternatively you can use the [GitHub CLI](https://cli.github.com/):
+
+```bash
+gh secret set AWS_REGION --env production --body "${AWS_REGION}"
+gh secret set AWS_ACCESS_KEY_ID --env production --body "${AWS_ACCESS_KEY_ID}"
+gh secret set AWS_SECRET_ACCESS_KEY --env production --body "${AWS_SECRET_ACCESS_KEY}"
+gh secret set WEBAPP_STACK_NAME --env production --body "${WEBAPP_STACK_NAME}"
 ```

@@ -5,9 +5,11 @@ on: push
 env:
   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
   AWS_REGION: ${{ secrets.AWS_REGION }}
+  # same as AWS_REGION
   AWS_DEFAULT_REGION: ${{ secrets.AWS_REGION }}
   AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
   AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+  WEBAPP_STACK_NAME: ${{ secrets.WEBAPP_STACK_NAME }}
 
 jobs:
   test-and-release:
@@ -31,6 +33,9 @@ jobs:
       - name: Install dependencies
         run: npm ci --no-audit
 
+      - name: Get web app configuration
+        run: node .github/workflows/web-app-config.js >> $GITHUB_ENV
+
       - name: Install playwright
         run: npx playwright install
 
@@ -40,18 +45,24 @@ jobs:
       - name: Run unit tests
         run: npm test
 
-      - name: Run end-to-end tests
-        run: npm run test:e2e
-
       - name: Build
         env:
           PUBLIC_VERSION: ${{ github.sha }}
         run: npm run build
 
+      - name: Start server
+        run: npx node-static build > server.log 2>&1 &
+
+      - name: Wait for server to be up
+        run: until nc -w 10 127.0.0.1 8080; do sleep 1; done
+
+      - name: Run end-to-end tests
+        run: npm run test:e2e
+
       - uses: actions/upload-artifact@v2
         with:
           name: asset-tracker-cloud-app-aws-${{ github.sha }}
-          path: public
+          path: build
 
       - name: Semantic release
         continue-on-error: true

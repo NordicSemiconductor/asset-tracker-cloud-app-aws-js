@@ -47,6 +47,11 @@ export default defineConfig({
 			{ find: 'hooks/', replacement: '/src/hooks/' },
 			{ find: 'components/', replacement: '/src/components/' },
 			{ find: 'util/', replacement: '/src/util/' },
+			// https://ui.docs.amplify.aws/getting-started/installation?platform=vue#vite
+			{
+				find: './runtimeConfig',
+				replacement: './runtimeConfig.browser',
+			},
 		],
 	},
 	build: {

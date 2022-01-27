@@ -1,44 +1,15 @@
-import {
-	AdminConfirmSignUpCommand,
-	AdminUpdateUserAttributesCommand,
-	CognitoIdentityProviderClient,
-} from '@aws-sdk/client-cognito-identity-provider'
-import { fromEnv } from '@nordicsemiconductor/from-env'
 import { expect, test } from '@playwright/test'
 import Chance from 'chance'
 import fs from 'fs'
 import id128 from 'id128'
 import path from 'path'
+import { confirmSignUp } from './lib/confirmSignup.js'
 const { Ulid } = id128
 
 const chance = new Chance()
 const { short_name } = JSON.parse(
 	fs.readFileSync(path.join(process.cwd(), 'public', 'manifest.json'), 'utf-8'),
 )
-
-const { UserPoolId } = fromEnv({
-	UserPoolId: 'PUBLIC_USER_POOL_ID',
-})(process.env)
-
-const confirmSignUp = async (email: string): Promise<void> => {
-	const upc = new CognitoIdentityProviderClient({})
-	await Promise.all([
-		upc.send(
-			new AdminConfirmSignUpCommand({
-				UserPoolId,
-				Username: email,
-			}),
-		),
-		upc.send(
-			new AdminUpdateUserAttributesCommand({
-				UserPoolId,
-				Username: email,
-				UserAttributes: [{ Name: 'email_verified', Value: 'true' }],
-			}),
-		),
-	])
-	console.debug(`Confirmed ${email}.`)
-}
 
 test('Register a new account', async ({ page }) => {
 	const password = `U${Ulid.generate().toCanonical()}!`

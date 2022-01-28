@@ -9,6 +9,7 @@ import { useAuth } from 'hooks/useAuth'
 import {
 	createContext,
 	FunctionComponent,
+	useCallback,
 	useContext,
 	useEffect,
 	useState,
@@ -72,7 +73,7 @@ export const IotProvider: FunctionComponent = ({ children }) => {
 	const [nextStartKey, setNextStartKey] = useState<string>()
 	const [fetching, setFetching] = useState<boolean>(false)
 
-	const fetchPage = () => {
+	const fetchPage = useCallback(() => {
 		if (credentials === undefined) return
 		const iot = new IoTClient({
 			credentials,
@@ -96,12 +97,12 @@ export const IotProvider: FunctionComponent = ({ children }) => {
 			.finally(() => {
 				setFetching(false)
 			})
-	}
+	}, [nextStartKey, credentials])
 
 	// load devices
 	useEffect(() => {
 		fetchPage()
-	}, [fetchPage])
+	}, [])
 
 	return (
 		<IotContext.Provider

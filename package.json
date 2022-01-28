@@ -48,7 +48,7 @@
     "@aws-sdk/client-cloudformation": "3.48.0",
     "@aws-sdk/client-cognito-identity-provider": "3.48.0",
     "@aws-sdk/client-ssm": "3.48.0",
-    "@nordicsemiconductor/asset-tracker-cloud-code-style": "11.0.16",
+    "@nordicsemiconductor/asset-tracker-cloud-code-style": "11.0.17",
     "@nordicsemiconductor/object-to-env": "3.0.0",
     "@playwright/test": "1.18.1",
     "@types/chance": "1.1.3",

@@ -72,14 +72,23 @@ export const IotProvider: FunctionComponent = ({ children }) => {
 	const [things, setThings] = useState<Thing[]>([])
 	const [nextStartKey, setNextStartKey] = useState<string>()
 	const [fetching, setFetching] = useState<boolean>(false)
+	const [fetchedStartKeys, setFetchedStartKeys] = useState<
+		(undefined | string)[]
+	>([])
 
 	const fetchPage = useCallback(() => {
 		if (credentials === undefined) return
+		if (fetchedStartKeys.includes(nextStartKey)) return
 		const iot = new IoTClient({
 			credentials,
 			region,
 		})
 		setFetching(true)
+		// Remember which pages we have already fetched
+		setFetchedStartKeys((fetchedStartKeys) => [
+			...fetchedStartKeys,
+			nextStartKey,
+		])
 		fetchThingsPaginated({ iot, startKey: nextStartKey })
 			.then(({ things, nextStartKey }) => {
 				setThings((current) => [
@@ -91,18 +100,16 @@ export const IotProvider: FunctionComponent = ({ children }) => {
 				])
 				setNextStartKey(nextStartKey)
 			})
-			.catch((err) => {
-				console.error(err)
-			})
+			.catch(console.error)
 			.finally(() => {
 				setFetching(false)
 			})
-	}, [nextStartKey, credentials])
+	}, [nextStartKey, credentials, fetchedStartKeys])
 
 	// load devices
 	useEffect(() => {
 		fetchPage()
-	}, [])
+	}, [credentials])
 
 	return (
 		<IotContext.Provider

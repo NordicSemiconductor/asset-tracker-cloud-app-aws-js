@@ -1,4 +1,5 @@
 import {
+	DeleteThingCommand,
 	IoTClient,
 	ListThingsCommand,
 	ThingAttribute,
@@ -8,6 +9,7 @@ import { useAuth } from 'hooks/useAuth'
 import {
 	createContext,
 	FunctionComponent,
+	useCallback,
 	useContext,
 	useEffect,
 	useState,
@@ -16,7 +18,7 @@ import {
 const filterTestThings = (things: ThingAttribute[]): ThingAttribute[] =>
 	things.filter((thing) => thing.attributes?.test === undefined)
 
-const defaultLimit = 10
+const defaultLimit = 25
 
 const fetchThingsPaginated = async ({
 	iot,
@@ -56,8 +58,10 @@ type Thing = { id: string; name: string }
 export const IotContext = createContext<{
 	things: Thing[]
 	next?: () => void
+	deleteThing: (thingName: string) => Promise<void>
 }>({
 	things: [],
+	deleteThing: async () => Promise.resolve(),
 })
 
 export const useIot = () => useContext(IotContext)
@@ -68,14 +72,23 @@ export const IotProvider: FunctionComponent = ({ children }) => {
 	const [things, setThings] = useState<Thing[]>([])
 	const [nextStartKey, setNextStartKey] = useState<string>()
 	const [fetching, setFetching] = useState<boolean>(false)
+	const [fetchedStartKeys, setFetchedStartKeys] = useState<
+		(undefined | string)[]
+	>([])
 
-	const fetchPage = () => {
+	const fetchPage = useCallback(() => {
 		if (credentials === undefined) return
+		if (fetchedStartKeys.includes(nextStartKey)) return
 		const iot = new IoTClient({
 			credentials,
 			region,
 		})
 		setFetching(true)
+		// Remember which pages we have already fetched
+		setFetchedStartKeys((fetchedStartKeys) => [
+			...fetchedStartKeys,
+			nextStartKey,
+		])
 		fetchThingsPaginated({ iot, startKey: nextStartKey })
 			.then(({ things, nextStartKey }) => {
 				setThings((current) => [
@@ -87,18 +100,16 @@ export const IotProvider: FunctionComponent = ({ children }) => {
 				])
 				setNextStartKey(nextStartKey)
 			})
-			.catch((err) => {
-				console.error(err)
-			})
+			.catch(console.error)
 			.finally(() => {
 				setFetching(false)
 			})
-	}
+	}, [nextStartKey, credentials, fetchedStartKeys])
 
 	// load devices
 	useEffect(() => {
 		fetchPage()
-	}, [credentials, region])
+	}, [credentials])
 
 	return (
 		<IotContext.Provider
@@ -110,6 +121,17 @@ export const IotProvider: FunctionComponent = ({ children }) => {
 								fetchPage()
 						  }
 						: undefined,
+				deleteThing: async (thingName) => {
+					const iot = new IoTClient({
+						credentials,
+						region,
+					})
+					await iot.send(
+						new DeleteThingCommand({
+							thingName,
+						}),
+					)
+				},
 			}}
 		>
 			{children}

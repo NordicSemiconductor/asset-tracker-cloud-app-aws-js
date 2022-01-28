@@ -48,6 +48,9 @@ console.log(
 				)
 			).endpointAddress,
 		},
-		prefix,
+		{
+			prefix,
+			quote: '',
+		},
 	),
 )

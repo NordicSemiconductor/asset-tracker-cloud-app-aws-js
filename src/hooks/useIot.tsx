@@ -1,4 +1,5 @@
 import {
+	DeleteThingCommand,
 	IoTClient,
 	ListThingsCommand,
 	ThingAttribute,
@@ -56,8 +57,10 @@ type Thing = { id: string; name: string }
 export const IotContext = createContext<{
 	things: Thing[]
 	next?: () => void
+	deleteThing: (thingName: string) => Promise<void>
 }>({
 	things: [],
+	deleteThing: async () => Promise.resolve(),
 })
 
 export const useIot = () => useContext(IotContext)
@@ -98,7 +101,7 @@ export const IotProvider: FunctionComponent = ({ children }) => {
 	// load devices
 	useEffect(() => {
 		fetchPage()
-	}, [credentials, region])
+	}, [fetchPage])
 
 	return (
 		<IotContext.Provider
@@ -110,6 +113,17 @@ export const IotProvider: FunctionComponent = ({ children }) => {
 								fetchPage()
 						  }
 						: undefined,
+				deleteThing: async (thingName) => {
+					const iot = new IoTClient({
+						credentials,
+						region,
+					})
+					await iot.send(
+						new DeleteThingCommand({
+							thingName,
+						}),
+					)
+				},
 			}}
 		>
 			{children}

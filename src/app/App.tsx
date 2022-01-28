@@ -1,3 +1,4 @@
+import { Account } from 'app/pages/Account'
 import { Assets } from 'app/pages/Assets'
 import { Navbar } from 'components/Navbar'
 import { useAppConfig } from 'hooks/useAppConfig'
@@ -16,6 +17,7 @@ export const App = () => {
 			<Routes>
 				<Route index element={<Navigate to="/assets" />} />
 				<Route path="/assets" element={<Assets />} />
+				<Route path="/account" element={<Account />} />
 			</Routes>
 		</Router>
 	)

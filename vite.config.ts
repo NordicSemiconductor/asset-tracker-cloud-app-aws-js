@@ -1,8 +1,8 @@
 import react from '@vitejs/plugin-react'
 import fs from 'fs'
+import Handlebars from 'handlebars'
 import path from 'path'
 import { defineConfig } from 'vite'
-import { createHtmlPlugin } from 'vite-plugin-html'
 
 const { version, homepage } = JSON.parse(
 	fs.readFileSync(path.join(process.cwd(), 'package.json'), 'utf-8'),
@@ -19,19 +19,23 @@ process.env.PUBLIC_MANIFEST_NAME = name
 process.env.PUBLIC_MANIFEST_THEME_COLOR = theme_color
 process.env.PUBLIC_MANIFEST_BACKGROUND_COLOR = background_color
 
+const replaceInIndex = (data: Record<string, string>) => ({
+	name: 'replace-in-index',
+	transformIndexHtml: (source: string): string => {
+		const template = Handlebars.compile(source)
+		return template(data)
+	},
+})
+
 // https://vitejs.dev/config/
 export default defineConfig({
 	plugins: [
 		react(),
-		createHtmlPlugin({
-			inject: {
-				data: {
-					name,
-					shortName: short_name,
-					themeColor: theme_color,
-					version,
-				},
-			},
+		replaceInIndex({
+			name,
+			shortName: short_name,
+			themeColor: theme_color,
+			version,
 		}),
 	],
 	base: `${(process.env.BASE_URL ?? '').replace(/\/+$/, '')}/`,

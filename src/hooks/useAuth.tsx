@@ -10,11 +10,17 @@ import {
 	useState,
 } from 'react'
 
+type CognitoUserAttributes = {
+	sub: string
+	email_verified: boolean
+	email: string
+}
 type AuthContextType = {
 	signOut: ReturnType<typeof useAuthenticator>['signOut']
 	user: CognitoUserAmplify
-	attributes: Record<string, string>
+	attributes?: CognitoUserAttributes
 	credentials?: ICredentials
+	deleteAccount: () => void
 }
 
 export const AuthContext = createContext<AuthContextType>(undefined as any)
@@ -24,7 +30,7 @@ export const useAuth = () => useContext(AuthContext)
 export const AuthProvider: FunctionComponent<
 	Pick<AuthContextType, 'user' | 'signOut'>
 > = ({ children, signOut, user }) => {
-	const [attributes, setAttributes] = useState<Record<string, string>>({})
+	const [attributes, setAttributes] = useState<CognitoUserAttributes>()
 	const [credentials, setCredentials] = useState<ICredentials>()
 
 	// Fetch user profile
@@ -38,8 +44,8 @@ export const AuthProvider: FunctionComponent<
 			setAttributes(
 				attributes?.reduce(
 					(attributes, { Name, Value }) => ({ ...attributes, [Name]: Value }),
-					{},
-				) ?? {},
+					{} as CognitoUserAttributes,
+				) ?? ({} as CognitoUserAttributes),
 			)
 		})
 	}, [user])
@@ -59,6 +65,15 @@ export const AuthProvider: FunctionComponent<
 				user,
 				attributes,
 				credentials,
+				deleteAccount: () => {
+					user.deleteUser((error) => {
+						if (error !== undefined && error !== null) {
+							console.error(error)
+						} else {
+							signOut()
+						}
+					})
+				},
 			}}
 		>
 			{children}

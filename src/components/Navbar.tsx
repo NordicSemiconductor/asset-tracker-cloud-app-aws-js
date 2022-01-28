@@ -5,6 +5,7 @@ import {
 	LogoutIcon,
 	MapIcon,
 	ParcelIcon,
+	UserIcon,
 } from 'components/FeatherIcon'
 import { useAppConfig } from 'hooks/useAppConfig'
 import { useAuth } from 'hooks/useAuth'
@@ -52,7 +53,7 @@ export const Navbar = () => {
 						<span className="navbar-toggler-icon"></span>
 					</button>
 					<div className="collapse navbar-collapse" id="navbarTogglerDemo02">
-						<ul className="navbar-nav me-auto mb-2 mb-lg-0">
+						<ul className="navbar-nav me-auto">
 							<li className="nav-item">
 								<Link className="nav-link" to="/assets">
 									<ParcelIcon /> Assets
@@ -88,7 +89,17 @@ export const Navbar = () => {
 							</li>
 						</ul>
 
-						<form className="d-flex">
+						<div className="d-flex">
+							<ul className="navbar-nav me-4">
+								<li className="nav-item">
+									<Link className="nav-link" to="/account">
+										<IconWithText>
+											<UserIcon /> Account
+										</IconWithText>
+									</Link>
+								</li>
+							</ul>
+
 							<button
 								type="button"
 								className="btn btn-outline-light"
@@ -99,7 +110,7 @@ export const Navbar = () => {
 									Sign out
 								</IconWithText>
 							</button>
-						</form>
+						</div>
 					</div>
 				</div>
 			</nav>

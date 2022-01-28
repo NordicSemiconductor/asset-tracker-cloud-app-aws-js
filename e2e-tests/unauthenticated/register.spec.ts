@@ -1,15 +1,12 @@
 import { expect, test } from '@playwright/test'
 import Chance from 'chance'
-import fs from 'fs'
+import { promises as fs } from 'fs'
 import id128 from 'id128'
-import path from 'path'
-import { confirmSignUp } from './lib/confirmSignup.js'
+import * as path from 'path'
+import { confirmSignUp } from '../lib/confirmSignup.js'
 const { Ulid } = id128
 
 const chance = new Chance()
-const { short_name } = JSON.parse(
-	fs.readFileSync(path.join(process.cwd(), 'public', 'manifest.json'), 'utf-8'),
-)
 
 test('Register a new account', async ({ page }) => {
 	const password = `U${Ulid.generate().toCanonical()}!`
@@ -17,13 +14,19 @@ test('Register a new account', async ({ page }) => {
 
 	// Open start page
 	await page.goto('http://localhost:8080/')
+	const { short_name } = JSON.parse(
+		await fs.readFile(
+			path.join(process.cwd(), 'public', 'manifest.json'),
+			'utf-8',
+		),
+	)
 	await expect(page.locator('div#root')).toContainText(short_name)
 	await expect(page.locator('div#root')).toContainText('Sign In')
-	await page.screenshot({ path: `./test-results/login.png` })
+	await page.screenshot({ path: `./test-session/login.png` })
 
 	// find registration link
 	await page.click('text=Create Account')
-	await page.screenshot({ path: `./test-results/register.png` })
+	await page.screenshot({ path: `./test-session/register.png` })
 
 	// input user information
 	await page.fill('[placeholder="Email"]', email)
@@ -31,7 +34,7 @@ test('Register a new account', async ({ page }) => {
 	await page.fill('[placeholder="Confirm Password"]', password)
 	await page.click('button:has-text("Create Account")')
 	await expect(page.locator('div#root')).toContainText('We Emailed You')
-	await page.screenshot({ path: `./test-results/register-confirm.png` })
+	await page.screenshot({ path: `./test-session/register-confirm.png` })
 
 	// input verification token
 	await confirmSignUp(email)
@@ -49,13 +52,15 @@ test('Register a new account', async ({ page }) => {
 	})
 	await expect(page.locator('main')).toContainText(`Assets`)
 
-	// FIXME: move to separate step
-	await page.waitForSelector('[data-test-id=assets-list] a')
-	const assetsLinksCount = await page
-		.locator('[data-test-id=assets-list] a')
-		.count()
-	expect(assetsLinksCount).toBeGreaterThan(1)
-	await page.screenshot({ path: `./test-results/assets.png` })
+	// Store state to be re-used in authenticated tests
+	await page.context().storageState({
+		path: path.join(process.cwd(), 'test-session', 'authenticated.json'),
+	})
+	await fs.writeFile(
+		path.join(process.cwd(), 'test-session', 'user.json'),
+		JSON.stringify({ email }),
+		'utf-8',
+	)
 
 	// sign out
 	await page.click('text=Sign out')

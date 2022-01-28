@@ -5,5 +5,5 @@
 node_modules/
 npm-debug.log
 build/
-test-results/
+test-session/
 e2e-tests-out/

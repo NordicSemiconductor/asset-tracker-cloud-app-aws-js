@@ -53,6 +53,11 @@ main h4 {
   padding-right: 1rem;
 }
 
+.card-body > dl:last-child,
+.card-body > dl:last-child dd {
+  margin-bottom: 0;
+}
+
 a {
   text-decoration: none;
 }

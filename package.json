@@ -9,7 +9,7 @@
     "preview": "vite preview",
     "prepare": "husky install",
     "test": "jest --passWithNoTests",
-    "test:e2e": "tsc -p e2e-tests/tsconfig.json && npx playwright test -c e2e-tests-out"
+    "test:e2e": "tsc -p e2e-tests/tsconfig.json && npx playwright test -c e2e-tests-out/unauthenticated && npx playwright test -c e2e-tests-out/authenticated && npx playwright test -c e2e-tests-out/clean-up"
   },
   "repository": {
     "type": "git",
@@ -62,11 +62,11 @@
     "eslint-config-react-app": "7.0.0",
     "eslint-plugin-jsx-a11y": "6.5.1",
     "eslint-plugin-no-restricted-imports": "0.0.0",
+    "handlebars": "4.7.7",
     "id128": "1.6.6",
     "jest": "27.4.7",
     "ts-jest": "27.1.3",
-    "vite": "2.7.13",
-    "vite-plugin-html": "3.0.3"
+    "vite": "2.7.13"
   },
   "lint-staged": {
     "*.{ts,tsx}": [

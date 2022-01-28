@@ -428,6 +428,14 @@ export const ChevronUpIcon = (options?: TypedIconOptions) => (
 	<FeatherIcon {...options} title="^" type="chevron-up" />
 )
 
+export const UserIcon = (options?: TypedIconOptions) => (
+	<FeatherIcon {...options} title="User" type="user" />
+)
+
+export const DangerIcon = (options?: TypedIconOptions) => (
+	<FeatherIcon {...options} title="warning" type="alert-triangle" />
+)
+
 export const IconWithText: FunctionComponent<PropsWithChildren<any>> = ({
 	children,
 }) => <span className={styles.iconWithText}>{children}</span>

@@ -51,6 +51,7 @@ jobs:
         run: npm run build
 
       - uses: actions/upload-artifact@v2
+        if: always()
         with:
           name: asset-tracker-cloud-app-aws-${{ github.sha }}
           path: build
@@ -65,9 +66,12 @@ jobs:
         run: npm run test:e2e
 
       - uses: actions/upload-artifact@v2
+        if: always()
         with:
-          name: server.log
-          path: server.log
+          name: playwright-artifacts-${{ github.sha }}
+          path: |
+            server.log
+            test-session
 
       - name: Semantic release
         continue-on-error: true

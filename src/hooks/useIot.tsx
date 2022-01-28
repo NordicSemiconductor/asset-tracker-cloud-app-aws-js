@@ -18,7 +18,7 @@ import {
 const filterTestThings = (things: ThingAttribute[]): ThingAttribute[] =>
 	things.filter((thing) => thing.attributes?.test === undefined)
 
-const defaultLimit = 10
+const defaultLimit = 25
 
 const fetchThingsPaginated = async ({
 	iot,

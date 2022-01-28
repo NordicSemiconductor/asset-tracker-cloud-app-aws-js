@@ -19,6 +19,12 @@ const globalSetup = async () => {
 		}),
 	)
 
+	try {
+		await fs.stat(path.join(process.cwd(), 'test-session'))
+	} catch {
+		await fs.mkdir(path.join(process.cwd(), 'test-session'))
+	}
+
 	await fs.writeFile(
 		path.join(process.cwd(), 'test-session', 'asset.json'),
 		JSON.stringify({ thingArn, thingId, thingName, name }),

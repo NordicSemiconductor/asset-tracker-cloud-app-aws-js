@@ -436,6 +436,10 @@ export const DangerIcon = (options?: TypedIconOptions) => (
 	<FeatherIcon {...options} title="warning" type="alert-triangle" />
 )
 
+export const LoadMoreIcon = (options?: TypedIconOptions) => (
+	<FeatherIcon {...options} title="load more" type="plus-square" />
+)
+
 export const IconWithText: FunctionComponent<PropsWithChildren<any>> = ({
 	children,
 }) => <span className={styles.iconWithText}>{children}</span>

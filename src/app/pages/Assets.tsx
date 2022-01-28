@@ -1,9 +1,10 @@
+import { IconWithText, LoadMoreIcon } from 'components/FeatherIcon'
 import { NoData } from 'components/NoData'
 import { useIot } from 'hooks/useIot'
 import { Link } from 'react-router-dom'
 
 export const Assets = () => {
-	const { things } = useIot()
+	const { things, next } = useIot()
 
 	return (
 		<main className="container">
@@ -43,6 +44,19 @@ export const Assets = () => {
 								</tbody>
 							</table>
 						)}
+						<div className="card-footer d-flex justify-content-end align-items-center">
+							<button
+								type="button"
+								className="btn btn-outline-secondary"
+								disabled={next === undefined}
+								onClick={next}
+							>
+								<IconWithText>
+									<LoadMoreIcon />
+									Load more
+								</IconWithText>
+							</button>
+						</div>
 					</div>
 				</div>
 			</div>

@@ -2,7 +2,7 @@ import react from '@vitejs/plugin-react'
 import fs from 'fs'
 import path from 'path'
 import { defineConfig } from 'vite'
-import { injectHtml } from 'vite-plugin-html'
+import { createHtmlPlugin } from 'vite-plugin-html'
 
 const { version, homepage } = JSON.parse(
 	fs.readFileSync(path.join(process.cwd(), 'package.json'), 'utf-8'),
@@ -23,12 +23,14 @@ process.env.PUBLIC_MANIFEST_BACKGROUND_COLOR = background_color
 export default defineConfig({
 	plugins: [
 		react(),
-		injectHtml({
-			data: {
-				name,
-				shortName: short_name,
-				themeColor: theme_color,
-				version,
+		createHtmlPlugin({
+			inject: {
+				data: {
+					name,
+					shortName: short_name,
+					themeColor: theme_color,
+					version,
+				},
 			},
 		}),
 	],

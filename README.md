@@ -101,7 +101,7 @@ If you have enabled the web application CI you can acquire them using the nRF
 Asset Tracker for AWS CLI:
 
 ```bash
-node cli webapp-ci -s
+node cli web-app-ci -s
 ```
 
 You can set the secrets through the GitHub UI (make sure to create the

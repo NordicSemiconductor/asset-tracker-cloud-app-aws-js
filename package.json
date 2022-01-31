@@ -33,6 +33,7 @@
   "dependencies": {
     "@aws-amplify/ui-react": "2.2.0",
     "@aws-sdk/client-iot": "3.49.0",
+    "@aws-sdk/client-iot-data-plane": "3.49.0",
     "@nordicsemiconductor/from-env": "1.0.0",
     "aws-amplify": "4.3.13",
     "bootstrap": "5.1.3",

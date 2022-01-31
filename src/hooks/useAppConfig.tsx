@@ -13,6 +13,7 @@ const {
 	name,
 	themeColor,
 	backgroundColor,
+	mqttEndpoint,
 } = fromEnv({
 	identityPoolId: 'PUBLIC_IDENTITY_POOL_ID',
 	region: 'PUBLIC_REGION',
@@ -24,6 +25,7 @@ const {
 	name: 'PUBLIC_MANIFEST_NAME',
 	themeColor: 'PUBLIC_MANIFEST_THEME_COLOR',
 	backgroundColor: 'PUBLIC_MANIFEST_BACKGROUND_COLOR',
+	mqttEndpoint: 'PUBLIC_MQTT_ENDPOINT',
 })(import.meta.env)
 
 Amplify.configure({
@@ -50,6 +52,7 @@ export const AppConfigContext = createContext<{
 		themeColor: string
 		backgroundColor: string
 	}
+	mqttEndpoint: string
 }>({
 	identityPoolId,
 	region,
@@ -64,6 +67,7 @@ export const AppConfigContext = createContext<{
 		themeColor,
 		backgroundColor,
 	},
+	mqttEndpoint,
 })
 
 export const useAppConfig = () => useContext(AppConfigContext)

@@ -1,4 +1,5 @@
-import type { Asset } from 'asset/Asset'
+import type { Asset, AssetWithTwin } from 'asset/Asset'
+import type { AssetTwin } from 'asset/state'
 import { useServices } from 'hooks/useServices'
 import {
 	createContext,
@@ -10,6 +11,7 @@ import {
 
 export const AssetContext = createContext<{
 	asset?: Asset
+	twin?: AssetTwin
 	setAssetId: (assetId?: string) => void
 	setUpdateInterval: (interval: number) => void
 	deleteAsset: () => void
@@ -24,7 +26,7 @@ export const useAsset = () => useContext(AssetContext)
 export const AssetProvider: FunctionComponent = ({ children }) => {
 	const { iot } = useServices()
 	const [assetId, setAssetId] = useState<string>()
-	const [currentAsset, setCurrentAsset] = useState<Asset>()
+	const [currentAsset, setCurrentAsset] = useState<AssetWithTwin>()
 	const [updateInterval, setUpdateInterval] = useState<number>(5000)
 
 	// Load current device
@@ -53,9 +55,9 @@ export const AssetProvider: FunctionComponent = ({ children }) => {
 		if (updateInterval < 1000) return
 
 		const updateState = async () => {
-			if (currentAsset === undefined) return
+			if (currentAsset?.asset === undefined) return
 			iot
-				.getThing(currentAsset.id)
+				.getThing(currentAsset.asset.id)
 				.then((asset) => {
 					if (!isMounted) return
 					setCurrentAsset(asset)
@@ -84,11 +86,12 @@ export const AssetProvider: FunctionComponent = ({ children }) => {
 			value={{
 				setAssetId: setAssetId,
 				setUpdateInterval,
-				asset: currentAsset,
+				asset: currentAsset?.asset,
+				twin: currentAsset?.twin,
 				deleteAsset: () => {
-					if (currentAsset === undefined) return
+					if (currentAsset?.asset === undefined) return
 					iot
-						.deleteThing(currentAsset.id)
+						.deleteThing(currentAsset.asset.id)
 						.catch((err) => console.error(`[useAsset:deleteAsset]`, err))
 				},
 			}}

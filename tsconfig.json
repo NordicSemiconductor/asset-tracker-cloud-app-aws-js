@@ -15,9 +15,11 @@
     "importsNotUsedAsValues": "error",
     "baseUrl": "src",
     "paths": {
+      "api/*": ["api/*"],
+      "app/*": ["app/*"],
+      "asset/*": ["asset/*"],
       "hooks/*": ["hooks/*"],
       "components/*": ["components/*"],
-      "app/*": ["app/*"],
       "util/*": ["util/*"]
     }
   },

@@ -49,7 +49,9 @@ export default defineConfig({
 	},
 	resolve: {
 		alias: [
+			{ find: 'api/', replacement: '/src/api/' },
 			{ find: 'app/', replacement: '/src/app/' },
+			{ find: 'asset/', replacement: '/src/asset/' },
 			{ find: 'hooks/', replacement: '/src/hooks/' },
 			{ find: 'components/', replacement: '/src/components/' },
 			{ find: 'util/', replacement: '/src/util/' },

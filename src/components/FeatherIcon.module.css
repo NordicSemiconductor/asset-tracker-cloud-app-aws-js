@@ -12,3 +12,13 @@
 .iconWithText .iconContainer {
   margin-right: 0.25rem;
 }
+
+.rotate {
+  animation: rotate 3s linear infinite;
+}
+
+@keyframes rotate {
+  to {
+    transform: rotate(360deg);
+  }
+}

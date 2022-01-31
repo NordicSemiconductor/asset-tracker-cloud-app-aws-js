@@ -8,6 +8,7 @@ import {
 	UserIcon,
 } from 'components/FeatherIcon'
 import { useAppConfig } from 'hooks/useAppConfig'
+import { useAsset } from 'hooks/useAsset'
 import { useAuth } from 'hooks/useAuth'
 import introJs from 'intro.js'
 import { Link } from 'react-router-dom'
@@ -20,6 +21,7 @@ export const Navbar = () => {
 	const {
 		manifest: { backgroundColor, shortName },
 	} = useAppConfig()
+	const { asset } = useAsset()
 	return (
 		<header>
 			<nav
@@ -37,9 +39,13 @@ export const Navbar = () => {
 							height="24"
 							className="d-inline-block align-text-top me-1"
 						/>
-						<span>
-							{shortName} <small>(AWS)</small>
-						</span>
+
+						{asset && <span>{asset.name}</span>}
+						{!asset && (
+							<span>
+								{shortName} <small>(AWS)</small>
+							</span>
+						)}
 					</Link>
 					<button
 						className="navbar-toggler"

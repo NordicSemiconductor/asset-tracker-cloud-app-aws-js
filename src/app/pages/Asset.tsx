@@ -1,12 +1,20 @@
 import { DangerIcon, IconWithText } from 'components/FeatherIcon'
-import { useIot } from 'hooks/useIot'
-import { useState } from 'react'
+import { useAsset } from 'hooks/useAsset'
+import { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
 
 export const Asset = () => {
 	const { id } = useParams()
-	const { deleteThing } = useIot()
+	const { setAssetId, deleteAsset } = useAsset()
 	const [deleteUnlocked, setDeleteUnlocked] = useState<boolean>(false)
+
+	useEffect(() => {
+		setAssetId(id)
+		return () => {
+			setAssetId()
+		}
+	}, [id, setAssetId])
+
 	return (
 		<main className="container">
 			<div className="row justify-content-center">
@@ -44,7 +52,7 @@ export const Asset = () => {
 								className="btn btn-outline-danger"
 								disabled={!deleteUnlocked}
 								onClick={() => {
-									if (id !== undefined) deleteThing(id).catch(console.error)
+									if (id !== undefined) deleteAsset()
 								}}
 							>
 								<IconWithText>

@@ -27,9 +27,15 @@ export const AuthContext = createContext<AuthContextType>(undefined as any)
 
 export const useAuth = () => useContext(AuthContext)
 
+/**
+ * This component loads the credentials neccessary to interact with AWS services and makes them available to children using a property. This way all child components can rely on the presence of these credentials.
+ */
 export const AuthProvider: FunctionComponent<
-	Pick<AuthContextType, 'user' | 'signOut'>
-> = ({ children, signOut, user }) => {
+	Pick<AuthContextType, 'user' | 'signOut'> & {
+		children: ({ credentials }: { credentials: ICredentials }) => JSX.Element
+		loadingScreen: JSX.Element
+	}
+> = ({ children, signOut, user, loadingScreen }) => {
 	const [attributes, setAttributes] = useState<CognitoUserAttributes>()
 	const [credentials, setCredentials] = useState<ICredentials>()
 
@@ -58,6 +64,8 @@ export const AuthProvider: FunctionComponent<
 			.catch((error) => console.error('[useAuth]', error))
 	}, [user])
 
+	if (credentials === undefined) return <>{loadingScreen}</>
+
 	return (
 		<AuthContext.Provider
 			value={{
@@ -76,7 +84,7 @@ export const AuthProvider: FunctionComponent<
 				},
 			}}
 		>
-			{children}
+			{children({ credentials })}
 		</AuthContext.Provider>
 	)
 }

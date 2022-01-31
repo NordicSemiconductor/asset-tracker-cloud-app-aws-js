@@ -440,6 +440,15 @@ export const LoadMoreIcon = (options?: TypedIconOptions) => (
 	<FeatherIcon {...options} title="load more" type="plus-square" />
 )
 
+export const LoadingIcon = (options?: TypedIconOptions) => (
+	<FeatherIcon
+		{...options}
+		title="loading ..."
+		type="loader"
+		className={styles.rotate}
+	/>
+)
+
 export const IconWithText: FunctionComponent<PropsWithChildren<any>> = ({
 	children,
 }) => <span className={styles.iconWithText}>{children}</span>

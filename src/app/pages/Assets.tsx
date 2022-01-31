@@ -50,6 +50,7 @@ export const Assets = () => {
 								className="btn btn-outline-secondary"
 								disabled={next === undefined}
 								onClick={next}
+								data-intro="Click this button to load more devices."
 							>
 								<IconWithText>
 									<LoadMoreIcon />

@@ -11,6 +11,7 @@ import { useAppConfig } from 'hooks/useAppConfig'
 import { useAsset } from 'hooks/useAsset'
 import { useAuth } from 'hooks/useAuth'
 import introJs from 'intro.js'
+import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import logo from '/logo-white-outline.svg'
 
@@ -22,6 +23,12 @@ export const Navbar = () => {
 		manifest: { backgroundColor, shortName },
 	} = useAppConfig()
 	const { asset } = useAsset()
+	const [navbarOpen, setNavbarOpen] = useState<boolean>(false)
+
+	const close = () => {
+		setNavbarOpen(false)
+	}
+
 	return (
 		<header>
 			<nav
@@ -50,30 +57,34 @@ export const Navbar = () => {
 					<button
 						className="navbar-toggler"
 						type="button"
-						data-bs-toggle="collapse"
-						data-bs-target="#navbarTogglerDemo02"
-						aria-controls="navbarTogglerDemo02"
-						aria-expanded="false"
+						aria-controls="navbar"
+						aria-expanded={navbarOpen}
 						aria-label="Toggle navigation"
+						onClick={() => {
+							setNavbarOpen((open) => !open)
+						}}
 					>
 						<span className="navbar-toggler-icon"></span>
 					</button>
-					<div className="collapse navbar-collapse" id="navbarTogglerDemo02">
+					<div
+						className={`navbar-collapse ${navbarOpen ? '' : 'collapse'}`}
+						id="navbar"
+					>
 						<ul className="navbar-nav me-auto">
 							<li className="nav-item">
-								<Link className="nav-link" to="/assets">
+								<Link className="nav-link" to="/assets" onClick={close}>
 									<ParcelIcon /> Assets
 								</Link>
 							</li>
 							<li className="nav-item">
-								<Link className="nav-link" to="/map">
+								<Link className="nav-link" to="/map" onClick={close}>
 									<IconWithText>
 										<MapIcon /> Map
 									</IconWithText>
 								</Link>
 							</li>
 							<li className="nav-item">
-								<Link className="nav-link" to="/about">
+								<Link className="nav-link" to="/about" onClick={close}>
 									<IconWithText>
 										<InfoIcon /> About
 									</IconWithText>
@@ -85,7 +96,15 @@ export const Navbar = () => {
 									className="btn btn-link nav-link"
 									style={{ fontWeight: 'var(--bs-body-font-weight)' }}
 									onClick={() => {
-										intro.start()
+										if (navbarOpen) {
+											close()
+											// Leave time for navbar to close
+											window.setTimeout(() => {
+												intro.start()
+											}, 500)
+										} else {
+											intro.start()
+										}
 									}}
 								>
 									<IconWithText>
@@ -95,10 +114,10 @@ export const Navbar = () => {
 							</li>
 						</ul>
 
-						<div className="d-flex">
+						<div className="d-flex justify-content-between align-items-center">
 							<ul className="navbar-nav me-4">
 								<li className="nav-item">
-									<Link className="nav-link" to="/account">
+									<Link className="nav-link" to="/account" onClick={close}>
 										<IconWithText>
 											<UserIcon /> Account
 										</IconWithText>
@@ -109,7 +128,10 @@ export const Navbar = () => {
 							<button
 								type="button"
 								className="btn btn-outline-light"
-								onClick={logout}
+								onClick={() => {
+									close()
+									logout()
+								}}
 							>
 								<IconWithText>
 									<LogoutIcon />

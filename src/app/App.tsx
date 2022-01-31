@@ -1,3 +1,4 @@
+import { About } from 'app/pages/About'
 import { Account } from 'app/pages/Account'
 import { Asset } from 'app/pages/Asset'
 import { Assets } from 'app/pages/Assets'
@@ -20,6 +21,7 @@ export const App = () => {
 				<Route path="/assets" element={<Assets />} />
 				<Route path="/asset/:id" element={<Asset />} />
 				<Route path="/account" element={<Account />} />
+				<Route path="/about" element={<About />} />
 			</Routes>
 		</Router>
 	)

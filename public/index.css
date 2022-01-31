@@ -61,3 +61,7 @@ main h4 {
 a {
   text-decoration: none;
 }
+
+dt {
+  font-weight: 600;
+}

@@ -12,8 +12,8 @@ const { short_name, name, theme_color, background_color } = JSON.parse(
 	fs.readFileSync(path.join(process.cwd(), 'public', 'manifest.json'), 'utf-8'),
 )
 
-process.env.PUBLIC_VERSION = version ?? Date.now()
-process.env.PUBLIC_HOMEPAGE = homepage
+process.env.PUBLIC_VERSION = process.env.PUBLIC_VERSION ?? version ?? Date.now()
+process.env.PUBLIC_HOMEPAGE = process.env.PUBLIC_HOMEPAGE ?? homepage
 process.env.PUBLIC_MANIFEST_SHORT_NAME = short_name
 process.env.PUBLIC_MANIFEST_NAME = name
 process.env.PUBLIC_MANIFEST_THEME_COLOR = theme_color

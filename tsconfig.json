@@ -23,11 +23,5 @@
       "utils/*": ["utils/*"]
     }
   },
-  "include": [
-    "src",
-    "src/util",
-    "vite.config.ts",
-    "playwright.config.ts",
-    "e2e-tests"
-  ]
+  "include": ["src", "vite.config.ts", "playwright.config.ts", "e2e-tests"]
 }

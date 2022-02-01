@@ -1,9 +1,7 @@
 import { DangerIcon, IconWithText } from 'components/FeatherIcon'
-import { useAsset } from 'hooks/useAsset'
 import { useState } from 'react'
 
-export const DeleteAsset = () => {
-	const { deleteAsset } = useAsset()
+export const DeleteAsset = ({ onDelete }: { onDelete: () => void }) => {
 	const [deleteUnlocked, setDeleteUnlocked] = useState<boolean>(false)
 
 	return (
@@ -27,7 +25,7 @@ export const DeleteAsset = () => {
 				className="btn btn-outline-danger"
 				disabled={!deleteUnlocked}
 				onClick={() => {
-					deleteAsset()
+					onDelete()
 				}}
 			>
 				<IconWithText>

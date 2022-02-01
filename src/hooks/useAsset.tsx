@@ -14,11 +14,11 @@ export const AssetContext = createContext<{
 	twin?: AssetTwin
 	setAssetId: (assetId?: string) => void
 	setUpdateInterval: (interval: number) => void
-	deleteAsset: () => void
+	deleteAsset: () => Promise<void>
 }>({
 	setAssetId: () => undefined,
 	setUpdateInterval: () => undefined,
-	deleteAsset: () => undefined,
+	deleteAsset: async () => Promise.resolve(undefined),
 })
 
 export const useAsset = () => useContext(AssetContext)
@@ -90,10 +90,13 @@ export const AssetProvider: FunctionComponent = ({ children }) => {
 				setUpdateInterval,
 				asset: currentAsset?.asset,
 				twin: currentAsset?.twin,
-				deleteAsset: () => {
+				deleteAsset: async () => {
 					if (currentAsset?.asset === undefined) return
-					iot
+					return iot
 						.deleteThing(currentAsset.asset.id)
+						.then(() => {
+							setAssetId(undefined)
+						})
 						.catch((err) => console.error(`[useAsset:deleteAsset]`, err))
 				},
 			}}

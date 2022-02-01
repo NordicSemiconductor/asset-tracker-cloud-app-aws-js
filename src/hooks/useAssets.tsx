@@ -11,7 +11,10 @@ import {
 export const AssetsContext = createContext<{
 	assets?: Asset[]
 	next?: () => void
-}>({})
+	reload: () => void
+}>({
+	reload: () => undefined,
+})
 
 export const useAssets = () => useContext(AssetsContext)
 
@@ -63,6 +66,11 @@ export const AssetsProvider: FunctionComponent = ({ children }) => {
 								fetchPage()
 						  }
 						: undefined,
+				reload: () => {
+					setFetchedStartKeys([])
+					setNextStartKey(undefined)
+					setAssets([])
+				},
 			}}
 		>
 			{children}

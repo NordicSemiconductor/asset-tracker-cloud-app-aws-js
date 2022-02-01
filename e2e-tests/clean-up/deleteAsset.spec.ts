@@ -1,4 +1,4 @@
-import { test } from '@playwright/test'
+import { expect, test } from '@playwright/test'
 import * as path from 'path'
 import { loadSessionData } from '../lib/loadSessionData.js'
 
@@ -7,7 +7,7 @@ test.use({
 })
 
 test('Users can delete assets', async ({ page }) => {
-	const { name } = await loadSessionData('asset')
+	const { name, thingName } = await loadSessionData('asset')
 
 	await page.goto('http://localhost:8080/')
 	const assetLink = page.locator(`text=${name}`)
@@ -26,4 +26,8 @@ test('Users can delete assets', async ({ page }) => {
 	await page.click('header[role="button"]:has-text("Danger zone")')
 	await page.click('text=Enable to unlock asset deletion')
 	await page.click('text=Delete asset')
+
+	await expect(page.locator('div#root main')).toContainText(
+		`Asset ${thingName} has been deleted.`,
+	)
 })

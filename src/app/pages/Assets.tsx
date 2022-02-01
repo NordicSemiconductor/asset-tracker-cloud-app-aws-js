@@ -1,6 +1,7 @@
 import type { Asset } from 'asset/asset'
 import { IconWithText, LoadMoreIcon } from 'components/FeatherIcon'
 import { Loading } from 'components/Loading'
+import { Main } from 'components/Main'
 import { NoData } from 'components/NoData'
 import { useAssets } from 'hooks/useAssets'
 import { useEffect, useState } from 'react'
@@ -18,37 +19,33 @@ export const Assets = () => {
 	}, [next, initalLoad])
 
 	return (
-		<main className="container">
-			<div className="row justify-content-center">
-				<div className="col-md-10 col-lg-8 col-xl-6">
-					<div
-						className="card"
-						data-intro="This card lists the assets in your project. Click on one to see its details."
+		<Main>
+			<div
+				className="card"
+				data-intro="This card lists the assets in your project. Click on one to see its details."
+			>
+				<div className="card-header d-flex align-items-center justify-content-between">
+					<span className="me-4">Assets</span>
+				</div>
+
+				<AssetsList assets={assets} />
+
+				<div className="card-footer d-flex justify-content-end align-items-center">
+					<button
+						type="button"
+						className="btn btn-outline-secondary"
+						disabled={next === undefined}
+						onClick={next}
+						data-intro="Click this button to load more devices."
 					>
-						<div className="card-header d-flex align-items-center justify-content-between">
-							<span className="me-4">Assets</span>
-						</div>
-
-						<AssetsList assets={assets} />
-
-						<div className="card-footer d-flex justify-content-end align-items-center">
-							<button
-								type="button"
-								className="btn btn-outline-secondary"
-								disabled={next === undefined}
-								onClick={next}
-								data-intro="Click this button to load more devices."
-							>
-								<IconWithText>
-									<LoadMoreIcon />
-									Load more
-								</IconWithText>
-							</button>
-						</div>
-					</div>
+						<IconWithText>
+							<LoadMoreIcon />
+							Load more
+						</IconWithText>
+					</button>
 				</div>
 			</div>
-		</main>
+		</Main>
 	)
 }
 

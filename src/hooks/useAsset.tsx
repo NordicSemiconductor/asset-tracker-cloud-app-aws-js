@@ -1,5 +1,6 @@
 import type { Asset, AssetWithTwin } from 'asset/Asset'
 import type { AssetTwin } from 'asset/state'
+import equal from 'fast-deep-equal'
 import { useServices } from 'hooks/useServices'
 import {
 	createContext,
@@ -58,9 +59,11 @@ export const AssetProvider: FunctionComponent = ({ children }) => {
 			if (currentAsset?.asset === undefined) return
 			iot
 				.getThing(currentAsset.asset.id)
-				.then((asset) => {
+				.then((updatedAsset) => {
 					if (!isMounted) return
-					setCurrentAsset(asset)
+					if (equal(updatedAsset, currentAsset)) return
+					console.debug(`[autoUpdateDeviceState]`, 'update')
+					setCurrentAsset(updatedAsset)
 				})
 				.catch((err) => console.error(`[AssetContext]`, err))
 		}

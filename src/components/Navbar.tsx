@@ -20,7 +20,7 @@ const intro = introJs()
 export const Navbar = () => {
 	const { signOut: logout } = useAuth()
 	const {
-		manifest: { backgroundColor, shortName },
+		manifest: { backgroundColor, shortName, name },
 	} = useAppConfig()
 	const { asset } = useAsset()
 	const [navbarOpen, setNavbarOpen] = useState<boolean>(false)
@@ -41,7 +41,7 @@ export const Navbar = () => {
 					<Link className="navbar-brand" to="/">
 						<img
 							src={logo}
-							alt=""
+							alt={name}
 							width="30"
 							height="24"
 							className="d-inline-block align-text-top me-1"

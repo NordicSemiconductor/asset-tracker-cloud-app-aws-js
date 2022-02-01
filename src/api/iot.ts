@@ -1,7 +1,9 @@
 import {
+	AttachPolicyCommand,
 	DeleteThingCommand,
 	DescribeThingCommand,
 	IoTClient,
+	ListAttachedPoliciesCommand,
 	ListThingsCommand,
 	ThingAttribute,
 } from '@aws-sdk/client-iot'
@@ -10,8 +12,7 @@ import {
 	IoTDataPlaneClient,
 } from '@aws-sdk/client-iot-data-plane'
 import { toUtf8 } from '@aws-sdk/util-utf8-browser'
-import type { AssetWithTwin } from 'asset/Asset'
-import type { AssetTwin } from 'asset/state'
+import type { AssetTwin, AssetWithTwin } from 'asset/asset'
 
 const filterTestThings = (things: ThingAttribute[]): ThingAttribute[] =>
 	things.filter((thing) => thing.attributes?.test === undefined)
@@ -55,6 +56,10 @@ export type IoTService = {
 		things: ThingAttribute[]
 		nextStartKey?: string
 	}>
+	attachIotPolicyToIdentity: (args: {
+		policyName: string
+		identityId: string
+	}) => Promise<void>
 }
 
 export const iotService = ({
@@ -71,11 +76,18 @@ export const iotService = ({
 					thingName,
 				}),
 			),
-			iotData.send(
-				new GetThingShadowCommand({
-					thingName,
+			iotData
+				.send(
+					new GetThingShadowCommand({
+						thingName,
+					}),
+				)
+				.catch((err) => {
+					if (err.name !== 'ResourceNotFoundException') {
+						console.error(`Failed to fetch thing shadow`, err)
+					}
+					return { payload: undefined }
 				}),
-			),
 		]).then(([{ thingName, attributes }, { payload }]) => {
 			const twin: AssetTwin = {
 				reported: {},
@@ -111,4 +123,20 @@ export const iotService = ({
 			limit: options?.limit ?? 25,
 			startKey: options?.startKey,
 		}),
+	attachIotPolicyToIdentity: async ({ policyName, identityId }) => {
+		const { policies } = await iot.send(
+			new ListAttachedPoliciesCommand({
+				target: identityId,
+			}),
+		)
+		if ((policies?.length ?? 0) > 0) {
+			return
+		}
+		await iot.send(
+			new AttachPolicyCommand({
+				target: identityId,
+				policyName,
+			}),
+		)
+	},
 })

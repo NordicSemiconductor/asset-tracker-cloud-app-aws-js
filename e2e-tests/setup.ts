@@ -1,7 +1,18 @@
 import { CreateThingCommand, IoTClient } from '@aws-sdk/client-iot'
+import {
+	IoTDataPlaneClient,
+	UpdateThingShadowCommand,
+} from '@aws-sdk/client-iot-data-plane'
+import { fromUtf8 } from '@aws-sdk/util-utf8-browser'
+import { fromEnv } from '@nordicsemiconductor/from-env'
 import { randomWords } from '@nordicsemiconductor/random-words'
 import { promises as fs } from 'fs'
 import * as path from 'path'
+import { state } from './asset-reported-state.js'
+
+const { mqttEndpoint } = fromEnv({
+	mqttEndpoint: 'PUBLIC_MQTT_ENDPOINT',
+})(process.env)
 
 const globalSetup = async () => {
 	// Create Asset Tracker
@@ -16,6 +27,21 @@ const globalSetup = async () => {
 					name,
 				},
 			},
+		}),
+	)
+
+	await new IoTDataPlaneClient({
+		endpoint: `https://${mqttEndpoint}`,
+	}).send(
+		new UpdateThingShadowCommand({
+			thingName,
+			payload: fromUtf8(
+				JSON.stringify({
+					state: {
+						reported: state,
+					},
+				}),
+			),
 		}),
 	)
 

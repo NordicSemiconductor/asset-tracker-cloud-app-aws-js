@@ -23,6 +23,7 @@ test('Users can delete assets', async ({ page }) => {
 	}
 
 	await assetLink.click()
+	await page.click('header[role="button"]:has-text("Danger zone")')
 	await page.click('text=Enable to unlock asset deletion')
 	await page.click('text=Delete asset')
 })

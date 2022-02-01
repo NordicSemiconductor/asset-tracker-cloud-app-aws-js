@@ -1,5 +1,4 @@
-import type { Asset, AssetWithTwin } from 'asset/Asset'
-import type { AssetTwin } from 'asset/state'
+import type { Asset, AssetTwin, AssetWithTwin } from 'asset/asset'
 import equal from 'fast-deep-equal'
 import { useServices } from 'hooks/useServices'
 import {

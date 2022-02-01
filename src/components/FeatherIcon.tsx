@@ -334,8 +334,8 @@ type TypedIconOptions = Omit<IconOptions, 'title'>
 export const TruckIcon = (options?: TypedIconOptions) => (
 	<FeatherIcon {...options} type="truck" title=" 🏃" />
 )
-export const CloudIcon = (options?: TypedIconOptions) => (
-	<FeatherIcon {...options} title="☁️" type="cloud" />
+export const CloudUploadIcon = (options?: TypedIconOptions) => (
+	<FeatherIcon {...options} title="☁️" type="upload-cloud" />
 )
 export const SettingsIcon = (options?: TypedIconOptions) => (
 	<FeatherIcon {...options} title="⚙️" type="settings" />

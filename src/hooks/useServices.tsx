@@ -4,7 +4,7 @@ import { IoTDataPlaneClient } from '@aws-sdk/client-iot-data-plane'
 import type { IoTService } from 'api/iot'
 import { iotService } from 'api/iot'
 import { useAppConfig } from 'hooks/useAppConfig'
-import { createContext, FunctionComponent, useContext } from 'react'
+import { createContext, FunctionComponent, useContext, useEffect } from 'react'
 
 export const ServicesContext = createContext<{
 	iot: IoTService
@@ -17,22 +17,34 @@ export const useServices = () => useContext(ServicesContext)
 export const ServicesProvider: FunctionComponent<{
 	credentials: ICredentials
 }> = ({ children, credentials }) => {
-	const { region, mqttEndpoint } = useAppConfig()
+	const { region, mqttEndpoint, userIotPolicyName } = useAppConfig()
+
+	const iot = iotService({
+		iot: new IoTClient({
+			credentials,
+			region,
+		}),
+		iotData: new IoTDataPlaneClient({
+			credentials,
+			endpoint: `https://${mqttEndpoint}`,
+			region,
+		}),
+	})
+
+	useEffect(() => {
+		// This attaches the
+		iot
+			.attachIotPolicyToIdentity({
+				policyName: userIotPolicyName,
+				identityId: credentials.identityId,
+			})
+			.catch((err) => console.error(`[attachIotPolicyToIdentity]`, err))
+	}, [credentials, iot, userIotPolicyName])
 
 	return (
 		<ServicesContext.Provider
 			value={{
-				iot: iotService({
-					iot: new IoTClient({
-						credentials,
-						region,
-					}),
-					iotData: new IoTDataPlaneClient({
-						credentials,
-						endpoint: `https://${mqttEndpoint}`,
-						region,
-					}),
-				}),
+				iot,
 			}}
 		>
 			{children}

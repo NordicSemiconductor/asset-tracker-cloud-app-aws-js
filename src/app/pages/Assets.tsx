@@ -1,4 +1,4 @@
-import type { Asset } from 'asset/Asset'
+import type { Asset } from 'asset/asset'
 import { IconWithText, LoadMoreIcon } from 'components/FeatherIcon'
 import { Loading } from 'components/Loading'
 import { NoData } from 'components/NoData'

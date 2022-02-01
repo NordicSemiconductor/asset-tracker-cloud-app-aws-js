@@ -1,12 +1,15 @@
-import { DangerIcon, IconWithText } from 'components/FeatherIcon'
+import { AssetInformation } from 'components/Asset/AssetInformation'
+import { DeleteAsset } from 'components/Asset/DeleteAsset'
+import { Collapsable } from 'components/Collapsable'
+import { DangerIcon, IconWithText, InfoIcon } from 'components/FeatherIcon'
+import { Loading } from 'components/Loading'
 import { useAsset } from 'hooks/useAsset'
-import { useEffect, useState } from 'react'
+import { useEffect } from 'react'
 import { useParams } from 'react-router-dom'
 
 export const Asset = () => {
 	const { id } = useParams()
-	const { setAssetId, deleteAsset } = useAsset()
-	const [deleteUnlocked, setDeleteUnlocked] = useState<boolean>(false)
+	const { setAssetId, asset, twin } = useAsset()
 
 	useEffect(() => {
 		setAssetId(id)
@@ -21,45 +24,41 @@ export const Asset = () => {
 				<div className="col-md-10 col-lg-8 col-xl-6">
 					<div className="card">
 						<div className="card-header d-flex align-items-center justify-content-between">
-							<span className="me-4">Asset</span>
+							<span className="me-4">{id}</span>
 						</div>
 						<div className="card-body">
-							<dl>
-								<dt>Asset ID</dt>
-								<dd>{id}</dd>
-							</dl>
-						</div>
-						<div className="card-footer d-flex justify-content-end align-items-center">
-							<div className="form-check form-switch me-2">
-								<input
-									className="form-check-input"
-									type="checkbox"
-									id="flexSwitchCheckDefault"
-									checked={deleteUnlocked}
-									onChange={({ target: { checked } }) => {
-										setDeleteUnlocked(checked)
-									}}
-								/>
-								<label
-									className="form-check-label"
-									htmlFor="flexSwitchCheckDefault"
-								>
-									Enable to unlock asset deletion
-								</label>
-							</div>
-							<button
-								type="button"
-								className="btn btn-outline-danger"
-								disabled={!deleteUnlocked}
-								onClick={() => {
-									if (id !== undefined) deleteAsset()
-								}}
-							>
-								<IconWithText>
-									<DangerIcon />
-									Delete asset
-								</IconWithText>
-							</button>
+							{asset === undefined && (
+								<Loading>
+									<span>
+										Loading <code>{id}</code> ...
+									</span>
+								</Loading>
+							)}
+							{asset !== undefined && (
+								<>
+									<Collapsable
+										title={
+											<IconWithText>
+												<InfoIcon size={22} />
+												Asset Information
+											</IconWithText>
+										}
+										id="cat:information"
+									>
+										<AssetInformation asset={asset} twin={twin} />
+									</Collapsable>
+									<Collapsable
+										id="asset:danger"
+										title={
+											<IconWithText>
+												<DangerIcon size={22} /> Danger zone
+											</IconWithText>
+										}
+									>
+										<DeleteAsset />
+									</Collapsable>
+								</>
+							)}
 						</div>
 					</div>
 				</div>

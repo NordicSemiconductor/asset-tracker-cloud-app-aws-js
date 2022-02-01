@@ -1,3 +1,9 @@
+export type Asset = { id: string; name: string }
+export type AssetWithTwin = {
+	asset: Asset
+	twin: AssetTwin
+}
+
 export enum DataModules {
 	GNSS = 'gnss',
 	NeigboringCellMeasurements = 'ncell',
@@ -17,15 +23,30 @@ export type AssetState = {
 	cfg?: Partial<AssetConfig>
 }
 
-type AssetStateMetadata =
-	| {
-			timestamp?: number
-	  }
-	| { [key: string]: AssetStateMetadata }
+export type UnixTimeInSeconds = number
+export type UnixTimeInMilliseconds = number
+export type ReportedSensor<A> = {
+	v: A
+	ts: UnixTimeInMilliseconds
+}
+
+export type ReportedState = AssetState & {
+	gnss?: ReportedSensor<GNSS>
+	bat?: ReportedSensor<Battery>
+	dev?: ReportedSensor<AssetInfo>
+	roam?: ReportedSensor<Roaming>
+	env?: ReportedSensor<Environment>
+}
+export type DesiredState = AssetState
+
+type AssetStateMetadata = Record<
+	string,
+	{ timestamp: UnixTimeInSeconds } & { [key: string]: AssetStateMetadata }
+>
 
 export type AssetTwin = {
-	reported: AssetState
-	desired: AssetState
+	reported: ReportedState
+	desired: DesiredState
 	metadata: AssetStateMetadata
 }
 
@@ -58,6 +79,7 @@ export type AssetInfo = {
 	imei: string
 	modV: string
 	brdV: string
+	appV: string
 }
 export type NCellMeasReport = {
 	reportId: string
@@ -85,3 +107,14 @@ export type NCellMeasReport = {
 		accuracy: number
 	}
 }
+
+export type AssetSensor =
+	| Battery
+	| GNSS
+	| Environment
+	| Roaming
+	| AssetInfo
+	| NCellMeasReport
+	| Button
+export type AssetHistoryDatum<T extends AssetSensor> = { ts: Date; v: T }
+export type AssetHistory<T extends AssetSensor> = AssetHistoryDatum<T>[]

@@ -54,7 +54,7 @@ export default defineConfig({
 			{ find: 'asset/', replacement: '/src/asset/' },
 			{ find: 'hooks/', replacement: '/src/hooks/' },
 			{ find: 'components/', replacement: '/src/components/' },
-			{ find: 'util/', replacement: '/src/util/' },
+			{ find: 'utils/', replacement: '/src/utils/' },
 			// https://ui.docs.amplify.aws/getting-started/installation?platform=vue#vite
 			{
 				find: './runtimeConfig',

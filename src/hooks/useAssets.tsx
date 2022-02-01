@@ -1,4 +1,4 @@
-import type { Asset } from 'asset/Asset'
+import type { Asset } from 'asset/asset'
 import { useServices } from 'hooks/useServices'
 import {
 	createContext,

@@ -1,6 +1,9 @@
 import { IconWithText, LoadingIcon } from 'components/FeatherIcon'
+import type { FunctionComponent, PropsWithChildren } from 'react'
 
-export const Loading = ({ children }: { children?: string }) => (
+export const Loading: FunctionComponent<PropsWithChildren<any>> = ({
+	children,
+}) => (
 	<div
 		style={{
 			backgroundColor: '#eee',

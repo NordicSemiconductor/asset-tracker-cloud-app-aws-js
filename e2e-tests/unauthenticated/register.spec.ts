@@ -58,7 +58,7 @@ test('Register a new account', async ({ page }) => {
 	})
 	await fs.writeFile(
 		path.join(process.cwd(), 'test-session', 'user.json'),
-		JSON.stringify({ email }),
+		JSON.stringify({ email, password }),
 		'utf-8',
 	)
 

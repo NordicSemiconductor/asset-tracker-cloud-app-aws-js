@@ -75,7 +75,7 @@ export const AssetInformation = ({
 				</dl>
 			)}
 			<ReportedTime
-				reportedAtSeconds={(roam?.ts ?? dev.ts) / 1000 - 5000}
+				reportedAtSeconds={(roam?.ts ?? dev.ts) / 1000}
 				receivedAtSeconds={twin?.metadata?.reported?.dev?.ts?.timestamp}
 				staleAfterSeconds={expectedInterval}
 			/>

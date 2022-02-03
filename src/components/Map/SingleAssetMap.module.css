@@ -1,0 +1,21 @@
+.mapContainer {
+  height: 300px;
+}
+
+.historyInfo {
+  display: grid;
+  grid-template: auto / 1fr 2fr;
+}
+
+.historyInfo dt,
+.historyInfo dd {
+  padding: 0;
+  margin: 0;
+  border-bottom: 1px solid #f0f0f0;
+}
+.historyInfo dt {
+  padding-right: 1rem;
+}
+.historyInfo dd {
+  flex-grow: 1;
+}

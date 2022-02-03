@@ -1,9 +1,11 @@
 import { AssetInformation } from 'components/Asset/AssetInformation'
 import { DeleteAsset } from 'components/Asset/DeleteAsset'
+import { InfoHeader } from 'components/Asset/Info'
 import { Collapsable } from 'components/Collapsable'
 import { DangerIcon, IconWithText, InfoIcon } from 'components/FeatherIcon'
 import { Loading } from 'components/Loading'
 import { Main } from 'components/Main'
+import { MapWithSettings } from 'components/Map/MapWithSettings'
 import { useAsset } from 'hooks/useAsset'
 import { useAssets } from 'hooks/useAssets'
 import { useEffect, useState } from 'react'
@@ -38,9 +40,25 @@ export const Asset = () => {
 	return (
 		<Main>
 			<div className="card">
-				<div className="card-header d-flex align-items-center justify-content-between">
-					<span className="me-4">{id}</span>
-				</div>
+				{asset === undefined && (
+					<div className="card-header d-flex align-items-center justify-content-between">
+						<span className="me-4">{id}</span>
+					</div>
+				)}
+				{asset !== undefined && twin !== undefined && (
+					<div className="card-header pt-0 pe-0 pb-0 ps-0">
+						<div data-intro="This map shows the location of your asset.">
+							<MapWithSettings asset={asset} twin={twin} />
+						</div>
+						<hr className="mt-0 mb-0" />
+						<div
+							data-intro="This provides on overview of important asset information."
+							id="info-header"
+						>
+							<InfoHeader asset={asset} twin={twin} />
+						</div>
+					</div>
+				)}
 				<div className="card-body">
 					{asset === undefined && (
 						<Loading>

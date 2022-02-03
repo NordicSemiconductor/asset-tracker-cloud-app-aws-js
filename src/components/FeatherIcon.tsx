@@ -331,8 +331,8 @@ export const FeatherIcon = ({
 
 type TypedIconOptions = Omit<IconOptions, 'title'>
 
-export const TruckIcon = (options?: TypedIconOptions) => (
-	<FeatherIcon {...options} type="truck" title=" 🏃" />
+export const SpeedIcon = (options?: TypedIconOptions) => (
+	<FeatherIcon {...options} type="navigation" title="speed" />
 )
 export const CloudUploadIcon = (options?: TypedIconOptions) => (
 	<FeatherIcon {...options} title="☁️" type="upload-cloud" />
@@ -348,8 +348,8 @@ export const AlertIcon = (options?: TypedIconOptions) => (
 		type="alert-triangle"
 	/>
 )
-export const AirplaneIcon = (options?: TypedIconOptions) => (
-	<FeatherIcon {...options} title="Airplane" type="send" />
+export const AltitudeIcon = (options?: TypedIconOptions) => (
+	<FeatherIcon {...options} title="altitude" type="arrow-up" />
 )
 export const XIcon = (options?: TypedIconOptions) => (
 	<FeatherIcon {...options} color="#b00000" title="X" type="x" />
@@ -377,6 +377,9 @@ export const HelpIcon = (options?: TypedIconOptions) => (
 )
 export const CloudRainIcon = (options?: TypedIconOptions) => (
 	<FeatherIcon {...options} title="Rainy cloud" type="cloud-rain" />
+)
+export const CloudIcon = (options?: TypedIconOptions) => (
+	<FeatherIcon {...options} title="☁️" type="cloud" />
 )
 export const ParcelIcon = (options?: TypedIconOptions) => (
 	<FeatherIcon {...options} title="📦" type="package" />

@@ -22,11 +22,14 @@ test('Register a new account', async ({ page }) => {
 	)
 	await expect(page.locator('div#root')).toContainText(short_name)
 	await expect(page.locator('div#root')).toContainText('Sign In')
-	await page.screenshot({ path: `./test-session/login.png` })
+	await page.screenshot({ fullPage: true, path: `./test-session/login.png` })
 
 	// find registration link
 	await page.click('text=Create Account')
-	await page.screenshot({ path: `./test-session/register.png` })
+	await page.screenshot({
+		fullPage: true,
+		path: `./test-session/register.png`,
+	})
 
 	// input user information
 	await page.fill('[placeholder="Email"]', email)
@@ -34,7 +37,10 @@ test('Register a new account', async ({ page }) => {
 	await page.fill('[placeholder="Confirm Password"]', password)
 	await page.click('button:has-text("Create Account")')
 	await expect(page.locator('div#root')).toContainText('We Emailed You')
-	await page.screenshot({ path: `./test-session/register-confirm.png` })
+	await page.screenshot({
+		fullPage: true,
+		path: `./test-session/register-confirm.png`,
+	})
 
 	// input verification token
 	await confirmSignUp(email)

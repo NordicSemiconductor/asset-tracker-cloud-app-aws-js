@@ -116,5 +116,8 @@ export type AssetSensor =
 	| AssetInfo
 	| NCellMeasReport
 	| Button
-export type AssetHistoryDatum<T extends AssetSensor> = { ts: Date; v: T }
+export type AssetHistoryDatum<T extends AssetSensor> = {
+	ts: UnixTimeInMilliseconds
+	v: T
+}
 export type AssetHistory<T extends AssetSensor> = AssetHistoryDatum<T>[]

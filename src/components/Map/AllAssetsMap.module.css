@@ -1,0 +1,13 @@
+.assetsMap {
+  position: relative;
+}
+.assetsMap :global(.project-selector) {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  z-index: 1000;
+}
+.mapContainer {
+  height: calc(100vh - 58px);
+  width: 100%;
+}

@@ -11,6 +11,8 @@ import type { AssetLocation, Position } from 'hooks/useMapData'
 import { useMapData } from 'hooks/useMapData'
 import { useMapSettings } from 'hooks/useMapSettings'
 import type { Map as LeafletMap } from 'leaflet'
+import 'leaflet-fullscreen/dist/leaflet.fullscreen.css'
+import 'leaflet-fullscreen/dist/Leaflet.fullscreen.js'
 import React, { useState } from 'react'
 import {
 	Circle,
@@ -107,170 +109,201 @@ const AssetMap = ({
 	if (map !== undefined && settings.follow) {
 		map.flyTo(center.location.position, settings.zoom)
 	}
+	const [initPosition, setInitPosition] = useState(0)
+	const [initSize, setInitSize] = useState(0)
+
+	const initial = (e: { clientY: React.SetStateAction<number> }) => {
+		//Gets the initial position and size of the map container.
+		const map = document.getElementById('mapContainer')
+		setInitPosition(e.clientY)
+		setInitSize(map!.offsetHeight)
+	}
+	const resize = (e: { clientY: number }) => {
+		//Gets the final position of the map container and resizes it.
+		const map = document.getElementById('mapContainer')
+		map!.style.height = `${initSize + (e.clientY - initPosition)}px`
+	}
+
 	return (
-		<MapContainer
-			center={center.location.position}
-			zoom={settings.zoom}
-			whenCreated={setmap}
-			className={styles.mapContainer}
-		>
-			<EventHandler
-				onZoomEnd={({ map }) => {
-					updateSettings({ zoom: map.getZoom() })
+		<>
+			<MapContainer
+				id="mapContainer"
+				center={center.location.position}
+				zoom={settings.zoom}
+				fullscreenControl={true}
+				whenCreated={setmap}
+				className={styles.mapContainer}
+			>
+				<EventHandler
+					onZoomEnd={({ map }) => {
+						updateSettings({ zoom: map.getZoom() })
+					}}
+				/>
+				<TileLayer
+					attribution='&amp;copy <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
+					url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+				/>
+				<Marker position={center.location.position} icon={markerIcon}>
+					<Popup>{asset.name}</Popup>
+				</Marker>
+				{(locations.length ?? 0) > 0 &&
+					locations.map(
+						(
+							{
+								location: {
+									position: { lat, lng, accuracy, heading, speed },
+									batch,
+									ts,
+								},
+								roaming,
+							},
+							k,
+						) => {
+							const alpha = Math.round(
+								(1 - k / locations.length) * 255,
+							).toString(16)
+							const color = `#1f56d2${alpha}`
+
+							return (
+								<React.Fragment key={`history-${k}`}>
+									{/* outer circle */}
+									{!batch && (
+										<Circle
+											center={{ lat, lng }}
+											radius={accuracy}
+											color={color}
+										/>
+									)}
+									{/* red dashed circle to mark batch */}
+									{batch && (
+										<Circle
+											center={{ lat, lng }}
+											radius={accuracy}
+											stroke={true}
+											color={'#ff0000'}
+											weight={2}
+											fill={false}
+											dashArray={settings.zoom > 16 ? '3 6' : '6 12'}
+										/>
+									)}
+									{k > 0 && (
+										<Polyline
+											positions={[
+												locations[k - 1].location.position,
+												{ lat, lng },
+											]}
+											weight={settings.zoom > 16 ? 1 : 2}
+											lineCap={'round'}
+											color={color}
+											dashArray={'10'}
+										/>
+									)}
+									{heading !== undefined && settings.enabledLayers.headings && (
+										<HeadingMarker
+											position={{ lat, lng }}
+											heading={heading}
+											mapZoom={settings.zoom}
+											color={'#00000080'}
+										/>
+									)}
+									{/* background circle */}
+									<Circle
+										center={{ lat, lng }}
+										radius={accuracy}
+										fillColor={'#826717'}
+										stroke={false}
+										className={`asset-location-circle asset-location-circle-${k}`}
+									>
+										<Popup position={{ lat, lng }}>
+											<div className={styles.historyInfo}>
+												{!nullOrUndefined(accuracy) && (
+													<>
+														<dt>Accuracy</dt>
+														<dd data-test="asset-location-info-accuracy">
+															{toFixed(accuracy as number)} m
+														</dd>
+													</>
+												)}
+												{!nullOrUndefined(speed) && (
+													<>
+														<dt>Speed</dt>
+														<dd data-test="asset-location-info-speed">
+															{toFixed(speed as number)} m/s
+														</dd>
+													</>
+												)}
+												{!nullOrUndefined(heading) && (
+													<>
+														<dt>Heading</dt>
+														<dd data-test="asset-location-info-heading">
+															{toFixed(heading as number)}°
+														</dd>
+													</>
+												)}
+												<dt>Time</dt>
+												<dd>
+													<time dateTime={new Date(ts).toISOString()}>
+														{formatDistanceToNow(ts, {
+															includeSeconds: true,
+															addSuffix: true,
+														})}
+													</time>
+												</dd>
+												{batch && (
+													<>
+														<dt>Batch</dt>
+														<dd>Yes</dd>
+													</>
+												)}
+											</div>
+											{roaming !== undefined && !batch && (
+												<>
+													<div className={styles.historyInfo}>
+														<dt>Connection</dt>
+														<dd style={{ textAlign: 'right' }}>
+															<SignalQuality dbm={roaming.roaming.rsrp} />
+														</dd>
+														<dt>MCC/MNC</dt>
+														<dd>{roaming.roaming.mccmnc}</dd>
+														<dt>Area Code</dt>
+														<dd>{roaming.roaming.area}</dd>
+														<dt>Cell ID</dt>
+														<dd>{roaming.roaming.cell}</dd>
+														<dt>IP</dt>
+														<dd>{roaming.roaming.ip}</dd>
+														<dt>RSRP</dt>
+														<dd>{roaming.roaming.rsrp}</dd>
+														<dt>Time</dt>
+														<dd>
+															<time
+																dateTime={new Date(roaming.ts).toISOString()}
+															>
+																{formatDistanceToNow(roaming.ts, {
+																	includeSeconds: true,
+																	addSuffix: true,
+																})}
+															</time>
+														</dd>
+													</div>
+												</>
+											)}
+										</Popup>
+									</Circle>
+								</React.Fragment>
+							)
+						},
+					)}
+			</MapContainer>
+			<div
+				id="mapResizer"
+				draggable="true"
+				onDragStart={initial}
+				onDrag={resize}
+				style={{
+					cursor: 'row-resize',
+					height: '10px',
 				}}
 			/>
-			<TileLayer
-				attribution='&amp;copy <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
-				url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-			/>
-			<Marker position={center.location.position} icon={markerIcon}>
-				<Popup>{asset.name}</Popup>
-			</Marker>
-			{(locations.length ?? 0) > 0 &&
-				locations.map(
-					(
-						{
-							location: {
-								position: { lat, lng, accuracy, heading, speed },
-								batch,
-								ts,
-							},
-							roaming,
-						},
-						k,
-					) => {
-						const alpha = Math.round((1 - k / locations.length) * 255).toString(
-							16,
-						)
-						const color = `#1f56d2${alpha}`
-
-						return (
-							<React.Fragment key={`history-${k}`}>
-								{/* outer circle */}
-								{!batch && (
-									<Circle
-										center={{ lat, lng }}
-										radius={accuracy}
-										color={color}
-									/>
-								)}
-								{/* red dashed circle to mark batch */}
-								{batch && (
-									<Circle
-										center={{ lat, lng }}
-										radius={accuracy}
-										stroke={true}
-										color={'#ff0000'}
-										weight={2}
-										fill={false}
-										dashArray={settings.zoom > 16 ? '3 6' : '6 12'}
-									/>
-								)}
-								{k > 0 && (
-									<Polyline
-										positions={[
-											locations[k - 1].location.position,
-											{ lat, lng },
-										]}
-										weight={settings.zoom > 16 ? 1 : 2}
-										lineCap={'round'}
-										color={color}
-										dashArray={'10'}
-									/>
-								)}
-								{heading !== undefined && settings.enabledLayers.headings && (
-									<HeadingMarker
-										position={{ lat, lng }}
-										heading={heading}
-										mapZoom={settings.zoom}
-										color={'#00000080'}
-									/>
-								)}
-								{/* background circle */}
-								<Circle
-									center={{ lat, lng }}
-									radius={accuracy}
-									fillColor={'#826717'}
-									stroke={false}
-									className={`asset-location-circle asset-location-circle-${k}`}
-								>
-									<Popup position={{ lat, lng }}>
-										<div className={styles.historyInfo}>
-											{!nullOrUndefined(accuracy) && (
-												<>
-													<dt>Accuracy</dt>
-													<dd data-test="asset-location-info-accuracy">
-														{toFixed(accuracy as number)} m
-													</dd>
-												</>
-											)}
-											{!nullOrUndefined(speed) && (
-												<>
-													<dt>Speed</dt>
-													<dd data-test="asset-location-info-speed">
-														{toFixed(speed as number)} m/s
-													</dd>
-												</>
-											)}
-											{!nullOrUndefined(heading) && (
-												<>
-													<dt>Heading</dt>
-													<dd data-test="asset-location-info-heading">
-														{toFixed(heading as number)}°
-													</dd>
-												</>
-											)}
-											<dt>Time</dt>
-											<dd>
-												<time dateTime={new Date(ts).toISOString()}>
-													{formatDistanceToNow(ts, {
-														includeSeconds: true,
-														addSuffix: true,
-													})}
-												</time>
-											</dd>
-											{batch && (
-												<>
-													<dt>Batch</dt>
-													<dd>Yes</dd>
-												</>
-											)}
-										</div>
-										{roaming !== undefined && !batch && (
-											<>
-												<div className={styles.historyInfo}>
-													<dt>Connection</dt>
-													<dd style={{ textAlign: 'right' }}>
-														<SignalQuality dbm={roaming.roaming.rsrp} />
-													</dd>
-													<dt>MCC/MNC</dt>
-													<dd>{roaming.roaming.mccmnc}</dd>
-													<dt>Area Code</dt>
-													<dd>{roaming.roaming.area}</dd>
-													<dt>Cell ID</dt>
-													<dd>{roaming.roaming.cell}</dd>
-													<dt>IP</dt>
-													<dd>{roaming.roaming.ip}</dd>
-													<dt>RSRP</dt>
-													<dd>{roaming.roaming.rsrp}</dd>
-													<dt>Time</dt>
-													<dd>
-														<time dateTime={new Date(roaming.ts).toISOString()}>
-															{formatDistanceToNow(roaming.ts, {
-																includeSeconds: true,
-																addSuffix: true,
-															})}
-														</time>
-													</dd>
-												</div>
-											</>
-										)}
-									</Popup>
-								</Circle>
-							</React.Fragment>
-						)
-					},
-				)}
-		</MapContainer>
+		</>
 	)
 }

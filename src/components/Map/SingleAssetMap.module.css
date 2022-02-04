@@ -1,5 +1,6 @@
 .mapContainer {
   height: 300px;
+  resize: vertical;
 }
 
 .historyInfo {

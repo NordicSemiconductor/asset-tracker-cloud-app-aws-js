@@ -8,7 +8,7 @@
     "build": "vite build --emptyOutDir",
     "preview": "vite preview",
     "prepare": "husky install",
-    "test": "jest --passWithNoTests",
+    "test": "node --experimental-vm-modules ./node_modules/jest/bin/jest.js --passWithNoTests",
     "test:e2e": "tsc -p e2e-tests/tsconfig.json && node e2e-tests-out/setup.js && npx playwright test -c e2e-tests-out/unauthenticated && npx playwright test -c e2e-tests-out/authenticated && npx playwright test -c e2e-tests-out/clean-up"
   },
   "repository": {
@@ -58,6 +58,8 @@
     "@nordicsemiconductor/object-to-env": "4.1.0",
     "@nordicsemiconductor/random-words": "6.0.0",
     "@playwright/test": "1.18.1",
+    "@swc/core": "1.2.136",
+    "@swc/jest": "0.2.17",
     "@types/chance": "1.1.3",
     "@types/feather-icons": "4.7.0",
     "@types/intro.js": "3.0.2",
@@ -73,7 +75,6 @@
     "handlebars": "4.7.7",
     "id128": "1.6.6",
     "jest": "27.4.7",
-    "ts-jest": "27.1.3",
     "vite": "2.7.13"
   },
   "lint-staged": {
@@ -102,7 +103,6 @@
   },
   "prettier": "@nordicsemiconductor/asset-tracker-cloud-code-style/.prettierrc",
   "jest": {
-    "preset": "ts-jest",
     "testRegex": ".+\\.spec\\.ts$",
     "testPathIgnorePatterns": [
       "/node_modules/",
@@ -110,6 +110,13 @@
     ],
     "moduleNameMapper": {
       "^utils/(.*)$": "<rootDir>/src/utils/$1"
-    }
+    },
+    "transform": {
+      "^.+\\.(t|j)sx?$": "@swc/jest"
+    },
+    "extensionsToTreatAsEsm": [
+      ".ts",
+      ".tsx"
+    ]
   }
 }

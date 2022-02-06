@@ -114,24 +114,33 @@ const AssetMap = ({
 
 	const initial = (e: { clientY: React.SetStateAction<number> }) => {
 		//Gets the initial position and size of the map container.
-		const map = document.getElementById('mapContainer')
+		const map = document.getElementById('map-container')
 		setInitPosition(e.clientY)
 		setInitSize(map!.offsetHeight)
 	}
 	const resize = (e: { clientY: number }) => {
 		//Gets the final position of the map container and resizes it.
-		const map = document.getElementById('mapContainer')
+		const map = document.getElementById('map-container')
 		map!.style.height = `${initSize + (e.clientY - initPosition)}px`
 	}
 
+	const setMap = (map: LeafletMap) => {
+		setmap(map)
+		const resizeObserver = new ResizeObserver(() => {
+			map.invalidateSize()
+		})
+		const container = document.getElementById('map-container')
+		resizeObserver.observe(container!)
+	}
+
 	return (
-		<>
+		<div>
 			<MapContainer
-				id="mapContainer"
+				id="map-container"
 				center={center.location.position}
 				zoom={settings.zoom}
 				fullscreenControl={true}
-				whenCreated={setmap}
+				whenCreated={setMap}
 				className={styles.mapContainer}
 			>
 				<EventHandler
@@ -295,7 +304,7 @@ const AssetMap = ({
 					)}
 			</MapContainer>
 			<div
-				id="mapResizer"
+				id="map-container-resize"
 				draggable="true"
 				onDragStart={initial}
 				onDrag={resize}
@@ -304,6 +313,6 @@ const AssetMap = ({
 					height: '10px',
 				}}
 			/>
-		</>
+		</div>
 	)
 }

@@ -9,11 +9,13 @@ import {
 	DangerIcon,
 	IconWithText,
 	InfoIcon,
+	NeighboringCellsIcon,
 	SettingsIcon,
 } from 'components/FeatherIcon'
 import { Loading } from 'components/Loading'
 import { Main } from 'components/Main'
 import { MapWithSettings } from 'components/Map/MapWithSettings'
+import { NeighborCellMeasurementsReport } from 'components/NeighborCellMeasurementsReport'
 import { useAsset } from 'hooks/useAsset'
 import { useAssets } from 'hooks/useAssets'
 import { useEffect, useState } from 'react'
@@ -107,6 +109,16 @@ export const Asset = () => {
 									<HelpNote />
 									<Settings key={`asset-${asset.id}-${twin?.version ?? 0}`} />
 								</div>
+							</Collapsable>
+							<Collapsable
+								id="asset:neighboringcells"
+								title={
+									<IconWithText>
+										<NeighboringCellsIcon size={22} /> Neighboring cells
+									</IconWithText>
+								}
+							>
+								<NeighborCellMeasurementsReport asset={asset} />
 							</Collapsable>
 							<Collapsable
 								id="asset:danger"

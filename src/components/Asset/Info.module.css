@@ -11,10 +11,29 @@
 
 .assetInfoToggle .info > span:first-child {
   display: flex;
+  max-width: calc(100vw - 50px - 2rem);
 }
 
 .assetInfoToggle .info > span:first-child > * {
-  padding-right: 1rem;
+  padding-right: 0.5rem;
+}
+
+@media (min-width: 576px) {
+  .assetInfoToggle .info > span:first-child > * {
+    padding-right: 1rem;
+  }
+}
+
+.assetInfoToggle
+  .info
+  span:global(.connection-info)
+  :global(.iconWithText)
+  :global(.text) {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: calc(((100vw - 50px - 2rem) / 3) - 16px - 0.75rem);
+  white-space: nowrap;
+  display: inline-block;
 }
 
 .assetInfoToggle .info :global(.reportedTime) {

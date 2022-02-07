@@ -1,18 +1,14 @@
+import { RSRP, SignalQualityTriangle } from '@nordicsemiconductor/rsrp-bar'
 import type { UnixTimeInSeconds } from 'asset/asset'
-import { SignalQuality } from 'components/Asset/SignalQuality'
 import {
 	CellularIcon,
 	IconWithText,
 	SmartphoneIcon,
+	XSquareIcon,
 } from 'components/FeatherIcon'
 import { ReportedTime } from 'components/ReportedTime'
-import { TextWithIcon } from 'components/TextWithIcon'
 import { identifyIssuer } from 'e118-iin-list'
-import { filter as filterOperator, Operator as Op } from 'mcc-mnc-list'
-
-export const Operator = ({ op }: { op?: Op }) => (
-	<span className={'operator'}>{op?.brand ?? 'Unknown'}</span>
-)
+import { filter as filterOperator } from 'mcc-mnc-list'
 
 export const ConnectionInformation = ({
 	networkMode,
@@ -34,23 +30,47 @@ export const ConnectionInformation = ({
 	const maybeSimIssuer = iccid !== undefined ? identifyIssuer(iccid) : undefined
 	return (
 		<>
-			<span>
-				<TextWithIcon icon={SignalQuality({ dbm: rsrp })}>
-					<>
-						&nbsp;
-						<Operator op={filterOperator({ mccmnc: `${mccmnc}` })[0]} />
-					</>
-				</TextWithIcon>
+			<span className="connection-info">
+				<IconWithText>
+					<RSRP
+						dbm={rsrp}
+						renderBar={({ quality, dbm }) => (
+							<>
+								<SignalQualityTriangle
+									style={{
+										width: '20px',
+										height: '20px',
+										marginRight: '0.2rem',
+									}}
+									quality={quality}
+								/>
+
+								<span className="text">
+									<small>{`(${dbm} dBm)`}</small>{' '}
+									{filterOperator({ mccmnc: `${mccmnc}` })[0].brand ??
+										'Unknown'}
+								</span>
+							</>
+						)}
+						renderInvalid={() => (
+							<abbr title={`Unexpected value ${rsrp} reported!`}>
+								<XSquareIcon />
+							</abbr>
+						)}
+					/>
+				</IconWithText>
 				<abbr title={'Network mode'}>
 					<IconWithText>
 						<CellularIcon size={16} />
-						{networkMode ?? '?'}
+						<span className="text">{networkMode ?? '?'}</span>
 					</IconWithText>
 				</abbr>
 				<abbr title={'SIM issuer'}>
 					<IconWithText>
 						<SmartphoneIcon size={16} />
-						{maybeSimIssuer !== undefined ? maybeSimIssuer.companyName : '?'}
+						<span className="text">
+							{maybeSimIssuer !== undefined ? maybeSimIssuer.companyName : '?'}
+						</span>
 					</IconWithText>
 				</abbr>
 			</span>

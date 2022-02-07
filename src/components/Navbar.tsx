@@ -7,6 +7,7 @@ import {
 	ParcelIcon,
 	UserIcon,
 } from 'components/FeatherIcon'
+import styles from 'components/Navbar.module.css'
 import { useAppConfig } from 'hooks/useAppConfig'
 import { useAsset } from 'hooks/useAsset'
 import { useAuth } from 'hooks/useAuth'
@@ -38,7 +39,7 @@ export const Navbar = () => {
 				}}
 			>
 				<div className="container-fluid">
-					<Link className="navbar-brand" to="/">
+					<Link className="navbar-brand d-flex align-items-center" to="/">
 						<img
 							src={logo}
 							alt={name}
@@ -46,10 +47,9 @@ export const Navbar = () => {
 							height="24"
 							className="d-inline-block align-text-top me-1"
 						/>
-
-						{asset && <span>{asset.name}</span>}
+						{asset && <span className={styles.assetName}>{asset.name}</span>}
 						{!asset && (
-							<span>
+							<span className={styles.assetName}>
 								{shortName} <small>(AWS)</small>
 							</span>
 						)}

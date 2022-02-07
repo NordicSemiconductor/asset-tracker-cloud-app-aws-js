@@ -20,7 +20,7 @@ main h4 {
   font-size: 100%;
 }
 
-@media (max-width: 576px) {
+@media (max-width: 575px) {
   .card {
     border-left: 0;
     border-right: 0;

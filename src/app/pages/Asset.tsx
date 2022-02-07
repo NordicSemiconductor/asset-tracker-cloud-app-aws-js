@@ -1,8 +1,16 @@
 import { AssetInformation } from 'components/Asset/AssetInformation'
 import { DeleteAsset } from 'components/Asset/DeleteAsset'
 import { InfoHeader } from 'components/Asset/Info'
+import { Personalization } from 'components/Asset/Personalization'
+import { HelpNote } from 'components/Asset/Settings/HelpNote'
+import { Settings } from 'components/Asset/Settings/Settings'
 import { Collapsable } from 'components/Collapsable'
-import { DangerIcon, IconWithText, InfoIcon } from 'components/FeatherIcon'
+import {
+	DangerIcon,
+	IconWithText,
+	InfoIcon,
+	SettingsIcon,
+} from 'components/FeatherIcon'
 import { Loading } from 'components/Loading'
 import { Main } from 'components/Main'
 import { MapWithSettings } from 'components/Map/MapWithSettings'
@@ -79,6 +87,26 @@ export const Asset = () => {
 								id="cat:information"
 							>
 								<AssetInformation asset={asset} twin={twin} />
+							</Collapsable>
+							<Collapsable
+								title={
+									<IconWithText>
+										<SettingsIcon size={22} />
+										Settings
+									</IconWithText>
+								}
+								id="cat:settings"
+							>
+								<h4>Personalization</h4>
+								<Personalization
+									asset={asset}
+									key={`asset-${asset.id}-${asset.version}`}
+								/>
+								<div data-intro="This allows you change the run-time configuration of the asset.">
+									<h4 className="mt-4 ">Asset configuration</h4>
+									<HelpNote />
+									<Settings key={`asset-${asset.id}-${twin?.version ?? 0}`} />
+								</div>
 							</Collapsable>
 							<Collapsable
 								id="asset:danger"

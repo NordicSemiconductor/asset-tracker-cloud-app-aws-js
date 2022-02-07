@@ -43,6 +43,7 @@ export const AssetsProvider: FunctionComponent = ({ children }) => {
 					...things.map((thing) => ({
 						id: thing.thingName as string,
 						name: (thing.attributes?.name ?? thing.thingName) as string,
+						version: thing.version ?? -1,
 					})),
 				])
 				setNextStartKey(nextStartKey)

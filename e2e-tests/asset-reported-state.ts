@@ -1,3 +1,5 @@
+import { defaultConfig } from '../src/asset/defaultConfig.js'
+
 const now = Date.now()
 
 /**
@@ -27,15 +29,7 @@ export const state: Record<string, any> = {
 		},
 		ts: now,
 	},
-	cfg: {
-		gnsst: 720,
-		act: false,
-		actwt: 60,
-		mvres: 60,
-		mvt: 3600,
-		acct: 1.2,
-		nod: [],
-	},
+	cfg: defaultConfig,
 	dev: {
 		v: {
 			imei: '352656106111232',

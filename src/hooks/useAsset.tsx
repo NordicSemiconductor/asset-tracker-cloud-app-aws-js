@@ -1,4 +1,4 @@
-import type { Asset, AssetTwin, AssetWithTwin } from 'asset/asset'
+import type { Asset, AssetConfig, AssetTwin, AssetWithTwin } from 'asset/asset'
 import equal from 'fast-deep-equal'
 import { useServices } from 'hooks/useServices'
 import {
@@ -15,10 +15,16 @@ export const AssetContext = createContext<{
 	setAssetId: (assetId?: string) => void
 	setUpdateInterval: (interval: number) => void
 	deleteAsset: () => Promise<void>
+	update: (patch: {
+		name?: string
+		cfg?: Partial<AssetConfig>
+	}) => Promise<void>
 }>({
 	setAssetId: () => undefined,
 	setUpdateInterval: () => undefined,
 	deleteAsset: async () => Promise.resolve(undefined),
+	update: async () =>
+		Promise.reject(new Error('[useAsset] update not possible.')),
 })
 
 export const useAsset = () => useContext(AssetContext)
@@ -61,16 +67,16 @@ export const AssetProvider: FunctionComponent = ({ children }) => {
 				.then((updatedAsset) => {
 					if (!isMounted) return
 					if (equal(updatedAsset, currentAsset)) return
-					console.debug(`[autoUpdateDeviceState]`, 'update')
+					console.debug(`[autoUpdateAsset]`, 'update')
 					setCurrentAsset(updatedAsset)
 				})
 				.catch((err) => console.error(`[AssetContext]`, err))
 		}
 
-		console.debug(`[autoUpdateDeviceState]`, 'enabled', updateInterval)
+		console.debug(`[autoUpdateAsset]`, 'enabled', updateInterval)
 		const interval = setInterval(updateState, updateInterval)
 		return () => {
-			console.debug(`[autoUpdateDeviceState]`, 'disabled')
+			console.debug(`[autoUpdateAsset]`, 'disabled')
 			clearInterval(interval)
 			isMounted = false
 		}
@@ -98,6 +104,36 @@ export const AssetProvider: FunctionComponent = ({ children }) => {
 							setAssetId(undefined)
 						})
 						.catch((err) => console.error(`[useAsset:deleteAsset]`, err))
+				},
+				update: async ({ name, cfg }) => {
+					if (currentAsset?.asset === undefined) return
+					const promises: Promise<any>[] = []
+					if (name !== undefined) {
+						promises.push(iot.updateThing(currentAsset.asset.id, { name }))
+					}
+					if (cfg !== undefined) {
+						promises.push(
+							iot.updateShadow(currentAsset.asset.id, { desired: { cfg } }),
+						)
+					}
+					await Promise.all(promises)
+					setCurrentAsset({
+						...currentAsset,
+						asset: {
+							...currentAsset.asset,
+							name: name ?? currentAsset.asset.name,
+						},
+						twin: {
+							...currentAsset.twin,
+							desired: {
+								...currentAsset.twin.desired,
+								cfg: {
+									...currentAsset.twin.desired?.cfg,
+									...cfg,
+								},
+							},
+						},
+					})
 				},
 			}}
 		>

@@ -1,4 +1,4 @@
-export type Asset = { id: string; name: string }
+export type Asset = { id: string; name: string; version: number }
 export type AssetWithTwin = {
 	asset: Asset
 	twin: AssetTwin
@@ -14,7 +14,7 @@ export type AssetConfig = {
 	actwt: number
 	mvres: number
 	mvt: number
-	gpst: number
+	gnsst: number
 	acct: number
 	nod: DataModules[]
 }
@@ -44,10 +44,14 @@ type AssetStateMetadata = Record<
 	{ timestamp: UnixTimeInSeconds } & { [key: string]: AssetStateMetadata }
 >
 
+/**
+ * @see https://docs.aws.amazon.com/iot/latest/developerguide/device-shadow-document.html#device-shadow-example-response-json
+ */
 export type AssetTwin = {
 	reported: ReportedState
 	desired: DesiredState
 	metadata: AssetStateMetadata
+	version: number
 }
 
 export type Battery = number

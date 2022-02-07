@@ -6,12 +6,14 @@ import {
 	ListAttachedPoliciesCommand,
 	ListThingsCommand,
 	ThingAttribute,
+	UpdateThingCommand,
 } from '@aws-sdk/client-iot'
 import {
 	GetThingShadowCommand,
 	IoTDataPlaneClient,
+	UpdateThingShadowCommand,
 } from '@aws-sdk/client-iot-data-plane'
-import { toUtf8 } from '@aws-sdk/util-utf8-browser'
+import { fromUtf8, toUtf8 } from '@aws-sdk/util-utf8-browser'
 import type { AssetTwin, AssetWithTwin } from 'asset/asset'
 
 const filterTestThings = (things: ThingAttribute[]): ThingAttribute[] =>
@@ -60,6 +62,8 @@ export type IoTService = {
 		policyName: string
 		identityId: string
 	}) => Promise<void>
+	updateThing: (thingName: string, { name }: { name: string }) => Promise<void>
+	updateShadow: (thingName: string, patch: Partial<AssetTwin>) => Promise<void>
 }
 
 export const iotService = ({
@@ -88,29 +92,34 @@ export const iotService = ({
 					}
 					return { payload: undefined }
 				}),
-		]).then(([{ thingName, attributes }, { payload }]) => {
-			const twin: AssetTwin = {
-				reported: {},
-				desired: {},
-				metadata: {},
-			}
-			if (payload !== undefined) {
-				const shadow = JSON.parse(toUtf8(payload))
-				if (shadow.state !== undefined) {
-					twin.reported = shadow.state.reported
-					twin.desired = shadow.state.desired
-					twin.metadata = shadow.metadata
+		]).then(
+			([{ thingName, attributes, version: thingVersion }, { payload }]) => {
+				const twin: AssetTwin = {
+					reported: {},
+					desired: {},
+					metadata: {},
+					version: -1,
 				}
-			}
+				if (payload !== undefined) {
+					const shadow = JSON.parse(toUtf8(payload))
+					if (shadow.state !== undefined) {
+						twin.reported = shadow.state.reported ?? {}
+						twin.desired = shadow.state.desired ?? {}
+						twin.metadata = shadow.metadata ?? {}
+						twin.version = shadow.version ?? -1
+					}
+				}
 
-			return {
-				asset: {
-					id: thingName as string,
-					name: (attributes?.name ?? thingName) as string,
-				},
-				twin,
-			}
-		}),
+				return {
+					asset: {
+						id: thingName as string,
+						name: (attributes?.name ?? thingName) as string,
+						version: thingVersion ?? -1,
+					},
+					twin,
+				}
+			},
+		),
 	deleteThing: async (thingName: string) => {
 		await iot.send(
 			new DeleteThingCommand({
@@ -136,6 +145,30 @@ export const iotService = ({
 			new AttachPolicyCommand({
 				target: identityId,
 				policyName,
+			}),
+		)
+	},
+	updateThing: async (thingName, { name }) => {
+		await iot.send(
+			new UpdateThingCommand({
+				thingName,
+				attributePayload: {
+					attributes: {
+						name,
+					},
+				},
+			}),
+		)
+	},
+	updateShadow: async (thingName, patch) => {
+		await iotData.send(
+			new UpdateThingShadowCommand({
+				thingName,
+				payload: fromUtf8(
+					JSON.stringify({
+						state: patch,
+					}),
+				),
 			}),
 		)
 	},

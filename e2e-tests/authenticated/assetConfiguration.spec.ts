@@ -25,6 +25,9 @@ test('Change asset name', async ({ page }) => {
 	const { name } = await loadSessionData('asset')
 	await page.fill('input[id="asset-name"]', `${name}-renamed`)
 	await page.click('form[id="personalization-form"] button:has-text("Update")')
+	await page.screenshot({
+		path: `./test-session/asset-rename.png`,
+	})
 	await expect(page.locator('.navbar-brand')).toContainText(`${name}-renamed`)
 })
 
@@ -59,6 +62,9 @@ test('Update asset configuration', async ({ page }) => {
 	await page.click('#gnss-disable')
 	await page.click('#ncellmeas-disable')
 	await page.click('#asset-settings-form >> footer >> button')
+	await page.screenshot({
+		path: `./test-session/asset-settings.png`,
+	})
 
 	// Verify
 	const { thingName } = await loadSessionData('asset')

@@ -32,8 +32,8 @@
   "license": "BSD-3-Clause",
   "dependencies": {
     "@aws-amplify/ui-react": "2.2.2",
-    "@aws-sdk/client-iot": "3.49.0",
-    "@aws-sdk/client-iot-data-plane": "3.49.0",
+    "@aws-sdk/client-iot": "3.50.0",
+    "@aws-sdk/client-iot-data-plane": "3.50.0",
     "@nordicsemiconductor/from-env": "1.0.0",
     "@nordicsemiconductor/rsrp-bar": "5.0.0",
     "aws-amplify": "4.3.14",
@@ -51,9 +51,9 @@
     "react-router-dom": "6.2.1"
   },
   "devDependencies": {
-    "@aws-sdk/client-cloudformation": "3.49.0",
-    "@aws-sdk/client-cognito-identity-provider": "3.49.0",
-    "@aws-sdk/client-ssm": "3.49.0",
+    "@aws-sdk/client-cloudformation": "3.50.0",
+    "@aws-sdk/client-cognito-identity-provider": "3.50.0",
+    "@aws-sdk/client-ssm": "3.50.0",
     "@nordicsemiconductor/asset-tracker-cloud-code-style": "11.0.20",
     "@nordicsemiconductor/object-to-env": "4.1.0",
     "@nordicsemiconductor/random-words": "6.0.0",

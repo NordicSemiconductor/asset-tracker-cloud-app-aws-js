@@ -31,7 +31,7 @@
   "author": "Nordic Semiconductor ASA | nordicsemi.no",
   "license": "BSD-3-Clause",
   "dependencies": {
-    "@aws-amplify/ui-react": "2.2.2",
+    "@aws-amplify/ui-react": "2.3.0",
     "@aws-sdk/client-iot": "3.50.0",
     "@aws-sdk/client-iot-data-plane": "3.50.0",
     "@nordicsemiconductor/from-env": "1.0.0",

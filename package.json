@@ -32,8 +32,10 @@
   "license": "BSD-3-Clause",
   "dependencies": {
     "@aws-amplify/ui-react": "2.3.0",
+    "@aws-sdk/client-dynamodb": "3.50.0",
     "@aws-sdk/client-iot": "3.50.0",
     "@aws-sdk/client-iot-data-plane": "3.50.0",
+    "@aws-sdk/util-dynamodb": "3.50.0",
     "@nordicsemiconductor/from-env": "1.0.0",
     "@nordicsemiconductor/rsrp-bar": "5.0.0",
     "aws-amplify": "4.3.14",
@@ -79,8 +81,19 @@
   },
   "lint-staged": {
     "*.{ts,tsx}": [
-      "prettier --write",
+      "prettier --write"
+    ],
+    "src/*.{ts,tsx}": [
       "eslint --ext .js,.ts,.jsx,.tsx"
+    ],
+    "src/**/*.{ts,tsx}": [
+      "eslint --ext .js,.ts,.jsx,.tsx"
+    ],
+    "e2e-tests/*.{ts,tsx}": [
+      "eslint --ext .js,.ts,.jsx,.tsx --parser-options tsconfigRootDir:e2e-tests"
+    ],
+    "e2e-tests/**/*.{ts,tsx}": [
+      "eslint --ext .js,.ts,.jsx,.tsx --parser-options tsconfigRootDir:e2e-tests"
     ],
     "*.{md,json,yaml,yml,html}": [
       "prettier --write"

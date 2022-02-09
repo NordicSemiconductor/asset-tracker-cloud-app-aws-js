@@ -1,58 +1,22 @@
-import type {
-	Asset,
-	AssetTwin,
-	NCellMeasReport,
-	UnixTimeInMilliseconds,
-	UnixTimeInSeconds,
-} from 'asset/asset'
+import type { AssetTwin } from 'asset/asset'
 import { expectedSendIntervalInSeconds } from 'asset/expectedSendIntervalInSeconds'
 import styles from 'components/Asset/AssetInformation.module.css'
-import { ChartDateRange } from 'components/ChartDateRange'
-import { Loading } from 'components/Loading'
 import { NoData } from 'components/NoData'
 import { ReportedTime } from 'components/ReportedTime'
-import { useState } from 'react'
+import { useNeighboringCellMeasurementReport } from 'hooks/useNeighboringCellMeasurementReport'
 
-/**
- * FIXME: implement
- */
 export const NeighborCellMeasurementsReport = ({
-	asset,
 	twin,
 }: {
-	asset: Asset
 	twin?: AssetTwin
 }) => {
 	const expectedInterval = expectedSendIntervalInSeconds(twin)
+	const { report } = useNeighboringCellMeasurementReport()
 
-	const [loading] = useState<boolean>(true)
-
-	const [nCellMeasReport] = useState<{
-		v: NCellMeasReport
-		ts: UnixTimeInMilliseconds
-		receivedAt: UnixTimeInSeconds
-	}>()
-
-	if (loading)
-		return (
-			<>
-				<ChartDateRange />
-				<Loading />
-			</>
-		)
-
-	if (nCellMeasReport === undefined)
-		return (
-			<>
-				<ChartDateRange />
-				<NoData />
-			</>
-		)
-
-	const report = nCellMeasReport.v
+	if (report === undefined) return <NoData />
 
 	return (
-		<div className={styles.assetInformation}>
+		<div className={styles.assetInformation} id="neighboring-cells">
 			{(report.nmr?.length ?? 0) === 0 && (
 				<NoData>No neighboring cells found.</NoData>
 			)}
@@ -62,19 +26,19 @@ export const NeighborCellMeasurementsReport = ({
 						<li key={k}>
 							<dl className={styles.AssetInformation}>
 								<dt>RSRP</dt>
-								<dd>
+								<dd data-test="rsrp">
 									<code>{cell.rsrp}</code>
 								</dd>
 								<dt>RSRQ</dt>
-								<dd>
+								<dd data-test="rsrq">
 									<code>{cell.rsrq}</code>
 								</dd>
 								<dt>CellID</dt>
-								<dd>
+								<dd data-test="cell">
 									<code>{cell.cell}</code>
 								</dd>
 								<dt>EARFCN</dt>
-								<dd>
+								<dd data-test="earfcn">
 									<code>{cell.earfcn}</code>
 								</dd>
 							</dl>
@@ -83,8 +47,8 @@ export const NeighborCellMeasurementsReport = ({
 				</ol>
 			)}
 			<ReportedTime
-				receivedAtSeconds={nCellMeasReport.receivedAt}
-				reportedAtSeconds={nCellMeasReport.ts / 1000}
+				receivedAtSeconds={report.receivedAt.getTime() / 1000}
+				reportedAtSeconds={report.reportedAt.getTime() / 1000}
 				staleAfterSeconds={expectedInterval}
 			/>
 		</div>

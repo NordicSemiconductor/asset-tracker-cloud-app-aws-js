@@ -1,4 +1,5 @@
 import type { ICredentials } from '@aws-amplify/core'
+import { DynamoDBClient } from '@aws-sdk/client-dynamodb'
 import { IoTClient } from '@aws-sdk/client-iot'
 import { IoTDataPlaneClient } from '@aws-sdk/client-iot-data-plane'
 import type { IoTService } from 'api/iot'
@@ -8,8 +9,10 @@ import { createContext, FunctionComponent, useContext, useEffect } from 'react'
 
 export const ServicesContext = createContext<{
 	iot: IoTService
+	dynamoDB: DynamoDBClient
 }>({
 	iot: undefined as any,
+	dynamoDB: undefined as any,
 })
 
 export const useServices = () => useContext(ServicesContext)
@@ -45,6 +48,10 @@ export const ServicesProvider: FunctionComponent<{
 		<ServicesContext.Provider
 			value={{
 				iot,
+				dynamoDB: new DynamoDBClient({
+					credentials,
+					region,
+				}),
 			}}
 		>
 			{children}

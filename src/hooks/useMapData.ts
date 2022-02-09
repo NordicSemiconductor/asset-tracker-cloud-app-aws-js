@@ -1,5 +1,3 @@
-import type { AssetHistory, AssetHistoryDatum, GNSS } from 'asset/asset'
-
 export type Position = { lat: number; lng: number }
 
 export type Location = {
@@ -36,15 +34,15 @@ export type AssetLocation = {
 
 const toLocation =
 	(batch = false) =>
-	(locationHistory: AssetHistoryDatum<GNSS>): AssetLocation => ({
+	(locationHistory: Location): AssetLocation => ({
 		location: {
 			position: {
-				lat: locationHistory.v.lat,
-				lng: locationHistory.v.lng,
-				accuracy: locationHistory.v.acc,
-				altitude: locationHistory.v.alt,
-				speed: locationHistory.v.spd,
-				heading: locationHistory.v.hdg,
+				lat: locationHistory.position.lat,
+				lng: locationHistory.position.lng,
+				accuracy: locationHistory.position.accuracy,
+				altitude: locationHistory.position.altitude,
+				speed: locationHistory.position.speed,
+				heading: locationHistory.position.heading,
 			},
 			batch,
 			ts: new Date(locationHistory.ts),
@@ -55,7 +53,7 @@ const toLocation =
 export const useMapData = ({
 	locations,
 }: {
-	locations: AssetHistory<GNSS>
+	locations: Location[]
 }): {
 	assetLocations: AssetLocation[]
 	center?: AssetLocation

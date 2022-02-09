@@ -1,17 +1,25 @@
+import { DynamoDBClient, PutItemCommand } from '@aws-sdk/client-dynamodb'
 import { CreateThingCommand, IoTClient } from '@aws-sdk/client-iot'
 import {
 	IoTDataPlaneClient,
 	UpdateThingShadowCommand,
 } from '@aws-sdk/client-iot-data-plane'
+import { marshall } from '@aws-sdk/util-dynamodb'
 import { fromUtf8 } from '@aws-sdk/util-utf8-browser'
 import { fromEnv } from '@nordicsemiconductor/from-env'
 import { randomWords } from '@nordicsemiconductor/random-words'
 import { promises as fs } from 'fs'
+import id128 from 'id128'
 import * as path from 'path'
-import { state } from './asset-reported-state.js'
+import {
+	ncellmeasDeviceReport,
+	ncellmeasDeviceReportLocation,
+	state,
+} from './asset-reported-state.js'
 
-const { mqttEndpoint } = fromEnv({
+const { mqttEndpoint, neighborCellMeasurementsStorageTable } = fromEnv({
 	mqttEndpoint: 'PUBLIC_MQTT_ENDPOINT',
+	neighborCellMeasurementsStorageTable: 'PUBLIC_NCELLMEAS_STORAGE_TABLE_NAME',
 })(process.env)
 
 const globalSetup = async () => {
@@ -19,6 +27,8 @@ const globalSetup = async () => {
 	const words = await randomWords({ numWords: 3 })
 	const name = words.join('-')
 	const thingName = `web-app-ci-${name}`
+	console.debug(`Creating device`, thingName)
+
 	const { thingArn, thingId } = await new IoTClient({}).send(
 		new CreateThingCommand({
 			thingName,
@@ -30,9 +40,12 @@ const globalSetup = async () => {
 		}),
 	)
 
-	await new IoTDataPlaneClient({
+	const iotData = new IoTDataPlaneClient({
 		endpoint: `https://${mqttEndpoint}`,
-	}).send(
+	})
+
+	// Report configuration
+	await iotData.send(
 		new UpdateThingShadowCommand({
 			thingName,
 			payload: fromUtf8(
@@ -42,6 +55,27 @@ const globalSetup = async () => {
 					},
 				}),
 			),
+		}),
+	)
+
+	// Publish neighboring cell measurement
+	const db = new DynamoDBClient({})
+
+	// Publish neighboring cell measurement
+	const report = {
+		reportId: id128.Uuid4.generate().toCanonical(),
+		nw: state.roam?.v.nw,
+		deviceId: thingName,
+		report: ncellmeasDeviceReport,
+		timestamp: Date.now().toString(),
+		unresolved: false,
+		...ncellmeasDeviceReportLocation,
+	}
+	console.log(`Storing neighboring cell report`)
+	await db.send(
+		new PutItemCommand({
+			TableName: neighborCellMeasurementsStorageTable,
+			Item: marshall(report),
 		}),
 	)
 

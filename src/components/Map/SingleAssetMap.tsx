@@ -1,4 +1,4 @@
-import type { Asset, AssetHistory, AssetWithTwin, GNSS } from 'asset/asset'
+import type { Asset, AssetHistoryDatum, AssetWithTwin, GNSS } from 'asset/asset'
 import { SignalQuality } from 'components/Asset/SignalQuality'
 import { EventHandler } from 'components/Map/EventHandler'
 import { markerIcon } from 'components/Map/MarkerIcon'
@@ -7,9 +7,15 @@ import styles from 'components/Map/SingleAssetMap.module.css'
 import { formatDistanceToNow } from 'date-fns'
 import { SensorProperties, useAssetHistory } from 'hooks/useAssetHistory'
 import { useChartDateRange } from 'hooks/useChartDateRange'
-import type { AssetLocation, Position } from 'hooks/useMapData'
+import type {
+	AssetLocation,
+	CellLocation,
+	Location,
+	Position,
+} from 'hooks/useMapData'
 import { useMapData } from 'hooks/useMapData'
 import { useMapSettings } from 'hooks/useMapSettings'
+import { useNeighboringCellMeasurementReportLocation } from 'hooks/useNeighboringCellMeasurementReportLocation'
 import type { Map as LeafletMap } from 'leaflet'
 import React, { useState } from 'react'
 import {
@@ -57,6 +63,19 @@ const HeadingMarker = ({
 	</MapConsumer>
 )
 
+const toLocation = (gnss: AssetHistoryDatum<GNSS>): Location => ({
+	position: {
+		lat: gnss.v.lat,
+		lng: gnss.v.lng,
+		accuracy: gnss.v.acc,
+		altitude: gnss.v.alt,
+		heading: gnss.v.hdg,
+		speed: gnss.v.spd,
+	},
+	ts: new Date(gnss.ts),
+	batch: false,
+})
+
 export const SingleAssetMap = ({ asset, twin }: AssetWithTwin) => {
 	const { settings } = useMapSettings()
 	const { startDate, endDate } = useChartDateRange()
@@ -67,16 +86,18 @@ export const SingleAssetMap = ({ asset, twin }: AssetWithTwin) => {
 		endDate,
 		enabled: enableHistory,
 	})
+	const { location: neighboringCellGeoLocation } =
+		useNeighboringCellMeasurementReportLocation()
 
-	const locations: AssetHistory<GNSS> = []
+	const locations: Location[] = []
 
 	// If history is disabled, use current position (if available)
 	if (!enableHistory && twin.reported.gnss !== undefined)
-		locations.push(twin.reported.gnss)
+		locations.push(toLocation(twin.reported.gnss))
 
 	// If history is enabled, fetch positions according to selected date range
 	if (enableHistory) {
-		locations.push(...locationHistory)
+		locations.push(...locationHistory.map(toLocation))
 	}
 
 	const { assetLocations, center } = useMapData({
@@ -87,7 +108,12 @@ export const SingleAssetMap = ({ asset, twin }: AssetWithTwin) => {
 
 	return (
 		<div id="asset-map">
-			<AssetMap asset={asset} center={center} locations={assetLocations} />
+			<AssetMap
+				asset={asset}
+				center={center}
+				locations={assetLocations}
+				neighboringCellGeoLocation={neighboringCellGeoLocation}
+			/>
 		</div>
 	)
 }
@@ -96,10 +122,12 @@ const AssetMap = ({
 	asset,
 	center,
 	locations,
+	neighboringCellGeoLocation,
 }: {
 	asset: Asset
 	center: AssetLocation
 	locations: AssetLocation[]
+	neighboringCellGeoLocation?: CellLocation
 }) => {
 	const { settings, update: updateSettings } = useMapSettings()
 
@@ -267,6 +295,20 @@ const AssetMap = ({
 										)}
 									</Popup>
 								</Circle>
+								{/* Neighboring Cell Geolocation */}
+								{neighboringCellGeoLocation &&
+									settings.enabledLayers.multicellLocations && (
+										<Circle
+											center={neighboringCellGeoLocation.position}
+											radius={neighboringCellGeoLocation.position.accuracy}
+											color={'#E56399'}
+										>
+											<Popup>
+												Approximate location based on neighboring cell
+												information.
+											</Popup>
+										</Circle>
+									)}
 							</React.Fragment>
 						)
 					},

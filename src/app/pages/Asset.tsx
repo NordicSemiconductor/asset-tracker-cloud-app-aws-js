@@ -118,7 +118,7 @@ export const Asset = () => {
 									</IconWithText>
 								}
 							>
-								<NeighborCellMeasurementsReport asset={asset} />
+								<NeighborCellMeasurementsReport twin={twin} />
 							</Collapsable>
 							<Collapsable
 								id="asset:danger"

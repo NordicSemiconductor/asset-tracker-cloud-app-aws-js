@@ -75,7 +75,7 @@ export type Roaming = {
 	cell: number
 	ip: string
 	rsrp: number
-	band: string
+	band: number
 	nw: string
 }
 export type AssetInfo = {
@@ -105,11 +105,7 @@ export type NCellMeasReport = {
 	reportedAt: Date
 	receivedAt: Date
 	unresolved?: boolean
-	position?: {
-		lat: number
-		lng: number
-		accuracy: number
-	}
+	position?: { lat: number; lng: number; accuracy: number }
 }
 
 export type AssetSensor =

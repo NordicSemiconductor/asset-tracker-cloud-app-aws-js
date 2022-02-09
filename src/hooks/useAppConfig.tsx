@@ -15,6 +15,8 @@ const {
 	backgroundColor,
 	mqttEndpoint,
 	userIotPolicyName,
+	nCellMeasReportTableName,
+	nCellMeasCellGeolocationApiEndpoint,
 } = fromEnv({
 	identityPoolId: 'PUBLIC_IDENTITY_POOL_ID',
 	region: 'PUBLIC_REGION',
@@ -28,6 +30,9 @@ const {
 	backgroundColor: 'PUBLIC_MANIFEST_BACKGROUND_COLOR',
 	mqttEndpoint: 'PUBLIC_MQTT_ENDPOINT',
 	userIotPolicyName: 'PUBLIC_USER_IOT_POLICY_NAME',
+	nCellMeasReportTableName: 'PUBLIC_NCELLMEAS_STORAGE_TABLE_NAME',
+	nCellMeasCellGeolocationApiEndpoint:
+		'PUBLIC_NEIGHBOR_CELL_GEOLOCATION_API_URL',
 })(import.meta.env)
 
 Amplify.configure({
@@ -56,6 +61,8 @@ export const AppConfigContext = createContext<{
 	}
 	mqttEndpoint: string
 	userIotPolicyName: string
+	nCellMeasReportTableName: string
+	nCellMeasCellGeolocationApiEndpoint: URL
 }>({
 	identityPoolId,
 	region,
@@ -72,6 +79,10 @@ export const AppConfigContext = createContext<{
 	},
 	mqttEndpoint,
 	userIotPolicyName,
+	nCellMeasReportTableName,
+	nCellMeasCellGeolocationApiEndpoint: new URL(
+		nCellMeasCellGeolocationApiEndpoint.replace(/\/+$/, ''),
+	),
 })
 
 export const useAppConfig = () => useContext(AppConfigContext)

@@ -46,8 +46,6 @@ const SettingsUI = ({
 }) => {
 	const { update, twin } = useAsset()
 
-	console.log({ twin })
-
 	const {
 		reported: { cfg: reportedConfig },
 	} = twin ?? { reported: { cfg: {} as Partial<AssetConfig> } }

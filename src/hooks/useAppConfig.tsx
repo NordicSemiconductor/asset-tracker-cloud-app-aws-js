@@ -17,6 +17,7 @@ const {
 	userIotPolicyName,
 	nCellMeasReportTableName,
 	nCellMeasCellGeolocationApiEndpoint,
+	geolocationApiEndpoint,
 } = fromEnv({
 	identityPoolId: 'PUBLIC_IDENTITY_POOL_ID',
 	region: 'PUBLIC_REGION',
@@ -33,6 +34,7 @@ const {
 	nCellMeasReportTableName: 'PUBLIC_NCELLMEAS_STORAGE_TABLE_NAME',
 	nCellMeasCellGeolocationApiEndpoint:
 		'PUBLIC_NEIGHBOR_CELL_GEOLOCATION_API_URL',
+	geolocationApiEndpoint: 'PUBLIC_GEOLOCATION_API_URL',
 })(import.meta.env)
 
 Amplify.configure({
@@ -63,6 +65,7 @@ export const AppConfigContext = createContext<{
 	userIotPolicyName: string
 	nCellMeasReportTableName: string
 	nCellMeasCellGeolocationApiEndpoint: URL
+	geolocationApiEndpoint: URL
 }>({
 	identityPoolId,
 	region,
@@ -83,6 +86,7 @@ export const AppConfigContext = createContext<{
 	nCellMeasCellGeolocationApiEndpoint: new URL(
 		nCellMeasCellGeolocationApiEndpoint.replace(/\/+$/, ''),
 	),
+	geolocationApiEndpoint: new URL(geolocationApiEndpoint.replace(/\/+$/, '')),
 })
 
 export const useAppConfig = () => useContext(AppConfigContext)

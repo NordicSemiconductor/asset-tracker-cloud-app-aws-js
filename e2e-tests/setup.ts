@@ -6,8 +6,13 @@ import {
 } from '@aws-sdk/client-iot-data-plane'
 import { marshall } from '@aws-sdk/util-dynamodb'
 import { fromUtf8 } from '@aws-sdk/util-utf8-browser'
+import {
+	cellId,
+	NetworkMode,
+} from '@nordicsemiconductor/cell-geolocation-helpers'
 import { fromEnv } from '@nordicsemiconductor/from-env'
 import { randomWords } from '@nordicsemiconductor/random-words'
+import { ReportedSensor, Roaming } from 'asset/asset.js'
 import { promises as fs } from 'fs'
 import id128 from 'id128'
 import * as path from 'path'
@@ -17,9 +22,14 @@ import {
 	state,
 } from './asset-reported-state.js'
 
-const { mqttEndpoint, neighborCellMeasurementsStorageTable } = fromEnv({
+const {
+	mqttEndpoint,
+	neighborCellMeasurementsStorageTable,
+	cellGeoLocationCacheTableName,
+} = fromEnv({
 	mqttEndpoint: 'PUBLIC_MQTT_ENDPOINT',
 	neighborCellMeasurementsStorageTable: 'PUBLIC_NCELLMEAS_STORAGE_TABLE_NAME',
+	cellGeoLocationCacheTableName: 'PUBLIC_CELL_GEO_LOCATION_CACHE_TABLE_NAME',
 })(process.env)
 
 const globalSetup = async () => {
@@ -58,8 +68,28 @@ const globalSetup = async () => {
 		}),
 	)
 
-	// Publish neighboring cell measurement
 	const db = new DynamoDBClient({})
+
+	// Store cell geo location
+	console.log(`Storing cell geo location`)
+	const roam = state.roam as ReportedSensor<Roaming>
+	await db.send(
+		new PutItemCommand({
+			TableName: cellGeoLocationCacheTableName,
+			Item: marshall({
+				cellId: cellId({
+					...roam.v,
+					nw: roam.v.nw.includes('NB-IoT')
+						? NetworkMode.NBIoT
+						: NetworkMode.LTEm,
+				}),
+				ttl: Math.floor(Date.now() / 1000) + 30 * 24 * 60,
+				lat: 63.421133000000026,
+				lng: 10.436642000000063,
+				accuracy: 5000,
+			}),
+		}),
+	)
 
 	// Publish neighboring cell measurement
 	const report = {

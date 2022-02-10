@@ -1,13 +1,13 @@
 import { useAppConfig } from 'hooks/useAppConfig'
-import type { CellLocation } from 'hooks/useMapData'
+import type { CellGeoLocation } from 'hooks/useMapData'
 import { useNeighboringCellMeasurementReport } from 'hooks/useNeighboringCellMeasurementReport'
 import { useCallback, useEffect, useState } from 'react'
 
-export const useNeighboringCellMeasurementReportLocation = (): {
-	location?: CellLocation
+export const useNeighboringCellMeasurementReportGeoLocation = (): {
+	location?: CellGeoLocation
 } => {
 	const { report } = useNeighboringCellMeasurementReport()
-	const [location, setLocation] = useState<CellLocation>()
+	const [location, setLocation] = useState<CellGeoLocation>()
 	const { nCellMeasCellGeolocationApiEndpoint } = useAppConfig()
 
 	const reportId = report?.reportId
@@ -17,14 +17,14 @@ export const useNeighboringCellMeasurementReportLocation = (): {
 			retryCount?: number,
 			maxTries?: number,
 		) => {
-			promise: Promise<CellLocation | undefined>
+			promise: Promise<CellGeoLocation | undefined>
 			cancel: () => void
 		}
 	>(
 		(retryCount = 0, maxTries = 10) => {
 			let cancelled = false
 			let retryTimeout: NodeJS.Timeout
-			const promise = new Promise<CellLocation | undefined>(
+			const promise = new Promise<CellGeoLocation | undefined>(
 				(resolve, reject) => {
 					if (report === undefined)
 						return reject(new Error(`No report defined`))
@@ -42,7 +42,7 @@ export const useNeighboringCellMeasurementReportLocation = (): {
 							new Error(`Maximum retryCount reached (${retryCount})`),
 						)
 					}
-					console.log(
+					console.debug(
 						'[nCellMeas:geolocateReport]',
 						`Locating report`,
 						report.reportId,
@@ -57,11 +57,11 @@ export const useNeighboringCellMeasurementReportLocation = (): {
 								console.debug('[nCellMeas:geolocateReport]', {
 									location,
 								})
-								const cellLocation: CellLocation = {
-									position: location as unknown as CellLocation['position'],
+								const cellGeoLocation: CellGeoLocation = {
+									position: location as unknown as CellGeoLocation['position'],
 									ts: report.reportedAt,
 								}
-								return resolve(cellLocation)
+								return resolve(cellGeoLocation)
 							} else if (res.status === 409) {
 								const expires = res.headers.get('expires')
 								const retryInMs =
@@ -128,11 +128,6 @@ export const useNeighboringCellMeasurementReportLocation = (): {
 				})
 			return // Already resolved
 		}
-		console.log(
-			`useNeighboringCellMeasurementReportLocation`,
-			`Start useEffect`,
-		)
-
 		const { cancel, promise } = geolocateReport()
 		promise
 			.then((position) => {
@@ -141,17 +136,13 @@ export const useNeighboringCellMeasurementReportLocation = (): {
 			})
 			.catch((err) => {
 				console.error(
-					`[useNeighboringCellMeasurementReportLocation]`,
+					`[useNeighboringCellMeasurementReportGeoLocation]`,
 					err.message,
 				)
 			})
 		return () => {
 			isMounted = false
 			cancel()
-			console.log(
-				`useNeighboringCellMeasurementReportLocation`,
-				`Cancelled useEffect`,
-			)
 		}
 	}, [reportId, report, geolocateReport])
 

@@ -6,16 +6,17 @@ import { NoMap } from 'components/Map/NoMap'
 import styles from 'components/Map/SingleAssetMap.module.css'
 import { formatDistanceToNow } from 'date-fns'
 import { SensorProperties, useAssetHistory } from 'hooks/useAssetHistory'
+import { useCellGeoLocation } from 'hooks/useCellGeoLocation'
 import { useChartDateRange } from 'hooks/useChartDateRange'
 import type {
-	AssetLocation,
-	CellLocation,
-	Location,
+	AssetGeoLocation,
+	CellGeoLocation,
+	GeoLocation,
 	Position,
 } from 'hooks/useMapData'
 import { useMapData } from 'hooks/useMapData'
 import { useMapSettings } from 'hooks/useMapSettings'
-import { useNeighboringCellMeasurementReportLocation } from 'hooks/useNeighboringCellMeasurementReportLocation'
+import { useNeighboringCellMeasurementReportGeoLocation } from 'hooks/useNeighboringCellMeasurementReportGeoLocation'
 import type { Map as LeafletMap } from 'leaflet'
 import React, { useState } from 'react'
 import {
@@ -23,6 +24,7 @@ import {
 	MapConsumer,
 	MapContainer,
 	Marker,
+	Pane,
 	Polyline,
 	Popup,
 	TileLayer,
@@ -63,7 +65,7 @@ const HeadingMarker = ({
 	</MapConsumer>
 )
 
-const toLocation = (gnss: AssetHistoryDatum<GNSS>): Location => ({
+const toLocation = (gnss: AssetHistoryDatum<GNSS>): GeoLocation => ({
 	position: {
 		lat: gnss.v.lat,
 		lng: gnss.v.lng,
@@ -79,6 +81,9 @@ const toLocation = (gnss: AssetHistoryDatum<GNSS>): Location => ({
 export const SingleAssetMap = ({ asset, twin }: AssetWithTwin) => {
 	const { settings } = useMapSettings()
 	const { startDate, endDate } = useChartDateRange()
+	const { location: neighboringCellGeoLocation } =
+		useNeighboringCellMeasurementReportGeoLocation()
+	const { location: cellGeoLocation } = useCellGeoLocation()
 	const enableHistory = settings.enabledLayers.history
 	const locationHistory = useAssetHistory({
 		sensor: SensorProperties.GNSS,
@@ -87,7 +92,7 @@ export const SingleAssetMap = ({ asset, twin }: AssetWithTwin) => {
 		enabled: enableHistory,
 	})
 
-	const locations: Location[] = []
+	const locations: GeoLocation[] = []
 
 	// If history is disabled, use current position (if available)
 	if (!enableHistory && twin.reported.gnss !== undefined)
@@ -97,9 +102,6 @@ export const SingleAssetMap = ({ asset, twin }: AssetWithTwin) => {
 	if (enableHistory) {
 		locations.push(...locationHistory.map(toLocation))
 	}
-
-	const { location: neighboringCellGeoLocation } =
-		useNeighboringCellMeasurementReportLocation()
 
 	const { assetLocations, center } = useMapData({
 		locations,
@@ -114,6 +116,7 @@ export const SingleAssetMap = ({ asset, twin }: AssetWithTwin) => {
 				center={center}
 				locations={assetLocations}
 				neighboringCellGeoLocation={neighboringCellGeoLocation}
+				cellGeoLocation={cellGeoLocation}
 			/>
 		</div>
 	)
@@ -123,12 +126,14 @@ const AssetMap = ({
 	asset,
 	center,
 	locations,
+	cellGeoLocation,
 	neighboringCellGeoLocation,
 }: {
 	asset: Asset
-	center: AssetLocation
-	locations: AssetLocation[]
-	neighboringCellGeoLocation?: CellLocation
+	center: AssetGeoLocation
+	locations: AssetGeoLocation[]
+	cellGeoLocation?: CellGeoLocation
+	neighboringCellGeoLocation?: CellGeoLocation
 }) => {
 	const { settings, update: updateSettings } = useMapSettings()
 
@@ -152,9 +157,6 @@ const AssetMap = ({
 				attribution='&amp;copy <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
 				url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
 			/>
-			<Marker position={center.location.position} icon={markerIcon}>
-				<Popup>{asset.name}</Popup>
-			</Marker>
 			{(locations.length ?? 0) > 0 &&
 				locations.map(
 					(
@@ -175,141 +177,166 @@ const AssetMap = ({
 
 						return (
 							<React.Fragment key={`history-${k}`}>
-								{/* outer circle */}
-								{!batch && (
-									<Circle
-										center={{ lat, lng }}
-										radius={accuracy}
-										color={color}
-									/>
-								)}
-								{/* red dashed circle to mark batch */}
-								{batch && (
-									<Circle
-										center={{ lat, lng }}
-										radius={accuracy}
-										stroke={true}
-										color={'#ff0000'}
-										weight={2}
-										fill={false}
-										dashArray={settings.zoom > 16 ? '3 6' : '6 12'}
-									/>
-								)}
-								{k > 0 && (
-									<Polyline
-										positions={[
-											locations[k - 1].location.position,
-											{ lat, lng },
-										]}
-										weight={settings.zoom > 16 ? 1 : 2}
-										lineCap={'round'}
-										color={color}
-										dashArray={'10'}
-									/>
-								)}
-								{heading !== undefined && settings.enabledLayers.headings && (
-									<HeadingMarker
-										position={{ lat, lng }}
-										heading={heading}
-										mapZoom={settings.zoom}
-										color={'#00000080'}
-									/>
-								)}
-								{/* background circle */}
-								<Circle
-									center={{ lat, lng }}
-									radius={accuracy}
-									fillColor={'#826717'}
-									stroke={false}
-									className={`asset-location-circle asset-location-circle-${k}`}
-								>
-									<Popup position={{ lat, lng }}>
-										<div className={styles.historyInfo}>
-											{!nullOrUndefined(accuracy) && (
-												<>
-													<dt>Accuracy</dt>
-													<dd data-test="asset-location-info-accuracy">
-														{toFixed(accuracy as number)} m
-													</dd>
-												</>
-											)}
-											{!nullOrUndefined(speed) && (
-												<>
-													<dt>Speed</dt>
-													<dd data-test="asset-location-info-speed">
-														{toFixed(speed as number)} m/s
-													</dd>
-												</>
-											)}
-											{!nullOrUndefined(heading) && (
-												<>
-													<dt>Heading</dt>
-													<dd data-test="asset-location-info-heading">
-														{toFixed(heading as number)}°
-													</dd>
-												</>
-											)}
-											<dt>Time</dt>
-											<dd>
-												<time dateTime={new Date(ts).toISOString()}>
-													{formatDistanceToNow(ts, {
-														includeSeconds: true,
-														addSuffix: true,
-													})}
-												</time>
-											</dd>
-											{batch && (
-												<>
-													<dt>Batch</dt>
-													<dd>Yes</dd>
-												</>
-											)}
-										</div>
-										{roaming !== undefined && !batch && (
-											<>
-												<div className={styles.historyInfo}>
-													<dt>Connection</dt>
-													<dd style={{ textAlign: 'right' }}>
-														<SignalQuality dbm={roaming.roaming.rsrp} />
-													</dd>
-													<dt>MCC/MNC</dt>
-													<dd>{roaming.roaming.mccmnc}</dd>
-													<dt>Area Code</dt>
-													<dd>{roaming.roaming.area}</dd>
-													<dt>Cell ID</dt>
-													<dd>{roaming.roaming.cell}</dd>
-													<dt>IP</dt>
-													<dd>{roaming.roaming.ip}</dd>
-													<dt>RSRP</dt>
-													<dd>{roaming.roaming.rsrp}</dd>
-													<dt>Time</dt>
-													<dd>
-														<time dateTime={new Date(roaming.ts).toISOString()}>
-															{formatDistanceToNow(roaming.ts, {
-																includeSeconds: true,
-																addSuffix: true,
-															})}
-														</time>
-													</dd>
-												</div>
-											</>
+								<Marker position={center.location.position} icon={markerIcon}>
+									<Popup pane="popupPane">{asset.name}</Popup>
+								</Marker>
+								{/* Cell Geolocation */}
+								<Pane name="cellGeolocation" style={{ zIndex: 400 }}>
+									{cellGeoLocation &&
+										settings.enabledLayers.singleCellGeoLocations && (
+											<Circle
+												center={cellGeoLocation.position}
+												radius={cellGeoLocation.position.accuracy}
+												color={'#F6C270'}
+											>
+												<Popup pane="popupPane">
+													Approximate location based on asset's cell
+													information.
+												</Popup>
+											</Circle>
 										)}
-									</Popup>
-								</Circle>
+								</Pane>
 								{/* Neighboring Cell Geolocation */}
-								{neighboringCellGeoLocation &&
-									settings.enabledLayers.multicellLocations && (
+								<Pane name="neighboringCellGeoLocation" style={{ zIndex: 410 }}>
+									{neighboringCellGeoLocation &&
+										settings.enabledLayers.multiCellGeoLocations && (
+											<Circle
+												center={neighboringCellGeoLocation.position}
+												radius={neighboringCellGeoLocation.position.accuracy}
+												color={'#E56399'}
+											>
+												<Popup pane="popupPane">
+													Approximate location based on neighboring cell
+													information.
+												</Popup>
+											</Circle>
+										)}
+								</Pane>
+								<Pane name="assetLocation" style={{ zIndex: 420 }}>
+									{/* outer circle */}
+									{!batch && (
 										<Circle
-											center={neighboringCellGeoLocation.position}
-											radius={neighboringCellGeoLocation.position.accuracy}
-											color={'#E56399'}
-										>
-											<Popup>
-												Approximate location based on neighboring cell
-												information.
-											</Popup>
-										</Circle>
+											center={{ lat, lng }}
+											radius={accuracy}
+											color={color}
+										/>
 									)}
+									{/* red dashed circle to mark batch */}
+									{batch && (
+										<Circle
+											center={{ lat, lng }}
+											radius={accuracy}
+											stroke={true}
+											color={'#ff0000'}
+											weight={2}
+											fill={false}
+											dashArray={settings.zoom > 16 ? '3 6' : '6 12'}
+										/>
+									)}
+									{k > 0 && (
+										<Polyline
+											positions={[
+												locations[k - 1].location.position,
+												{ lat, lng },
+											]}
+											weight={settings.zoom > 16 ? 1 : 2}
+											lineCap={'round'}
+											color={color}
+											dashArray={'10'}
+										/>
+									)}
+									{heading !== undefined && settings.enabledLayers.headings && (
+										<HeadingMarker
+											position={{ lat, lng }}
+											heading={heading}
+											mapZoom={settings.zoom}
+											color={'#00000080'}
+										/>
+									)}
+									{/* background circle */}
+									<Circle
+										center={{ lat, lng }}
+										radius={accuracy}
+										fillColor={'#826717'}
+										stroke={false}
+										className={`asset-location-circle asset-location-circle-${k}`}
+									>
+										<Popup position={{ lat, lng }} pane="popupPane">
+											<div className={styles.historyInfo}>
+												{!nullOrUndefined(accuracy) && (
+													<>
+														<dt>Accuracy</dt>
+														<dd data-test="asset-location-info-accuracy">
+															{toFixed(accuracy as number)} m
+														</dd>
+													</>
+												)}
+												{!nullOrUndefined(speed) && (
+													<>
+														<dt>Speed</dt>
+														<dd data-test="asset-location-info-speed">
+															{toFixed(speed as number)} m/s
+														</dd>
+													</>
+												)}
+												{!nullOrUndefined(heading) && (
+													<>
+														<dt>Heading</dt>
+														<dd data-test="asset-location-info-heading">
+															{toFixed(heading as number)}°
+														</dd>
+													</>
+												)}
+												<dt>Time</dt>
+												<dd>
+													<time dateTime={new Date(ts).toISOString()}>
+														{formatDistanceToNow(ts, {
+															includeSeconds: true,
+															addSuffix: true,
+														})}
+													</time>
+												</dd>
+												{batch && (
+													<>
+														<dt>Batch</dt>
+														<dd>Yes</dd>
+													</>
+												)}
+											</div>
+											{roaming !== undefined && !batch && (
+												<>
+													<div className={styles.historyInfo}>
+														<dt>Connection</dt>
+														<dd style={{ textAlign: 'right' }}>
+															<SignalQuality dbm={roaming.roaming.rsrp} />
+														</dd>
+														<dt>MCC/MNC</dt>
+														<dd>{roaming.roaming.mccmnc}</dd>
+														<dt>Area Code</dt>
+														<dd>{roaming.roaming.area}</dd>
+														<dt>Cell ID</dt>
+														<dd>{roaming.roaming.cell}</dd>
+														<dt>IP</dt>
+														<dd>{roaming.roaming.ip}</dd>
+														<dt>RSRP</dt>
+														<dd>{roaming.roaming.rsrp}</dd>
+														<dt>Time</dt>
+														<dd>
+															<time
+																dateTime={new Date(roaming.ts).toISOString()}
+															>
+																{formatDistanceToNow(roaming.ts, {
+																	includeSeconds: true,
+																	addSuffix: true,
+																})}
+															</time>
+														</dd>
+													</div>
+												</>
+											)}
+										</Popup>
+									</Circle>
+								</Pane>
 							</React.Fragment>
 						)
 					},

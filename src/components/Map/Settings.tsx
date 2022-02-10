@@ -64,18 +64,18 @@ export const MapSettings = () => {
 							<input
 								className="form-check-input"
 								type="checkbox"
-								name="singlecellLocation"
+								name="singleCellGeoLocation"
 								onChange={() => {
 									updateEnabledLayers({
-										singlecellLocations:
-											!settings.enabledLayers.singlecellLocations,
+										singleCellGeoLocations:
+											!settings.enabledLayers.singleCellGeoLocations,
 									})
 								}}
-								checked={settings.enabledLayers.singlecellLocations}
-								id="mapSettingsSingleCellLocations"
+								checked={settings.enabledLayers.singleCellGeoLocations}
+								id="mapSettingsSingleCellGeoLocations"
 							/>
-							<label htmlFor="mapSettingsSingleCellLocations">
-								Singlecell locations
+							<label htmlFor="mapSettingsSingleCellGeoLocations">
+								Location based on device's cell information
 							</label>
 						</div>
 					</div>
@@ -105,18 +105,18 @@ export const MapSettings = () => {
 							<input
 								className="form-check-input"
 								type="checkbox"
-								name="multicellLocation"
+								name="multiCellGeoLocation"
 								onChange={() => {
 									updateEnabledLayers({
-										multicellLocations:
-											!settings.enabledLayers.multicellLocations,
+										multiCellGeoLocations:
+											!settings.enabledLayers.multiCellGeoLocations,
 									})
 								}}
-								checked={settings.enabledLayers.multicellLocations}
-								id="mapSettingsMultiCellLocations"
+								checked={settings.enabledLayers.multiCellGeoLocations}
+								id="mapSettingsMultiCellGeoLocations"
 							/>
-							<label htmlFor="mapSettingsMultiCellLocations">
-								Multicell locations
+							<label htmlFor="mapSettingsMultiCellGeoLocations">
+								Location based on device's neighboring cell information
 							</label>
 						</div>
 					</div>

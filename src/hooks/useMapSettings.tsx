@@ -5,8 +5,8 @@ import { withLocalStorage } from 'utils/withLocalStorage'
 export type Settings = {
 	enabledLayers: {
 		headings: boolean
-		singlecellLocations: boolean
-		multicellLocations: boolean
+		singleCellGeoLocations: boolean
+		multiCellGeoLocations: boolean
 		history: boolean
 	}
 	follow: boolean
@@ -17,8 +17,8 @@ const defaultSettings: Settings = {
 	follow: true,
 	enabledLayers: {
 		headings: false,
-		singlecellLocations: true,
-		multicellLocations: true,
+		singleCellGeoLocations: true,
+		multiCellGeoLocations: true,
 		history: false,
 	},
 	zoom: 13,

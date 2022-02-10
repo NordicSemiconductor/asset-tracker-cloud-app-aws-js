@@ -38,15 +38,7 @@ test('Neighboring cells', async ({ page }) => {
 	await expect(
 		page.locator('#neighboring-cells li:last-child dd[data-test="cell"]'),
 	).toHaveText(ncellmeasDeviceReport.nmr[1].cell.toString())
-})
-
-test('Neighboring cells location on map', async ({ page }) => {
-	// Neighboring cell location circle should exist
-	await page.click('#asset-map path[stroke="#E56399"]')
-	// And popup should be shown
-	await expect(
-		page.locator(
-			'text=Approximate location based on neighboring cell information.',
-		),
-	).toBeVisible()
+	await page.screenshot({
+		path: `./test-session/neighboring-cells.png`,
+	})
 })

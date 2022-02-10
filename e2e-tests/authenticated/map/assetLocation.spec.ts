@@ -63,15 +63,3 @@ test('Map with device location should be visible', async ({ page }) => {
 		path: `./test-session/asset-location-info.png`,
 	})
 })
-
-test('Show map settings', async ({ page }) => {
-	await page.click('button[data-test="show-map-settings"]')
-	await expect(page.locator('#mapSettingsFollow')).toBeChecked()
-	await expect(page.locator('#mapSettingsSingleCellLocations')).toBeChecked()
-	await expect(page.locator('#mapSettingsMultiCellLocations')).toBeChecked()
-	await expect(page.locator('#mapSettingsHeadings')).not.toBeChecked()
-	await expect(page.locator('#mapSettingsFetchHistory')).not.toBeChecked()
-	await page.screenshot({
-		path: `./test-session/map-settings.png`,
-	})
-})

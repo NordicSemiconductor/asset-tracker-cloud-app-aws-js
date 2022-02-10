@@ -36,6 +36,7 @@
     "@aws-sdk/client-iot": "3.50.0",
     "@aws-sdk/client-iot-data-plane": "3.50.0",
     "@aws-sdk/util-dynamodb": "3.50.0",
+    "@nordicsemiconductor/cell-geolocation-helpers": "4.0.2",
     "@nordicsemiconductor/from-env": "1.0.0",
     "@nordicsemiconductor/rsrp-bar": "5.0.0",
     "aws-amplify": "4.3.14",

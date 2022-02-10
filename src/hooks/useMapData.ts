@@ -1,6 +1,6 @@
 export type Position = { lat: number; lng: number }
 
-export type Location = {
+export type GeoLocation = {
 	position: Position & {
 		accuracy?: number
 		heading?: number
@@ -11,7 +11,7 @@ export type Location = {
 	ts: Date
 }
 
-export type CellLocation = {
+export type CellGeoLocation = {
 	position: Position & { accuracy: number }
 	ts: Date
 }
@@ -27,14 +27,14 @@ export type Roaming = {
 	ts: Date
 }
 
-export type AssetLocation = {
-	location: Location
+export type AssetGeoLocation = {
+	location: GeoLocation
 	roaming?: Roaming
 }
 
 const toLocation =
 	(batch = false) =>
-	(locationHistory: Location): AssetLocation => ({
+	(locationHistory: GeoLocation): AssetGeoLocation => ({
 		location: {
 			position: {
 				lat: locationHistory.position.lat,
@@ -53,10 +53,10 @@ const toLocation =
 export const useMapData = ({
 	locations,
 }: {
-	locations: Location[]
+	locations: GeoLocation[]
 }): {
-	assetLocations: AssetLocation[]
-	center?: AssetLocation
+	assetLocations: AssetGeoLocation[]
+	center?: AssetGeoLocation
 } => {
 	// FIXME: implement batch info
 	const assetLocations = locations?.map(toLocation(false)) ?? []

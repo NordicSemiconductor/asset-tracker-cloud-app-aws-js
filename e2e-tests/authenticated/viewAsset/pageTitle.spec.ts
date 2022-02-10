@@ -1,11 +1,14 @@
 import { expect, test } from '@playwright/test'
 import * as path from 'path'
+import { checkForConsoleErrors } from '../../lib/checkForConsoleErrors.js'
 import { loadSessionData } from '../../lib/loadSessionData.js'
 import { selectCurrentAsset } from '../lib.js'
 
 test.use({
 	storageState: path.join(process.cwd(), 'test-session', 'authenticated.json'),
 })
+
+test.beforeEach(checkForConsoleErrors)
 
 test.beforeEach(selectCurrentAsset)
 

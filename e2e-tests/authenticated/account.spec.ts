@@ -1,10 +1,13 @@
 import { expect, test } from '@playwright/test'
 import * as path from 'path'
+import { checkForConsoleErrors } from '../lib/checkForConsoleErrors.js'
 import { loadSessionData } from '../lib/loadSessionData.js'
 
 test.use({
 	storageState: path.join(process.cwd(), 'test-session', 'authenticated.json'),
 })
+
+test.beforeEach(checkForConsoleErrors)
 
 test('Users can view their account', async ({ page }) => {
 	await page.goto('http://localhost:8080/')

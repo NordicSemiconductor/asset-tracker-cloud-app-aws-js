@@ -86,8 +86,6 @@ export const SingleAssetMap = ({ asset, twin }: AssetWithTwin) => {
 		endDate,
 		enabled: enableHistory,
 	})
-	const { location: neighboringCellGeoLocation } =
-		useNeighboringCellMeasurementReportLocation()
 
 	const locations: Location[] = []
 
@@ -99,6 +97,9 @@ export const SingleAssetMap = ({ asset, twin }: AssetWithTwin) => {
 	if (enableHistory) {
 		locations.push(...locationHistory.map(toLocation))
 	}
+
+	const { location: neighboringCellGeoLocation } =
+		useNeighboringCellMeasurementReportLocation()
 
 	const { assetLocations, center } = useMapData({
 		locations,

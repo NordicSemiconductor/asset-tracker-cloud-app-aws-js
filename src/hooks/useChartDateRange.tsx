@@ -47,10 +47,12 @@ export const CurrentChartDateRangeProvider: FunctionComponent = ({
 				endDate,
 				setStartDate: (startDate) => {
 					if (startDate.getTime() > endDate.getTime()) return
+					console.log({ startDate })
 					setStartDate(startDate)
 					storedStartDate.set(startDate)
 				},
 				setEndDate: (endDate) => {
+					console.log({ endDate })
 					if (endDate.getTime() < startDate.getTime()) return
 					setEndDate(endDate)
 					storedEndDate.set(endDate)

@@ -1,3 +1,4 @@
+import { timeStreamFormatDate } from 'api/timestream'
 import type {
 	AssetHistory,
 	AssetInfo,
@@ -8,6 +9,9 @@ import type {
 	GNSS,
 	Roaming,
 } from 'asset/asset'
+import { useAsset } from 'hooks/useAsset'
+import { useChartDateRange } from 'hooks/useChartDateRange'
+import { useServices } from 'hooks/useServices'
 import { useEffect, useState } from 'react'
 
 export enum SensorProperties {
@@ -19,12 +23,8 @@ export enum SensorProperties {
 	Button = 'btn',
 }
 
-type PropertyName = SensorProperties | string
-
 type SharedArgs = {
-	enabled?: boolean
-	startDate?: Date
-	endDate?: Date
+	disabled?: boolean
 }
 
 type useAssetHistoryType = {
@@ -58,26 +58,77 @@ type useAssetHistoryType = {
 			sensor: SensorProperties.Button
 		} & SharedArgs,
 	): AssetHistory<Button>
+	(
+		_: {
+			sensor: SensorProperties
+		} & SharedArgs,
+	): AssetHistory<any>
 }
 
-export const useAssetHistory: useAssetHistoryType = <T extends AssetSensor>({
+export const useAssetHistory: useAssetHistoryType = <
+	Sensor extends AssetSensor,
+>({
 	sensor,
-	enabled,
-	startDate,
-	endDate,
+	disabled,
 }: {
-	sensor: PropertyName
-	startDate?: Date
-	endDate?: Date
-	enabled?: boolean
-}): AssetHistory<T> => {
-	const [history] = useState<AssetHistory<T>>([])
+	sensor: SensorProperties
+	disabled?: boolean
+}): AssetHistory<Sensor> => {
+	const [history, setHistory] = useState<AssetHistory<Sensor>>([])
+	const { startDate, endDate } = useChartDateRange()
+	const { timestream } = useServices()
+	const { asset } = useAsset()
 
 	useEffect(() => {
-		if (!(enabled ?? true)) return
-	}, [enabled])
+		if (disabled ?? false) return
+		let removed = false
+		if (asset === undefined) return
 
-	// FIXME: implement
+		timestream
+			.query<{
+				date: Date
+				value: number
+			}>(
+				// FIXME: support more sensors
+				(table) => `
+			SELECT
+			bin(time, 1h) as date,
+			MIN(
+				measure_value::double
+			) / 1000 AS value
+			FROM ${table}
+			WHERE deviceId='${asset.id}' 
+			AND measure_name='${sensor}' 
+			AND time >= '${timeStreamFormatDate(startDate)}'
+			AND time <= '${timeStreamFormatDate(endDate)}'
+						GROUP BY bin(time, 1h)
+			ORDER BY bin(time, 1h) DESC
+		`,
+			)
+			.then((data) => {
+				if (removed) {
+					console.debug(
+						'[useAssetHistory]',
+						'Received result, but was removed already.',
+					)
+					return
+				}
+				console.debug('[Historical Data]', data)
+				setHistory(
+					data.map(({ date, value }) => ({
+						ts: date.getTime(),
+						v: value,
+					})) as AssetHistory<Sensor>,
+				)
+			})
+			.catch((error) => {
+				console.error(`[useAssetHistory]`, error)
+			})
+
+		return () => {
+			removed = true
+		}
+	}, [disabled, asset, timestream, endDate, sensor, startDate])
 
 	return history
 }

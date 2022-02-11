@@ -18,6 +18,7 @@ const {
 	nCellMeasReportTableName,
 	nCellMeasCellGeolocationApiEndpoint,
 	geolocationApiEndpoint,
+	historicaldataTableInfo,
 } = fromEnv({
 	identityPoolId: 'PUBLIC_IDENTITY_POOL_ID',
 	region: 'PUBLIC_REGION',
@@ -35,6 +36,7 @@ const {
 	nCellMeasCellGeolocationApiEndpoint:
 		'PUBLIC_NEIGHBOR_CELL_GEOLOCATION_API_URL',
 	geolocationApiEndpoint: 'PUBLIC_GEOLOCATION_API_URL',
+	historicaldataTableInfo: 'PUBLIC_HISTORICALDATA_TABLE_INFO',
 })(import.meta.env)
 
 Amplify.configure({
@@ -66,6 +68,10 @@ export const AppConfigContext = createContext<{
 	nCellMeasReportTableName: string
 	nCellMeasCellGeolocationApiEndpoint: URL
 	geolocationApiEndpoint: URL
+	timestream: {
+		db: string
+		table: string
+	}
 }>({
 	identityPoolId,
 	region,
@@ -87,6 +93,10 @@ export const AppConfigContext = createContext<{
 		nCellMeasCellGeolocationApiEndpoint.replace(/\/+$/, ''),
 	),
 	geolocationApiEndpoint: new URL(geolocationApiEndpoint.replace(/\/+$/, '')),
+	timestream: {
+		db: historicaldataTableInfo.split('|')[0],
+		table: historicaldataTableInfo.split('|')[1],
+	},
 })
 
 export const useAppConfig = () => useContext(AppConfigContext)

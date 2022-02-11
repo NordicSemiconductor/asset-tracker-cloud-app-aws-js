@@ -1,18 +1,17 @@
 import { expect, test } from '@playwright/test'
 import Chance from 'chance'
 import { promises as fs } from 'fs'
-import id128 from 'id128'
 import * as path from 'path'
+import { ulid } from '../../src/utils/ulid.js'
 import { checkForConsoleErrors } from '../lib/checkForConsoleErrors.js'
 import { confirmSignUp } from '../lib/confirmSignup.js'
-const { Ulid } = id128
 
 const chance = new Chance()
 
 test.beforeEach(checkForConsoleErrors)
 
 test('Register a new account', async ({ page }) => {
-	const password = `U${Ulid.generate().toCanonical()}!`
+	const password = `U${ulid()}!`
 	const email = chance.email({ domain: 'example.com' })
 
 	// Open start page

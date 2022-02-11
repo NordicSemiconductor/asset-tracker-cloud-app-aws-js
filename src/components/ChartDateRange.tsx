@@ -27,7 +27,7 @@ export const ChartDateRange = () => {
 								type="date"
 								id="inclusiveStartDate"
 								className="form-control form-control-sm"
-								value={startDate.toISOString().substring(0, 10)}
+								value={startDate.toISOString().slice(0, 10)}
 								onChange={({ target: { value } }) => {
 									try {
 										setStartDate(
@@ -35,8 +35,8 @@ export const ChartDateRange = () => {
 												? defaultStart
 												: new Date(`${value}T00:00:00.000Z`),
 										)
-									} catch {
-										// pass
+									} catch (error) {
+										console.error(error)
 									}
 								}}
 							/>
@@ -58,7 +58,7 @@ export const ChartDateRange = () => {
 								type="date"
 								id="inclusiveEndDate"
 								className="form-control form-control-sm"
-								value={endDate.toISOString().substring(0, 10)}
+								value={endDate.toISOString().slice(0, 10)}
 								onChange={({ target: { value } }) => {
 									try {
 										setEndDate(
@@ -66,8 +66,8 @@ export const ChartDateRange = () => {
 												? defaultEnd
 												: new Date(`${value}T23:59:59.999Z`),
 										)
-									} catch {
-										// pass
+									} catch (error) {
+										console.error(error)
 									}
 								}}
 							/>

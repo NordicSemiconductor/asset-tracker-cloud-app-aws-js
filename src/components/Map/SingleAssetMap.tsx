@@ -7,7 +7,6 @@ import styles from 'components/Map/SingleAssetMap.module.css'
 import { formatDistanceToNow } from 'date-fns'
 import { SensorProperties, useAssetHistory } from 'hooks/useAssetHistory'
 import { useCellGeoLocation } from 'hooks/useCellGeoLocation'
-import { useChartDateRange } from 'hooks/useChartDateRange'
 import type {
 	AssetGeoLocation,
 	CellGeoLocation,
@@ -80,16 +79,13 @@ const toLocation = (gnss: AssetHistoryDatum<GNSS>): GeoLocation => ({
 
 export const SingleAssetMap = ({ asset, twin }: AssetWithTwin) => {
 	const { settings } = useMapSettings()
-	const { startDate, endDate } = useChartDateRange()
 	const { location: neighboringCellGeoLocation } =
 		useNeighboringCellMeasurementReportGeoLocation()
 	const { location: cellGeoLocation } = useCellGeoLocation()
 	const enableHistory = settings.enabledLayers.history
 	const locationHistory = useAssetHistory({
 		sensor: SensorProperties.GNSS,
-		startDate,
-		endDate,
-		enabled: enableHistory,
+		disabled: !enableHistory,
 	})
 
 	const locations: GeoLocation[] = []

@@ -1,4 +1,4 @@
-import { nullOrUndefined } from 'utils/nullOrUndefined'
+import { nullOrUndefined } from 'utils/nullOrUndefined.js'
 
 describe('nullOrUndefined', () => {
 	it('should return true for undefined', () => {

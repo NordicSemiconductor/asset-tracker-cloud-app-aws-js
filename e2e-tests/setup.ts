@@ -21,15 +21,18 @@ import {
 	ncellmeasDeviceReportLocation,
 	state,
 } from './asset-reported-state.js'
+import { generateBatteryReadings } from './setup/sensorDataGenerator.js'
 
 const {
 	mqttEndpoint,
 	neighborCellMeasurementsStorageTable,
 	cellGeoLocationCacheTableName,
+	historicaldataTableInfo,
 } = fromEnv({
 	mqttEndpoint: 'PUBLIC_MQTT_ENDPOINT',
 	neighborCellMeasurementsStorageTable: 'PUBLIC_NCELLMEAS_STORAGE_TABLE_NAME',
 	cellGeoLocationCacheTableName: 'PUBLIC_CELL_GEO_LOCATION_CACHE_TABLE_NAME',
+	historicaldataTableInfo: 'PUBLIC_HISTORICALDATA_TABLE_INFO',
 })(process.env)
 
 const globalSetup = async () => {
@@ -108,6 +111,15 @@ const globalSetup = async () => {
 			Item: marshall(report),
 		}),
 	)
+
+	// Historical sensor data
+	const [DatabaseName, TableName] = historicaldataTableInfo.split('|')
+	console.log(`Generating battery readings ...`)
+	await generateBatteryReadings({
+		thingName,
+		DatabaseName,
+		TableName,
+	})
 
 	try {
 		await fs.stat(path.join(process.cwd(), 'test-session'))

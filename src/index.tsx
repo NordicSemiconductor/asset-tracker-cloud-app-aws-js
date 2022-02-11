@@ -5,6 +5,7 @@ import { Loading } from 'components/Loading'
 import { AssetProvider } from 'hooks/useAsset'
 import { AssetsProvider } from 'hooks/useAssets'
 import { AuthProvider } from 'hooks/useAuth'
+import { CurrentChartDateRangeProvider } from 'hooks/useChartDateRange'
 import { ServicesProvider } from 'hooks/useServices'
 import * as ReactDOM from 'react-dom'
 
@@ -16,7 +17,9 @@ ReactDOM.render(
 					<ServicesProvider credentials={credentials}>
 						<AssetsProvider>
 							<AssetProvider>
-								<App />
+								<CurrentChartDateRangeProvider>
+									<App />
+								</CurrentChartDateRangeProvider>
 							</AssetProvider>
 						</AssetsProvider>
 					</ServicesProvider>

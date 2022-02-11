@@ -4,15 +4,19 @@ import { IoTClient } from '@aws-sdk/client-iot'
 import { IoTDataPlaneClient } from '@aws-sdk/client-iot-data-plane'
 import type { IoTService } from 'api/iot'
 import { iotService } from 'api/iot'
+import type { TimestreamService } from 'api/timestream'
+import { timestreamService } from 'api/timestream'
 import { useAppConfig } from 'hooks/useAppConfig'
 import { createContext, FunctionComponent, useContext, useEffect } from 'react'
 
 export const ServicesContext = createContext<{
 	iot: IoTService
 	dynamoDB: DynamoDBClient
+	timestream: TimestreamService
 }>({
 	iot: undefined as any,
 	dynamoDB: undefined as any,
+	timestream: undefined as any,
 })
 
 export const useServices = () => useContext(ServicesContext)
@@ -20,7 +24,12 @@ export const useServices = () => useContext(ServicesContext)
 export const ServicesProvider: FunctionComponent<{
 	credentials: ICredentials
 }> = ({ children, credentials }) => {
-	const { region, mqttEndpoint, userIotPolicyName } = useAppConfig()
+	const {
+		region,
+		mqttEndpoint,
+		userIotPolicyName,
+		timestream: { db, table },
+	} = useAppConfig()
 
 	const iot = iotService({
 		iot: new IoTClient({
@@ -51,6 +60,12 @@ export const ServicesProvider: FunctionComponent<{
 				dynamoDB: new DynamoDBClient({
 					credentials,
 					region,
+				}),
+				timestream: timestreamService({
+					credentials,
+					region,
+					db,
+					table,
 				}),
 			}}
 		>

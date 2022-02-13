@@ -150,3 +150,33 @@ test('Show map settings', async ({ page }) => {
 		path: `./test-session/map-settings.png`,
 	})
 })
+
+test('Map should be vertically resizable', async ({ page }) => {
+	const mapContainer = page.locator('#map-container')
+	const resizeBtn = page.locator('#map-container-resize')
+
+	if (resizeBtn !== undefined && mapContainer !== undefined) {
+		const mapContainerBounding = await mapContainer.boundingBox()
+		const resizeSrc = await resizeBtn.boundingBox()
+		const resizeDst = {
+			x: 18,
+			y: 368,
+			width: 25,
+			height: 25,
+		}
+		if (resizeSrc !== undefined && resizeSrc !== null) {
+			await page.mouse.move(
+				resizeSrc?.x ?? 0 + resizeSrc?.width ?? 18 / 2,
+				resizeSrc?.y ?? 2 + resizeSrc?.height ?? 368 / 2,
+			)
+			await page.mouse.down()
+			await page.mouse.move(
+				resizeDst?.x + resizeDst?.width / 2,
+				resizeDst?.y + resizeDst?.height / 2,
+			)
+			expect(mapContainerBounding?.height).toBeGreaterThan(300)
+		} else {
+			throw new Error('Resize Button Element does not exist')
+		}
+	}
+})

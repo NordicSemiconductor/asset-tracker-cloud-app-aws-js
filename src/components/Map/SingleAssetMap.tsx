@@ -126,19 +126,7 @@ const AssetMap = ({
 	const resize = (data: DraggableData) => {
 		//Gets the final position of the map container and resizes it.
 		const map = document.getElementById('map-container')
-		console.log(`map height(before): ${map!.style.height}`)
 		map!.style.height = `${initSize + (data.y - initPosition)}px`
-
-		console.log(`init Size: ${initSize}`)
-		console.log(`init Position: ${initPosition}`)
-		console.log(`data.lastY: ${data.lastY}`)
-		console.log(`data.y: ${data.y}`)
-		console.log(`data.deltaY: ${data.deltaY}`)
-		console.log(`data.lastX: ${data.lastX}`)
-		console.log(`data.x: ${data.x}`)
-		console.log(`data.deltaX: ${data.deltaX}`)
-		console.log(`map height(after): ${map!.style.height}`)
-		console.log(`-----------------------------`)
 	}
 
 	const setMap = (map: LeafletMap) => {

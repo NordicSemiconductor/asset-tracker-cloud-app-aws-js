@@ -1,5 +1,6 @@
 import type { Asset, AssetHistory, AssetWithTwin, GNSS } from 'asset/asset'
 import { SignalQuality } from 'components/Asset/SignalQuality'
+import { MenuIcon } from 'components/FeatherIcon'
 import { EventHandler } from 'components/Map/EventHandler'
 import { markerIcon } from 'components/Map/MarkerIcon'
 import { NoMap } from 'components/Map/NoMap'
@@ -14,6 +15,10 @@ import type { Map as LeafletMap } from 'leaflet'
 import 'leaflet-fullscreen/dist/leaflet.fullscreen.css'
 import 'leaflet-fullscreen/dist/Leaflet.fullscreen.js'
 import React, { useState } from 'react'
+import Draggable, {
+	type DraggableData,
+	type DraggableEvent,
+} from 'react-draggable'
 import {
 	Circle,
 	MapConsumer,
@@ -112,16 +117,28 @@ const AssetMap = ({
 	const [initPosition, setInitPosition] = useState(0)
 	const [initSize, setInitSize] = useState(0)
 
-	const initial = (e: { clientY: React.SetStateAction<number> }) => {
+	const initial = (data: DraggableData) => {
 		//Gets the initial position and size of the map container.
 		const map = document.getElementById('map-container')
-		setInitPosition(e.clientY)
+		setInitPosition(data.lastY)
 		setInitSize(map!.offsetHeight)
 	}
-	const resize = (e: { clientY: number }) => {
+	const resize = (data: DraggableData) => {
 		//Gets the final position of the map container and resizes it.
 		const map = document.getElementById('map-container')
-		map!.style.height = `${initSize + (e.clientY - initPosition)}px`
+		console.log(`map height(before): ${map!.style.height}`)
+		map!.style.height = `${initSize + (data.y - initPosition)}px`
+
+		console.log(`init Size: ${initSize}`)
+		console.log(`init Position: ${initPosition}`)
+		console.log(`data.lastY: ${data.lastY}`)
+		console.log(`data.y: ${data.y}`)
+		console.log(`data.deltaY: ${data.deltaY}`)
+		console.log(`data.lastX: ${data.lastX}`)
+		console.log(`data.x: ${data.x}`)
+		console.log(`data.deltaX: ${data.deltaX}`)
+		console.log(`map height(after): ${map!.style.height}`)
+		console.log(`-----------------------------`)
 	}
 
 	const setMap = (map: LeafletMap) => {
@@ -303,16 +320,22 @@ const AssetMap = ({
 						},
 					)}
 			</MapContainer>
-			<div
-				id="map-container-resize"
-				draggable="true"
-				onDragStart={initial}
-				onDrag={resize}
-				style={{
-					cursor: 'row-resize',
-					height: '10px',
-				}}
-			/>
+			<Draggable
+				axis="y"
+				scale={1}
+				onStart={(e: DraggableEvent, data: DraggableData) => initial(data)}
+				onDrag={(e: DraggableEvent, data: DraggableData) => resize(data)}
+				position={{ x: 0, y: 0 }}
+				positionOffset={{ x: 'parent', y: 'parent' }}
+			>
+				<button
+					id="map-container-resize"
+					className={styles.resizeMapButton}
+					data-test="resize-map-button"
+				>
+					<MenuIcon className={styles.menu} />
+				</button>
+			</Draggable>
 		</div>
 	)
 }

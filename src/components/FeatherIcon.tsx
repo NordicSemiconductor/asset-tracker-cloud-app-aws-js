@@ -340,6 +340,9 @@ export const CloudUploadIcon = (options?: TypedIconOptions) => (
 export const SettingsIcon = (options?: TypedIconOptions) => (
 	<FeatherIcon {...options} title="⚙️" type="settings" />
 )
+export const MenuIcon = (options?: TypedIconOptions) => (
+	<FeatherIcon {...options} title="menu" type="menu" />
+)
 export const AlertIcon = (options?: TypedIconOptions) => (
 	<FeatherIcon
 		title="Warning"

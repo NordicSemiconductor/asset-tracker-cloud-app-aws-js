@@ -26,7 +26,7 @@ function* dataGenerator({
 			v,
 		}
 		v += step
-		if (v > max || v < min) {
+		if (v >= max || v <= min) {
 			step = -step
 		}
 		i++
@@ -107,23 +107,33 @@ export const readingsGenerator = async ({
 	}
 
 	await Promise.all([
+		// Battery
 		generateReadings({
 			min: 3000,
 			max: 4500,
 			step: 100,
 			sensor: SensorProperties.Battery,
 		}),
+		// RSRP
 		generateReadings({
 			min: -120,
 			max: -90,
 			step: 5,
 			sensor: `${SensorProperties.Roaming}.rsrp`,
 		}),
+		// Temperature
 		generateReadings({
 			min: 15,
 			max: 25,
 			step: 1,
 			sensor: `${SensorProperties.Environment}.temp`,
+		}),
+		// Button presses
+		generateReadings({
+			min: 1,
+			max: 4,
+			step: 1,
+			sensor: SensorProperties.Button,
 		}),
 	])
 }

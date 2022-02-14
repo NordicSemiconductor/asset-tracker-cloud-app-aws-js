@@ -443,6 +443,14 @@ export const LoadMoreIcon = (options?: TypedIconOptions) => (
 	<FeatherIcon {...options} title="load more" type="plus-square" />
 )
 
+export const ButtonIcon = (options?: TypedIconOptions) => (
+	<FeatherIcon {...options} title="button" type="stop-circle" />
+)
+
+export const ReloadIcon = (options?: TypedIconOptions) => (
+	<FeatherIcon {...options} title="reload" type="refresh-cw" />
+)
+
 export const LoadingIcon = (options?: TypedIconOptions) => (
 	<FeatherIcon
 		{...options}

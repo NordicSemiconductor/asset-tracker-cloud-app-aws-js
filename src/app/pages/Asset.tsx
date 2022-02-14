@@ -7,6 +7,7 @@ import { Settings } from 'components/Asset/Settings/Settings'
 import { Collapsable } from 'components/Collapsable'
 import {
 	BatteryIcon,
+	ButtonIcon,
 	CellularIcon,
 	DangerIcon,
 	IconWithText,
@@ -16,6 +17,7 @@ import {
 	ThermometerIcon,
 } from 'components/FeatherIcon'
 import { BatteryChart } from 'components/HistoricalData/BatteryChart'
+import { ButtonPresses } from 'components/HistoricalData/ButtonPresses'
 import { RSRPChart } from 'components/HistoricalData/RSRPChart'
 import { TemperatureChart } from 'components/HistoricalData/TemperatureChart'
 import { Loading } from 'components/Loading'
@@ -157,7 +159,16 @@ export const Asset = () => {
 							>
 								<TemperatureChart />
 							</Collapsable>
-							{/* FIXME: Button */}
+							<Collapsable
+								id="asset:button"
+								title={
+									<IconWithText>
+										<ButtonIcon size={22} /> Button
+									</IconWithText>
+								}
+							>
+								<ButtonPresses />
+							</Collapsable>
 							<Collapsable
 								id="asset:danger"
 								title={

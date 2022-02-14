@@ -1,22 +1,13 @@
 import type { Asset } from 'asset/asset'
-import { IconWithText, LoadMoreIcon } from 'components/FeatherIcon'
+import { IconWithText, LoadMoreIcon, ReloadIcon } from 'components/FeatherIcon'
 import { Loading } from 'components/Loading'
 import { Main } from 'components/Main'
 import { NoData } from 'components/NoData'
 import { useAssets } from 'hooks/useAssets'
-import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 
 export const Assets = () => {
-	const { assets, next } = useAssets()
-	const [initalLoad, setInitialLoad] = useState<boolean>(false)
-
-	// Always load first page
-	useEffect(() => {
-		if (initalLoad) return
-		setInitialLoad(true)
-		next?.()
-	}, [next, initalLoad])
+	const { assets, next, reload } = useAssets()
 
 	return (
 		<Main>
@@ -26,6 +17,14 @@ export const Assets = () => {
 			>
 				<div className="card-header d-flex align-items-center justify-content-between">
 					<span className="me-4">Assets</span>
+					<button
+						type="button"
+						className="btn btn-link"
+						style={{ padding: 0 }}
+						onClick={() => reload()}
+					>
+						<ReloadIcon />
+					</button>
 				</div>
 
 				<AssetsList assets={assets} />

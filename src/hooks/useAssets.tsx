@@ -5,6 +5,7 @@ import {
 	FunctionComponent,
 	useCallback,
 	useContext,
+	useEffect,
 	useState,
 } from 'react'
 
@@ -21,20 +22,35 @@ export const useAssets = () => useContext(AssetsContext)
 export const AssetsProvider: FunctionComponent = ({ children }) => {
 	const { iot } = useServices()
 	const [assets, setAssets] = useState<Asset[]>()
-	const [nextStartKey, setNextStartKey] = useState<string>()
 	const [fetching, setFetching] = useState<boolean>(false)
-	const [fetchedStartKeys, setFetchedStartKeys] = useState<
-		(undefined | string)[]
-	>([])
+
+	const [pageState, setPageState] = useState<{
+		currentPage: number
+		nextStartKey?: string
+		fetchedStartKeys: string[]
+		fetchedPages: Record<number, boolean>
+	}>({
+		currentPage: 0,
+		fetchedStartKeys: [],
+		fetchedPages: {},
+	})
+
+	const { fetchedStartKeys, nextStartKey, fetchedPages, currentPage } =
+		pageState
 
 	const fetchPage = useCallback(() => {
-		if (fetchedStartKeys.includes(nextStartKey)) return
+		if (fetchedPages[currentPage] !== undefined) return
+		if (fetchedStartKeys.includes(nextStartKey ?? '')) return
 		setFetching(true)
 		// Remember which pages we have already fetched
-		setFetchedStartKeys((fetchedStartKeys) => [
-			...fetchedStartKeys,
-			nextStartKey,
-		])
+		setPageState((state) => ({
+			...state,
+			fetchedPages: {
+				...fetchedPages,
+				[currentPage]: true,
+			},
+			fetchedStartKeys: [...fetchedStartKeys, nextStartKey ?? ''],
+		}))
 		iot
 			.listThings({ startKey: nextStartKey })
 			.then(({ things, nextStartKey }) => {
@@ -46,13 +62,21 @@ export const AssetsProvider: FunctionComponent = ({ children }) => {
 						version: thing.version ?? -1,
 					})),
 				])
-				setNextStartKey(nextStartKey)
+				setPageState((state) => ({
+					...state,
+					nextStartKey,
+				}))
 			})
 			.catch(console.error)
 			.finally(() => {
 				setFetching(false)
 			})
-	}, [nextStartKey, iot, fetchedStartKeys])
+	}, [nextStartKey, iot, fetchedStartKeys, fetchedPages, currentPage])
+
+	// Always load first page
+	useEffect(() => {
+		fetchPage()
+	}, [fetchPage])
 
 	const hasNextPage = nextStartKey !== undefined
 	const hasNotYetFetched = fetchedStartKeys.length === 0
@@ -64,13 +88,21 @@ export const AssetsProvider: FunctionComponent = ({ children }) => {
 				next:
 					(hasNotYetFetched || hasNextPage) && !fetching
 						? () => {
-								fetchPage()
+								setPageState((state) => ({
+									...state,
+									currentPage: state.currentPage + 1,
+								}))
 						  }
 						: undefined,
 				reload: () => {
-					setFetchedStartKeys([])
-					setNextStartKey(undefined)
 					setAssets([])
+					setPageState((state) => ({
+						...state,
+						currentPage: 0,
+						fetchedPages: {},
+						fetchedStartKeys: [],
+						nextStartKey: '',
+					}))
 				},
 			}}
 		>

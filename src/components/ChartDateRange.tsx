@@ -1,6 +1,11 @@
+import cx from 'classnames'
 import { useChartDateRange } from 'hooks/useChartDateRange'
 
-export const ChartDateRange = () => {
+export const ChartDateRange = ({
+	hideBinControls,
+}: {
+	hideBinControls?: boolean
+}) => {
 	const {
 		startDate,
 		endDate,
@@ -17,7 +22,12 @@ export const ChartDateRange = () => {
 	return (
 		<form className="mb-4">
 			<fieldset className="row">
-				<div className="col-4">
+				<div
+					className={cx({
+						'col-4': !(hideBinControls ?? false),
+						'col-6': hideBinControls ?? false,
+					})}
+				>
 					<label
 						htmlFor="inclusiveStartDate"
 						className="col-form-label col-form-label-sm"
@@ -42,7 +52,12 @@ export const ChartDateRange = () => {
 						}}
 					/>
 				</div>
-				<div className="col-4">
+				<div
+					className={cx({
+						'col-4': !(hideBinControls ?? false),
+						'col-6': hideBinControls ?? false,
+					})}
+				>
 					<label
 						htmlFor="inclusiveEndDate"
 						className="col-form-label col-form-label-sm"
@@ -67,40 +82,42 @@ export const ChartDateRange = () => {
 						}}
 					/>
 				</div>
-				<div className="col-4">
-					<label
-						htmlFor="binIntervalValue"
-						className="col-form-label col-form-label-sm"
-					>
-						Bin interval
-					</label>
-					<div className="input-group">
-						<input
-							name="binIntervalValue"
-							className="form-control form-control-sm"
-							type="number"
-							value={binIntervalValue}
-							step={1}
-							min={1}
-							onChange={({ target: { value } }) => {
-								setBinInterval(`${value}${binIntervalUnit}`)
-							}}
-						/>
-						<select
-							className="form-select  form-select-sm"
-							value={binIntervalUnit}
-							onChange={({ target: { value } }) => {
-								setBinInterval(`${binIntervalValue}${value}`)
-							}}
+				{!(hideBinControls ?? false) && (
+					<div className="col-4">
+						<label
+							htmlFor="binIntervalValue"
+							className="col-form-label col-form-label-sm"
 						>
-							{Object.entries(binIntervalUnits).map(([unit, label]) => (
-								<option key={unit} value={unit}>
-									{label}
-								</option>
-							))}
-						</select>
+							Bin interval
+						</label>
+						<div className="input-group">
+							<input
+								name="binIntervalValue"
+								className="form-control form-control-sm"
+								type="number"
+								value={binIntervalValue}
+								step={1}
+								min={1}
+								onChange={({ target: { value } }) => {
+									setBinInterval(`${value}${binIntervalUnit}`)
+								}}
+							/>
+							<select
+								className="form-select  form-select-sm"
+								value={binIntervalUnit}
+								onChange={({ target: { value } }) => {
+									setBinInterval(`${binIntervalValue}${value}`)
+								}}
+							>
+								{Object.entries(binIntervalUnits).map(([unit, label]) => (
+									<option key={unit} value={unit}>
+										{label}
+									</option>
+								))}
+							</select>
+						</div>
 					</div>
-				</div>
+				)}
 			</fieldset>
 		</form>
 	)

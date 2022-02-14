@@ -22,6 +22,7 @@ export const Assets = () => {
 						className="btn btn-link"
 						style={{ padding: 0 }}
 						onClick={() => reload()}
+						data-intro="Click this button to reload the list of assets."
 					>
 						<ReloadIcon />
 					</button>
@@ -35,7 +36,7 @@ export const Assets = () => {
 						className="btn btn-outline-secondary"
 						disabled={next === undefined}
 						onClick={next}
-						data-intro="Click this button to load more devices."
+						data-intro="Click this button to load more assets."
 					>
 						<IconWithText>
 							<LoadMoreIcon />

@@ -62,6 +62,30 @@ export PUBLIC_MQTT_ENDPOINT=...
 The frontend provides [end-to-end tests](./e2e-tests) using
 [Playwright](https://playwright.dev/).
 
+### Configure AWS credentials
+
+The end-to-end tests run against a real instance of the
+[nRF Asset Tracker for AWS](https://github.com/NordicSemiconductor/asset-tracker-cloud-aws-js).
+
+Either, use the credentials you created, when setting up the solution, or enable
+the Web App CI feature and use the dedicated credentials created for this task.
+The latter option is the recommended approach since it limits the permission
+scope to only the needed ones. They can also be used to
+[run the end-to-end tests on GitHub Actions](#running-end-to-end-tests-using-github-actions).
+
+Add these environment variables to you `.envrc`. Then run `direnv allow` to
+allow it.
+
+```bash
+# .envrc
+export AWS_REGION=...
+export AWS_ACCESS_KEY_ID=...
+export AWS_SECRET_ACCESS_KEY=...
+export WEBAPP_STACK_NAME=...
+```
+
+### Running the tests
+
 You can then run the tests using
 
     npx playwright test
@@ -96,8 +120,9 @@ Set these secrets:
 - `AWS_SECRET_ACCESS_KEY`
 - `WEBAPP_STACK_NAME`
 
-If you have enabled the web application CI you can acquire them using the nRF
-Asset Tracker for AWS CLI:
+If you have enabled the web application CI of the nRF Asset Tracker for AWS
+(`node cli configure context stack web-app-ci 1`) you can acquire them using the
+nRF Asset Tracker for AWS CLI:
 
 ```bash
 node cli web-app-ci -s

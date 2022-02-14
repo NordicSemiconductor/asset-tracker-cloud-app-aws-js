@@ -4,12 +4,7 @@ import {
 	_Record,
 } from '@aws-sdk/client-timestream-write'
 import { toRecord } from '@nordicsemiconductor/timestream-helpers'
-import {
-	AssetHistory,
-	Battery,
-	Roaming,
-	SensorProperties,
-} from '../../src/asset/asset.js'
+import { SensorProperties } from '../../src/asset/asset.js'
 import { ulid } from '../../src/utils/ulid.js'
 
 function* dataGenerator({
@@ -73,7 +68,7 @@ const writeHistoricalDataForDevice = async ({
 	)
 }
 
-export const generateBatteryReadings = async ({
+export const readingsGenerator = async ({
 	thingName,
 	DatabaseName,
 	TableName,
@@ -82,51 +77,53 @@ export const generateBatteryReadings = async ({
 	DatabaseName: string
 	TableName: string
 }): Promise<void> => {
-	const batteryReadings: AssetHistory<Battery> = []
-	const b = dataGenerator({
-		min: 3000,
-		max: 4500,
-		step: 100,
-	})
-	for (let i = 0; i < 24; i++) {
-		batteryReadings.push(b.next().value)
-	}
-	await writeHistoricalDataForDevice({
-		DatabaseName,
-		TableName,
-		deviceId: thingName,
-		data: batteryReadings,
-		sensor: SensorProperties.Battery,
-	})
-}
-
-export const generateRSRPReadings = async ({
-	thingName,
-	DatabaseName,
-	TableName,
-}: {
-	thingName: string
-	DatabaseName: string
-	TableName: string
-}): Promise<void> => {
-	const roamingReadings: AssetHistory<Roaming> = []
-	const b = dataGenerator({
-		min: -120,
-		max: -90,
-		step: 5,
-	})
-	for (let i = 0; i < 24; i++) {
-		const { v: rsrp, ts } = b.next().value
-		roamingReadings.push({
-			ts,
-			v: rsrp,
+	const generateReadings = async ({
+		min,
+		max,
+		step,
+		sensor,
+	}: {
+		min: number
+		max: number
+		step: number
+		sensor: string
+	}): Promise<void> => {
+		const data: { ts: number; v: number }[] = []
+		const b = dataGenerator({
+			min,
+			max,
+			step,
+		})
+		for (let i = 0; i < 24; i++) {
+			data.push(b.next().value)
+		}
+		await writeHistoricalDataForDevice({
+			DatabaseName,
+			TableName,
+			deviceId: thingName,
+			data,
+			sensor,
 		})
 	}
-	await writeHistoricalDataForDevice({
-		DatabaseName,
-		TableName,
-		deviceId: thingName,
-		data: roamingReadings,
-		sensor: `${SensorProperties.Roaming}.rsrp`,
-	})
+
+	await Promise.all([
+		generateReadings({
+			min: 3000,
+			max: 4500,
+			step: 100,
+			sensor: SensorProperties.Battery,
+		}),
+		generateReadings({
+			min: -120,
+			max: -90,
+			step: 5,
+			sensor: `${SensorProperties.Roaming}.rsrp`,
+		}),
+		generateReadings({
+			min: 15,
+			max: 25,
+			step: 1,
+			sensor: `${SensorProperties.Environment}.temp`,
+		}),
+	])
 }

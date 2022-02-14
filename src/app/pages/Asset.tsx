@@ -13,9 +13,11 @@ import {
 	InfoIcon,
 	NeighboringCellsIcon,
 	SettingsIcon,
+	ThermometerIcon,
 } from 'components/FeatherIcon'
 import { BatteryChart } from 'components/HistoricalData/BatteryChart'
 import { RSRPChart } from 'components/HistoricalData/RSRPChart'
+import { TemperatureChart } from 'components/HistoricalData/TemperatureChart'
 import { Loading } from 'components/Loading'
 import { Main } from 'components/Main'
 import { MapWithSettings } from 'components/Map/MapWithSettings'
@@ -145,7 +147,16 @@ export const Asset = () => {
 							>
 								<BatteryChart />
 							</Collapsable>
-							{/* FIXME: Temperature */}
+							<Collapsable
+								id="asset:temperature"
+								title={
+									<IconWithText>
+										<ThermometerIcon size={22} /> Temperature
+									</IconWithText>
+								}
+							>
+								<TemperatureChart />
+							</Collapsable>
 							{/* FIXME: Button */}
 							<Collapsable
 								id="asset:danger"

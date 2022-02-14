@@ -64,7 +64,7 @@ export const useAssetHistory = <Item extends Record<string, any>>({
 		return () => {
 			removed = true
 		}
-	}, [disabled, timestream, asset])
+	}, [disabled, timestream, asset, cachedQueryFn])
 
 	return history
 }

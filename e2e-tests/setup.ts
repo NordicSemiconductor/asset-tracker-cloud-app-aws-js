@@ -21,10 +21,7 @@ import {
 	ncellmeasDeviceReportLocation,
 	state,
 } from './asset-reported-state.js'
-import {
-	generateBatteryReadings,
-	generateRSRPReadings,
-} from './setup/sensorDataGenerator.js'
+import { readingsGenerator } from './setup/sensorDataGenerator.js'
 
 const {
 	mqttEndpoint,
@@ -117,14 +114,8 @@ const globalSetup = async () => {
 
 	// Historical sensor data
 	const [DatabaseName, TableName] = historicaldataTableInfo.split('|')
-	console.log(`Generating battery readings ...`)
-	await generateBatteryReadings({
-		thingName,
-		DatabaseName,
-		TableName,
-	})
-	console.log(`Generating RSRP readings`)
-	await generateRSRPReadings({
+	console.log(`Generating sensor readings ...`)
+	await readingsGenerator({
 		thingName,
 		DatabaseName,
 		TableName,

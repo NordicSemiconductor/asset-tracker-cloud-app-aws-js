@@ -5,7 +5,6 @@ import { markerIcon } from 'components/Map/MarkerIcon'
 import { NoMap } from 'components/Map/NoMap'
 import styles from 'components/Map/SingleAssetMap.module.css'
 import { formatDistanceToNow } from 'date-fns'
-import { SensorProperties, useAssetHistory } from 'hooks/useAssetHistory'
 import { useCellGeoLocation } from 'hooks/useCellGeoLocation'
 import type {
 	AssetGeoLocation,
@@ -83,10 +82,6 @@ export const SingleAssetMap = ({ asset, twin }: AssetWithTwin) => {
 		useNeighboringCellMeasurementReportGeoLocation()
 	const { location: cellGeoLocation } = useCellGeoLocation()
 	const enableHistory = settings.enabledLayers.history
-	const locationHistory = useAssetHistory({
-		sensor: SensorProperties.GNSS,
-		disabled: !enableHistory,
-	})
 
 	const locations: GeoLocation[] = []
 
@@ -95,9 +90,16 @@ export const SingleAssetMap = ({ asset, twin }: AssetWithTwin) => {
 		locations.push(toLocation(twin.reported.gnss))
 
 	// If history is enabled, fetch positions according to selected date range
+	/*
+	const locationHistory = []
+	useAssetHistory({
+		sensor: SensorProperties.GNSS,
+		disabled: !enableHistory,
+	})
 	if (enableHistory) {
 		locations.push(...locationHistory.map(toLocation))
 	}
+	*/
 
 	const { assetLocations, center } = useMapData({
 		locations,

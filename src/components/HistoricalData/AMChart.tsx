@@ -1,34 +1,8 @@
 import * as am5 from '@amcharts/amcharts5'
 import * as am5xy from '@amcharts/amcharts5/xy'
-import type { AssetHistory } from 'asset/asset'
-import { ChartDateRange } from 'components/ChartDateRange'
-import { NoData } from 'components/NoData'
-import type { SensorProperties } from 'hooks/useAssetHistory'
-import { useAssetHistory } from 'hooks/useAssetHistory'
 import { useChartDateRange } from 'hooks/useChartDateRange'
 import { nanoid } from 'nanoid'
 import React, { useLayoutEffect, useRef } from 'react'
-
-export const HistoricalDataChart = ({
-	sensor,
-	className,
-}: {
-	sensor: SensorProperties
-	className?: string
-}) => {
-	const history = useAssetHistory({ sensor })
-
-	return (
-		<>
-			<ChartDateRange />
-			{history.length === 0 ? (
-				<NoData />
-			) : (
-				<AMChart data={history} type={'line'} className={className} />
-			)}
-		</>
-	)
-}
 
 export const AMChart = ({
 	data,
@@ -37,7 +11,7 @@ export const AMChart = ({
 	max,
 	className,
 }: {
-	data: AssetHistory<any>
+	data: { value: number; date: Date }[]
 	type: 'line' | 'column'
 	min?: number
 	max?: number
@@ -45,6 +19,8 @@ export const AMChart = ({
 }) => {
 	const id = useRef<string>(nanoid())
 	const { startDate, endDate } = useChartDateRange()
+
+	console.log('AMChart', data)
 
 	useLayoutEffect(() => {
 		const root = am5.Root.new(id.current)
@@ -89,7 +65,9 @@ export const AMChart = ({
 				  }),
 		)
 
-		series.data.setAll(data.map(({ ts, v }) => ({ value: v, date: ts })))
+		series.data.setAll(
+			data.map(({ date, value }) => ({ value, date: date.getTime() })),
+		)
 
 		chart.set(
 			'cursor',

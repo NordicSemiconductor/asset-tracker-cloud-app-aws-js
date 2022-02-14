@@ -1,83 +1,43 @@
 import { timeStreamFormatDate } from 'api/timestream'
-import type {
-	AssetHistory,
-	AssetInfo,
-	AssetSensor,
-	Battery,
-	Button,
-	Environment,
-	GNSS,
-	Roaming,
-} from 'asset/asset'
+import type { Asset } from 'asset/asset'
 import { useAsset } from 'hooks/useAsset'
 import { useChartDateRange } from 'hooks/useChartDateRange'
 import { useServices } from 'hooks/useServices'
-import { useEffect, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 
-export enum SensorProperties {
-	Battery = 'bat',
-	Environment = 'env',
-	GNSS = 'gnss',
-	Roaming = 'roam',
-	Asset = 'dev',
-	Button = 'btn',
+type QueryFnArgs = {
+	table: string
+	asset: Asset
+	startDate: string
+	endDate: string
+	binInterval: string
 }
 
-type SharedArgs = {
-	disabled?: boolean
-}
+type QueryFn = (args: QueryFnArgs) => string
 
-type useAssetHistoryType = {
-	(
-		_: {
-			sensor: SensorProperties.GNSS
-		} & SharedArgs,
-	): AssetHistory<GNSS>
-	(
-		_: {
-			sensor: SensorProperties.Battery
-		} & SharedArgs,
-	): AssetHistory<Battery>
-	(
-		_: {
-			sensor: SensorProperties.Environment
-		} & SharedArgs,
-	): AssetHistory<Environment>
-	(
-		_: {
-			sensor: SensorProperties.Roaming
-		} & SharedArgs,
-	): AssetHistory<Roaming>
-	(
-		_: {
-			sensor: SensorProperties.Asset
-		} & SharedArgs,
-	): AssetHistory<AssetInfo>
-	(
-		_: {
-			sensor: SensorProperties.Button
-		} & SharedArgs,
-	): AssetHistory<Button>
-	(
-		_: {
-			sensor: SensorProperties
-		} & SharedArgs,
-	): AssetHistory<any>
-}
-
-export const useAssetHistory: useAssetHistoryType = <
-	Sensor extends AssetSensor,
->({
-	sensor,
+export const useAssetHistory = <Item extends Record<string, any>>({
+	query: queryFn,
 	disabled,
 }: {
-	sensor: SensorProperties
+	query: (args: QueryFnArgs) => string
 	disabled?: boolean
-}): AssetHistory<Sensor> => {
-	const [history, setHistory] = useState<AssetHistory<Sensor>>([])
-	const { startDate, endDate } = useChartDateRange()
+}): Item[] => {
+	const [history, setHistory] = useState<Item[]>([])
+	const { startDate, endDate, binInterval } = useChartDateRange()
 	const { timestream } = useServices()
 	const { asset } = useAsset()
+
+	const cachedQueryFn = useCallback<(table: string, asset: Asset) => string>(
+		(table, asset) =>
+			queryFn({
+				table,
+				asset,
+				startDate: timeStreamFormatDate(startDate),
+				endDate: timeStreamFormatDate(endDate),
+				binInterval,
+			}),
+		[startDate, endDate, binInterval],
+	)
 
 	useEffect(() => {
 		if (disabled ?? false) return
@@ -85,26 +45,7 @@ export const useAssetHistory: useAssetHistoryType = <
 		if (asset === undefined) return
 
 		timestream
-			.query<{
-				date: Date
-				value: number
-			}>(
-				// FIXME: support more sensors
-				(table) => `
-			SELECT
-			bin(time, 1h) as date,
-			MIN(
-				measure_value::double
-			) / 1000 AS value
-			FROM ${table}
-			WHERE deviceId='${asset.id}' 
-			AND measure_name='${sensor}' 
-			AND time >= '${timeStreamFormatDate(startDate)}'
-			AND time <= '${timeStreamFormatDate(endDate)}'
-						GROUP BY bin(time, 1h)
-			ORDER BY bin(time, 1h) DESC
-		`,
-			)
+			.query<Item>((table) => cachedQueryFn(table, asset))
 			.then((data) => {
 				if (removed) {
 					console.debug(
@@ -114,12 +55,7 @@ export const useAssetHistory: useAssetHistoryType = <
 					return
 				}
 				console.debug('[Historical Data]', data)
-				setHistory(
-					data.map(({ date, value }) => ({
-						ts: date.getTime(),
-						v: value,
-					})) as AssetHistory<Sensor>,
-				)
+				setHistory(data)
 			})
 			.catch((error) => {
 				console.error(`[useAssetHistory]`, error)
@@ -128,7 +64,7 @@ export const useAssetHistory: useAssetHistoryType = <
 		return () => {
 			removed = true
 		}
-	}, [disabled, asset, timestream, endDate, sensor, startDate])
+	}, [disabled, timestream, asset])
 
 	return history
 }

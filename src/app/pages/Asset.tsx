@@ -7,19 +7,20 @@ import { Settings } from 'components/Asset/Settings/Settings'
 import { Collapsable } from 'components/Collapsable'
 import {
 	BatteryIcon,
+	CellularIcon,
 	DangerIcon,
 	IconWithText,
 	InfoIcon,
 	NeighboringCellsIcon,
 	SettingsIcon,
 } from 'components/FeatherIcon'
-import { HistoricalDataChart } from 'components/HistoricalDataChart'
+import { BatteryChart } from 'components/HistoricalData/BatteryChart'
+import { RSRPChart } from 'components/HistoricalData/RSRPChart'
 import { Loading } from 'components/Loading'
 import { Main } from 'components/Main'
 import { MapWithSettings } from 'components/Map/MapWithSettings'
 import { NeighborCellMeasurementsReport } from 'components/NeighborCellMeasurementsReport'
 import { useAsset } from 'hooks/useAsset'
-import { SensorProperties } from 'hooks/useAssetHistory'
 import { useAssets } from 'hooks/useAssets'
 import { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
@@ -124,7 +125,16 @@ export const Asset = () => {
 							>
 								<NeighborCellMeasurementsReport twin={twin} />
 							</Collapsable>
-							{/* FIXME: RSRP */}
+							<Collapsable
+								id="asset:rsrp"
+								title={
+									<IconWithText>
+										<CellularIcon size={22} /> RSRP
+									</IconWithText>
+								}
+							>
+								<RSRPChart />
+							</Collapsable>
 							<Collapsable
 								id="asset:battery"
 								title={
@@ -133,10 +143,7 @@ export const Asset = () => {
 									</IconWithText>
 								}
 							>
-								<HistoricalDataChart
-									sensor={SensorProperties.Battery}
-									className={'battery-history'}
-								/>
+								<BatteryChart />
 							</Collapsable>
 							{/* FIXME: Temperature */}
 							{/* FIXME: Button */}

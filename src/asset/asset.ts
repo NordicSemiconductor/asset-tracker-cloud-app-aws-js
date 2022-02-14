@@ -121,3 +121,12 @@ export type AssetHistoryDatum<T extends AssetSensor> = {
 	v: T
 }
 export type AssetHistory<T extends AssetSensor> = AssetHistoryDatum<T>[]
+
+export enum SensorProperties {
+	Battery = 'bat',
+	Environment = 'env',
+	GNSS = 'gnss',
+	Roaming = 'roam',
+	Asset = 'dev',
+	Button = 'btn',
+}

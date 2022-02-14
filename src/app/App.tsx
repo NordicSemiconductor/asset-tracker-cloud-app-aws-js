@@ -19,7 +19,7 @@ export const App = () => {
 			<Routes>
 				<Route index element={<Navigate to="/assets" />} />
 				<Route path="/assets" element={<Assets />} />
-				<Route path="/asset/:id" element={<Asset />} />
+				<Route path="/asset/:id" element={<Asset key={Date.now()} />} />
 				<Route path="/account" element={<Account />} />
 				<Route path="/about" element={<About />} />
 			</Routes>

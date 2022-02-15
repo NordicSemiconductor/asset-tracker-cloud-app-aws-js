@@ -25,16 +25,13 @@ export const Account = () => {
 						<input
 							className="form-check-input"
 							type="checkbox"
-							id="flexSwitchCheckDefault"
+							id="unlockDelete"
 							checked={deleteUnlocked}
 							onChange={({ target: { checked } }) => {
 								setDeleteUnlocked(checked)
 							}}
 						/>
-						<label
-							className="form-check-label"
-							htmlFor="flexSwitchCheckDefault"
-						>
+						<label className="form-check-label" htmlFor="unlockDelete">
 							Enable to unlock account deletion
 						</label>
 					</div>

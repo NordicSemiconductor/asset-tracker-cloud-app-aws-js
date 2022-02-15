@@ -8,7 +8,7 @@ import { confirmSignUp } from '../lib/confirmSignup.js'
 
 const chance = new Chance()
 
-test.beforeEach(checkForConsoleErrors)
+test.afterEach(checkForConsoleErrors)
 
 test('Register a new account', async ({ page }) => {
 	const password = `U${ulid()}!`

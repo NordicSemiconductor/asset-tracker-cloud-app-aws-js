@@ -1,8 +1,8 @@
-import styles from 'components/Collapsable.module.css'
+import styles from 'components/CollapsableCard.module.css'
 import { ChevronDownIcon } from 'components/FeatherIcon'
 import { useCollapsed } from 'hooks/useCollapsed'
 
-export const Collapsable = ({
+export const CollapsableCard = ({
 	id,
 	title,
 	children,
@@ -29,35 +29,35 @@ export const Collapsable = ({
 
 	if (collapsed)
 		return (
-			<section className={styles.collapsable} id={id}>
-				<header
+			<div className={`${styles.collapsable} card`} id={id}>
+				<div
 					onClick={handleClick}
 					role={'button'}
 					tabIndex={0}
 					onKeyDown={handleKey}
 					aria-expanded="false"
-					className={styles.collapsableHeader}
+					className={`${styles.collapsableHeader} card-header`}
 				>
 					<div>{title}</div>
 					<ChevronDownIcon className={styles.chevron} />
-				</header>
-			</section>
+				</div>
+			</div>
 		)
 
 	return (
-		<section className={styles.collapsable}>
-			<header
+		<div className={`${styles.collapsable} card`} id={id}>
+			<div
 				onClick={handleClick}
 				role={'button'}
 				tabIndex={0}
 				onKeyDown={handleKey}
 				aria-expanded="true"
-				className={styles.collapsableHeader}
+				className={`${styles.collapsableHeader} card-header`}
 			>
 				<div>{title}</div>
 				<ChevronDownIcon className={styles.chevron} />
-			</header>
-			<div className="mt-4">{children}</div>
-		</section>
+			</div>
+			{children}
+		</div>
 	)
 }

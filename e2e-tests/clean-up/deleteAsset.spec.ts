@@ -7,7 +7,7 @@ test.use({
 	storageState: path.join(process.cwd(), 'test-session', 'authenticated.json'),
 })
 
-test.beforeEach(checkForConsoleErrors)
+test.afterEach(checkForConsoleErrors)
 
 test('Users can delete assets', async ({ page }) => {
 	const { name, thingName } = await loadSessionData('asset')

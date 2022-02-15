@@ -8,7 +8,7 @@ test.use({
 	storageState: path.join(process.cwd(), 'test-session', 'authenticated.json'),
 })
 
-test.beforeEach(checkForConsoleErrors)
+test.afterEach(checkForConsoleErrors)
 
 test.beforeEach(selectCurrentAsset)
 

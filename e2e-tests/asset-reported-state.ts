@@ -37,7 +37,7 @@ export const state: ReportedState = {
 			iccid: '89450421180216216095',
 			modV: 'mfw_nrf9160_1.0.0',
 			brdV: 'thingy91_nrf9160',
-			appV: 'v1.0.0-rc1-327-g6fc8c16b239f',
+			appV: 'v1.0.1',
 		},
 		ts: now,
 	},

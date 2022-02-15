@@ -7,7 +7,7 @@ test.use({
 	storageState: path.join(process.cwd(), 'test-session', 'authenticated.json'),
 })
 
-test.beforeEach(checkForConsoleErrors)
+test.afterEach(checkForConsoleErrors)
 
 test('Users can delete their account', async ({ page }) => {
 	await page.goto('http://localhost:8080/')

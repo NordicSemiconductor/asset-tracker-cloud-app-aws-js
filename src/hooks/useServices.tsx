@@ -2,6 +2,7 @@ import type { ICredentials } from '@aws-amplify/core'
 import { DynamoDBClient } from '@aws-sdk/client-dynamodb'
 import { IoTClient } from '@aws-sdk/client-iot'
 import { IoTDataPlaneClient } from '@aws-sdk/client-iot-data-plane'
+import { S3Client } from '@aws-sdk/client-s3'
 import type { IoTService } from 'api/iot'
 import { iotService } from 'api/iot'
 import type { TimestreamService } from 'api/timestream'
@@ -29,6 +30,7 @@ export const ServicesProvider: FunctionComponent<{
 		mqttEndpoint,
 		userIotPolicyName,
 		timestream: { db, table },
+		fotaBucketName,
 	} = useAppConfig()
 
 	const iot = iotService({
@@ -41,6 +43,11 @@ export const ServicesProvider: FunctionComponent<{
 			endpoint: `https://${mqttEndpoint}`,
 			region,
 		}),
+		s3: new S3Client({
+			credentials,
+			region,
+		}),
+		fotaBucketName,
 	})
 
 	useEffect(() => {

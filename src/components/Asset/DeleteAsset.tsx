@@ -10,13 +10,13 @@ export const DeleteAsset = ({ onDelete }: { onDelete: () => void }) => {
 				<input
 					className="form-check-input"
 					type="checkbox"
-					id="flexSwitchCheckDefault"
+					id="unlockDelete"
 					checked={deleteUnlocked}
 					onChange={({ target: { checked } }) => {
 						setDeleteUnlocked(checked)
 					}}
 				/>
-				<label className="form-check-label" htmlFor="flexSwitchCheckDefault">
+				<label className="form-check-label" htmlFor="unlockDelete">
 					Enable to unlock asset deletion
 				</label>
 			</div>

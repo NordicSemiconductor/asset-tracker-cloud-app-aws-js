@@ -1,0 +1,23 @@
+.jobItem {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.upgradeDocument {
+  display: flex;
+  font-size: 80%;
+}
+
+.upgradeDocument dt,
+.upgradeDocument dl {
+  margin-right: 0.25rem;
+  margin-left: 0.25rem;
+}
+.upgradeDocument dt:first-child {
+  margin-left: 0;
+}
+
+.downloadLink {
+  font-size: 80%;
+}

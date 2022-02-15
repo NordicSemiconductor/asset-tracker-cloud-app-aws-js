@@ -451,6 +451,12 @@ export const ReloadIcon = (options?: TypedIconOptions) => (
 	<FeatherIcon {...options} title="reload" type="refresh-cw" />
 )
 
+export const FOTAIcon = (options?: TypedIconOptions) => (
+	<FeatherIcon {...options} title="FOTA" type="download-cloud" />
+)
+
+export const QueuedAtIcon = CloudUploadIcon
+
 export const LoadingIcon = (options?: TypedIconOptions) => (
 	<FeatherIcon
 		{...options}

@@ -18,7 +18,5 @@
 }
 
 .collapsable + .collapsable {
-  margin-top: 1rem;
-  padding-top: 1rem;
-  border-top: 1px solid rgba(0, 0, 0, 0.125);
+  margin-top: 0.5rem;
 }

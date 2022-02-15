@@ -19,6 +19,7 @@ const {
 	nCellMeasCellGeolocationApiEndpoint,
 	geolocationApiEndpoint,
 	historicaldataTableInfo,
+	fotaBucketName,
 } = fromEnv({
 	identityPoolId: 'PUBLIC_IDENTITY_POOL_ID',
 	region: 'PUBLIC_REGION',
@@ -37,6 +38,7 @@ const {
 		'PUBLIC_NEIGHBOR_CELL_GEOLOCATION_API_URL',
 	geolocationApiEndpoint: 'PUBLIC_GEOLOCATION_API_URL',
 	historicaldataTableInfo: 'PUBLIC_HISTORICALDATA_TABLE_INFO',
+	fotaBucketName: 'PUBLIC_FOTA_BUCKET_NAME',
 })(import.meta.env)
 
 Amplify.configure({
@@ -72,6 +74,8 @@ export const AppConfigContext = createContext<{
 		db: string
 		table: string
 	}
+	fotaBucketName: string
+	autoUpdateIntervalInSeconds: number
 }>({
 	identityPoolId,
 	region,
@@ -97,6 +101,8 @@ export const AppConfigContext = createContext<{
 		db: historicaldataTableInfo.split('|')[0],
 		table: historicaldataTableInfo.split('|')[1],
 	},
+	fotaBucketName,
+	autoUpdateIntervalInSeconds: 60,
 })
 
 export const useAppConfig = () => useContext(AppConfigContext)

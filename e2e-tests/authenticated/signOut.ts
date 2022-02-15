@@ -3,7 +3,7 @@ import { promises as fs } from 'fs'
 import * as path from 'path'
 import { checkForConsoleErrors } from '../lib/checkForConsoleErrors'
 
-test.beforeEach(checkForConsoleErrors)
+test.afterEach(checkForConsoleErrors)
 
 test('Users can sign out', async ({ page }) => {
 	await page.goto('http://localhost:8080/')

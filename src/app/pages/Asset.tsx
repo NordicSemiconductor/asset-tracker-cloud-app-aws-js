@@ -10,12 +10,14 @@ import {
 	ButtonIcon,
 	CellularIcon,
 	DangerIcon,
+	FOTAIcon,
 	IconWithText,
 	InfoIcon,
 	NeighboringCellsIcon,
 	SettingsIcon,
 	ThermometerIcon,
 } from 'components/FeatherIcon'
+import { FOTA } from 'components/FOTA/FOTA'
 import { BatteryChart } from 'components/HistoricalData/BatteryChart'
 import { ButtonPresses } from 'components/HistoricalData/ButtonPresses'
 import { RSRPChart } from 'components/HistoricalData/RSRPChart'
@@ -118,7 +120,17 @@ export const Asset = () => {
 									<Settings key={`asset-${asset.id}-${twin?.version ?? 0}`} />
 								</div>
 							</Collapsable>
-							{/* FIXME: FOTA */}
+							<Collapsable
+								id="asset:fota"
+								title={
+									<IconWithText>
+										<FOTAIcon size={22} /> Firmware Upgrade (
+										<abbr title="Firmware Upgrade over the air">FOTA</abbr>)
+									</IconWithText>
+								}
+							>
+								<FOTA />
+							</Collapsable>
 							<Collapsable
 								id="asset:neighboringcells"
 								title={

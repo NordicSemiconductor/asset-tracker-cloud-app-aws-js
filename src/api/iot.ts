@@ -13,7 +13,15 @@ import {
 	IoTDataPlaneClient,
 	UpdateThingShadowCommand,
 } from '@aws-sdk/client-iot-data-plane'
+import type { S3Client } from '@aws-sdk/client-s3'
 import { fromUtf8, toUtf8 } from '@aws-sdk/util-utf8-browser'
+import { cancelUpgradeFirmwareJob } from 'api/iot/cancelUpgradeFirmwareJob'
+import {
+	createFirmwareJob,
+	DeviceUpgradeFirmwareJob,
+} from 'api/iot/createFirmwareJob'
+import { deleteUpgradeFirmwareJob } from 'api/iot/deleteUpgradeFirmwareJob'
+import { listFirmwareJobs } from 'api/iot/listFirmwareJobs'
 import type { AssetTwin, AssetWithTwin } from 'asset/asset'
 
 const filterTestThings = (things: ThingAttribute[]): ThingAttribute[] =>
@@ -64,14 +72,34 @@ export type IoTService = {
 	}) => Promise<void>
 	updateThing: (thingName: string, { name }: { name: string }) => Promise<void>
 	updateShadow: (thingName: string, patch: Partial<AssetTwin>) => Promise<void>
+	listJobs: (thingName: string) => Promise<DeviceUpgradeFirmwareJob[]>
+	createUpgradeJob: (
+		thingName: string,
+		settings: {
+			file: File
+			version: string
+		},
+	) => Promise<DeviceUpgradeFirmwareJob>
+	cancelUpgradeJob: (
+		job: DeviceUpgradeFirmwareJob,
+		force?: boolean,
+	) => Promise<void>
+	deleteUpgradeJob: (
+		job: DeviceUpgradeFirmwareJob,
+		force?: boolean,
+	) => Promise<void>
 }
 
 export const iotService = ({
 	iot,
 	iotData,
+	s3,
+	fotaBucketName,
 }: {
 	iot: IoTClient
 	iotData: IoTDataPlaneClient
+	s3: S3Client
+	fotaBucketName: string
 }): IoTService => ({
 	getThing: async (thingName: string) =>
 		Promise.all([
@@ -172,4 +200,8 @@ export const iotService = ({
 			}),
 		)
 	},
+	listJobs: listFirmwareJobs({ iot }),
+	createUpgradeJob: createFirmwareJob({ s3, iot, fotaBucketName }),
+	cancelUpgradeJob: cancelUpgradeFirmwareJob({ iot }),
+	deleteUpgradeJob: deleteUpgradeFirmwareJob({ iot, s3, fotaBucketName }),
 })

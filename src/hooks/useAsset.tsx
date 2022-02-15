@@ -1,5 +1,6 @@
 import type { Asset, AssetConfig, AssetTwin, AssetWithTwin } from 'asset/asset'
 import equal from 'fast-deep-equal'
+import { useAppConfig } from 'hooks/useAppConfig'
 import { useServices } from 'hooks/useServices'
 import {
 	createContext,
@@ -13,7 +14,6 @@ export const AssetContext = createContext<{
 	asset?: Asset
 	twin?: AssetTwin
 	setAssetId: (assetId?: string) => void
-	setUpdateInterval: (interval: number) => void
 	deleteAsset: () => Promise<void>
 	update: (patch: {
 		name?: string
@@ -21,7 +21,6 @@ export const AssetContext = createContext<{
 	}) => Promise<void>
 }>({
 	setAssetId: () => undefined,
-	setUpdateInterval: () => undefined,
 	deleteAsset: async () => Promise.resolve(undefined),
 	update: async () =>
 		Promise.reject(new Error('[useAsset] update not possible.')),
@@ -33,7 +32,7 @@ export const AssetProvider: FunctionComponent = ({ children }) => {
 	const { iot } = useServices()
 	const [assetId, setAssetId] = useState<string>()
 	const [currentAsset, setCurrentAsset] = useState<AssetWithTwin>()
-	const [updateInterval, setUpdateInterval] = useState<number>(5000)
+	const { autoUpdateIntervalInSeconds } = useAppConfig()
 
 	// Load current device
 	useEffect(() => {
@@ -58,7 +57,6 @@ export const AssetProvider: FunctionComponent = ({ children }) => {
 	useEffect(() => {
 		let isMounted = true
 		if (currentAsset === undefined) return
-		if (updateInterval < 1000) return
 
 		const updateState = async () => {
 			if (currentAsset?.asset === undefined) return
@@ -73,14 +71,17 @@ export const AssetProvider: FunctionComponent = ({ children }) => {
 				.catch((err) => console.error(`[AssetContext]`, err))
 		}
 
-		console.debug(`[autoUpdateAsset]`, 'enabled', updateInterval)
-		const interval = setInterval(updateState, updateInterval)
+		console.debug(`[autoUpdateAsset]`, 'enabled', autoUpdateIntervalInSeconds)
+		const interval = setInterval(
+			updateState,
+			autoUpdateIntervalInSeconds * 1000,
+		)
 		return () => {
 			console.debug(`[autoUpdateAsset]`, 'disabled')
 			clearInterval(interval)
 			isMounted = false
 		}
-	}, [currentAsset, updateInterval, iot])
+	}, [currentAsset, autoUpdateIntervalInSeconds, iot])
 
 	// Unload device data if deviceId is changed
 	useEffect(() => {
@@ -93,7 +94,6 @@ export const AssetProvider: FunctionComponent = ({ children }) => {
 		<AssetContext.Provider
 			value={{
 				setAssetId: setAssetId,
-				setUpdateInterval,
 				asset: currentAsset?.asset,
 				twin: currentAsset?.twin,
 				deleteAsset: async () => {

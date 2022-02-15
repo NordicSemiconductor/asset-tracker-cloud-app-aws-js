@@ -75,6 +75,7 @@ export const AssetInformation = ({
 				</dl>
 			)}
 			<ReportedTime
+				data-intro="This shows when the device sampled the information and when it was received by the cloud."
 				reportedAtSeconds={(roam?.ts ?? dev.ts) / 1000}
 				receivedAtSeconds={twin?.metadata?.reported?.dev?.ts?.timestamp}
 				staleAfterSeconds={expectedInterval}

@@ -6,6 +6,7 @@ export const Collapsable = ({
 	id,
 	title,
 	children,
+	...restProps
 }: {
 	id: string
 	title: React.ReactElement<any>
@@ -29,7 +30,7 @@ export const Collapsable = ({
 
 	if (collapsed)
 		return (
-			<section className={styles.collapsable} id={id}>
+			<section className={styles.collapsable} id={id} {...restProps}>
 				<header
 					onClick={handleClick}
 					role={'button'}
@@ -45,7 +46,7 @@ export const Collapsable = ({
 		)
 
 	return (
-		<section className={styles.collapsable}>
+		<section className={styles.collapsable} {...restProps}>
 			<header
 				onClick={handleClick}
 				role={'button'}

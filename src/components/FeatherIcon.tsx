@@ -468,4 +468,9 @@ export const LoadingIcon = (options?: TypedIconOptions) => (
 
 export const IconWithText: FunctionComponent<PropsWithChildren<any>> = ({
 	children,
-}) => <span className={`${styles.iconWithText} iconWithText`}>{children}</span>
+	...rest
+}) => (
+	<span className={`${styles.iconWithText} iconWithText`} {...rest}>
+		{children}
+	</span>
+)

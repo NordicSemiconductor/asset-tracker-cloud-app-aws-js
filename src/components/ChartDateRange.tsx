@@ -3,8 +3,10 @@ import { useChartDateRange } from 'hooks/useChartDateRange'
 
 export const ChartDateRange = ({
 	hideBinControls,
+	className,
 }: {
 	hideBinControls?: boolean
+	className?: string
 }) => {
 	const {
 		startDate,
@@ -20,7 +22,7 @@ export const ChartDateRange = ({
 	} = useChartDateRange()
 
 	return (
-		<form className="mb-4">
+		<form className={`form ${className}`}>
 			<fieldset className="row">
 				<div
 					className={cx({

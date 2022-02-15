@@ -37,6 +37,7 @@ export const ReportedTime = ({
 	reportedAtSeconds,
 	receivedAtSeconds,
 	staleAfterSeconds,
+	className,
 	...restProps
 }: HTMLProps<HTMLSpanElement> & Parameters<typeof useReportedTime>[0]) => {
 	const { reportedTimeIsOutDated, relativeTimesHaveDiff, reportIsOld } =
@@ -46,7 +47,7 @@ export const ReportedTime = ({
 			staleAfterSeconds,
 		})
 	return (
-		<span className={'reportedTime d-flex'} {...restProps}>
+		<span className={`reportedTime d-flex ${className}`} {...restProps}>
 			<IconWithText>
 				{staleAfterSeconds !== undefined && (
 					<OldWarning

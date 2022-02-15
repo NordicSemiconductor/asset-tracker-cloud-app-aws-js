@@ -24,6 +24,7 @@ export const ShowSettingsButton = ({
 				aria-expanded="false"
 				className={styles.showSettingsButton}
 				data-test="show-map-settings"
+				data-intro="Click this icon to configure what's shown on the map."
 			>
 				<SettingsIcon className={styles.cog} />
 				<ChevronDownIcon className={styles.chevron} />

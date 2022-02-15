@@ -1,6 +1,6 @@
 import { AssetInformation } from 'components/Asset/AssetInformation'
 import { DeleteAsset } from 'components/Asset/DeleteAsset'
-import { InfoHeader } from 'components/Asset/Info'
+import { InfoHeader } from 'components/Asset/InfoHeader'
 import { Personalization } from 'components/Asset/Personalization'
 import { HelpNote } from 'components/Asset/Settings/HelpNote'
 import { Settings } from 'components/Asset/Settings/Settings'
@@ -97,6 +97,7 @@ export const Asset = () => {
 									</IconWithText>
 								}
 								id="cat:information"
+								data-intro="This shows hard- and software, and connection information about the asset. Click to reveal the information."
 							>
 								<AssetInformation asset={asset} twin={twin} />
 							</Collapsable>
@@ -108,6 +109,7 @@ export const Asset = () => {
 									</IconWithText>
 								}
 								id="cat:settings"
+								data-intro="This allows to change the run-time configuration of the asset."
 							>
 								<h4>Personalization</h4>
 								<Personalization
@@ -128,6 +130,7 @@ export const Asset = () => {
 										<abbr title="Firmware Upgrade over the air">FOTA</abbr>)
 									</IconWithText>
 								}
+								data-intro="This allows to schedule firmware upgrades of the air for the asset."
 							>
 								<FOTA />
 							</Collapsable>
@@ -138,6 +141,7 @@ export const Asset = () => {
 										<NeighboringCellsIcon size={22} /> Neighboring cells
 									</IconWithText>
 								}
+								data-intro="This shows the most recent neighboring cells the asset able to identify."
 							>
 								<NeighborCellMeasurementsReport twin={twin} />
 							</Collapsable>
@@ -148,6 +152,7 @@ export const Asset = () => {
 										<CellularIcon size={22} /> RSRP
 									</IconWithText>
 								}
+								data-intro="This shows a history chart of the signal quality."
 							>
 								<RSRPChart />
 							</Collapsable>
@@ -158,6 +163,7 @@ export const Asset = () => {
 										<BatteryIcon size={22} /> Battery
 									</IconWithText>
 								}
+								data-intro="This shows a history chart of the asset's battery voltage."
 							>
 								<BatteryChart />
 							</Collapsable>
@@ -168,6 +174,7 @@ export const Asset = () => {
 										<ThermometerIcon size={22} /> Temperature
 									</IconWithText>
 								}
+								data-intro="This shows a history chart of the temperature measured by the asset's environment sensor."
 							>
 								<TemperatureChart />
 							</Collapsable>
@@ -178,6 +185,7 @@ export const Asset = () => {
 										<ButtonIcon size={22} /> Button
 									</IconWithText>
 								}
+								data-intro="This shows the button presses registered by the asset."
 							>
 								<ButtonPresses />
 							</Collapsable>
@@ -188,6 +196,7 @@ export const Asset = () => {
 										<DangerIcon size={22} /> Danger zone
 									</IconWithText>
 								}
+								data-intro="This allows to delete the asset."
 							>
 								<DeleteAsset
 									onDelete={() => {

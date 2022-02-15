@@ -22,7 +22,10 @@ export const MapSettings = () => {
 			<form className="pt-2 pe-2 ps-2">
 				<div className="row ps-1 pe-1">
 					<div className="col-sm-6 pt-1 pb-1">
-						<div className="form-check form-switch">
+						<div
+							className="form-check form-switch"
+							data-intro="Whether to always re-center the map on the position of the asset."
+						>
 							<input
 								className="form-check-input"
 								type="checkbox"
@@ -41,7 +44,10 @@ export const MapSettings = () => {
 						</div>
 					</div>
 					<div className="col-sm-6 pt-1 pb-1">
-						<div className="form-check form-switch">
+						<div
+							className="form-check form-switch"
+							data-intro="Whether to show the heading (direction) information with locations."
+						>
 							<input
 								className="form-check-input"
 								type="checkbox"
@@ -60,7 +66,10 @@ export const MapSettings = () => {
 				</div>
 				<div className="row ps-1 pe-1">
 					<div className="col-sm-6 pt-1 pb-1">
-						<div className="form-check form-switch">
+						<div
+							className="form-check form-switch"
+							data-intro="Whether to show the approximate location based on the asset's cell information."
+						>
 							<input
 								className="form-check-input"
 								type="checkbox"
@@ -75,12 +84,15 @@ export const MapSettings = () => {
 								id="mapSettingsSingleCellGeoLocations"
 							/>
 							<label htmlFor="mapSettingsSingleCellGeoLocations">
-								Location based on device's cell information
+								Location based on asset's cell information
 							</label>
 						</div>
 					</div>
 					<div className="col-sm-6 d-flex">
-						<div className="form-check form-switch flex-grow-1">
+						<div
+							className="form-check form-switch"
+							data-intro="Whether to show location history of the asset."
+						>
 							<input
 								className="form-check-input"
 								type="checkbox"
@@ -101,7 +113,10 @@ export const MapSettings = () => {
 				</div>
 				<div className="row ps-1 pe-1">
 					<div className="col-sm-6 pt-1 pb-1">
-						<div className="form-check form-switch">
+						<div
+							className="form-check form-switch"
+							data-intro="Whether to show the approximate location based on the asset's neighboring cell information."
+						>
 							<input
 								className="form-check-input"
 								type="checkbox"
@@ -116,13 +131,17 @@ export const MapSettings = () => {
 								id="mapSettingsMultiCellGeoLocations"
 							/>
 							<label htmlFor="mapSettingsMultiCellGeoLocations">
-								Location based on device's neighboring cell information
+								Location based on asset's neighboring cell information
 							</label>
 						</div>
 					</div>
 				</div>
 			</form>
-			<ChartDateRange />
+			{settings.enabledLayers.history && (
+				<div data-intro="This configures the date range for which to fetch historical locations for the asset.">
+					<ChartDateRange className="ms-2 me-2 mb-2" hideBinControls />
+				</div>
+			)}
 		</>
 	)
 }

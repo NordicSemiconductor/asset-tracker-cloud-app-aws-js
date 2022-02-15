@@ -27,20 +27,22 @@ export const FOTA = () => {
 			)}
 			<h4>Schedule a firmware upgrade</h4>
 			<CreateFOTAJob asset={asset} />
-			<h4 className="mt-4 d-flex justify-content-between align-items-center">
-				Firmware upgrades
-				<button
-					type="button"
-					className="btn btn-link"
-					style={{ padding: 0 }}
-					onClick={() => {
-						reload()
-					}}
-				>
-					<ReloadIcon />
-				</button>
-			</h4>
-			<Jobs />
+			<div data-intro="This list the firmware upgrade jobs for the asset.">
+				<h4 className="mt-4 d-flex justify-content-between align-items-center">
+					Firmware upgrades
+					<button
+						type="button"
+						className="btn btn-link"
+						style={{ padding: 0 }}
+						onClick={() => {
+							reload()
+						}}
+					>
+						<ReloadIcon />
+					</button>
+				</h4>
+				<Jobs />
+			</div>
 		</>
 	)
 }

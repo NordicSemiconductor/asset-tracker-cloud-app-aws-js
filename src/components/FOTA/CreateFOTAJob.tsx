@@ -24,7 +24,10 @@ export const CreateFOTAJob = ({ asset }: { asset: Asset }) => {
 		<>
 			<form className="form">
 				<fieldset>
-					<div className="mb-3">
+					<div
+						className="mb-3"
+						data-intro="Select the .bin file to be included in the job."
+					>
 						<label htmlFor="file" className="form-label">
 							Firmware file{' '}
 							{upgradeFile && <span>({upgradeFile.size} bytes)</span>}
@@ -53,7 +56,7 @@ export const CreateFOTAJob = ({ asset }: { asset: Asset }) => {
 				</fieldset>
 				{upgradeFile && (
 					<div className="d-flex justify-content-between align-items-end">
-						<div>
+						<div data-intro="Configure the version number of this upgrade.">
 							<label htmlFor={'nextVersion'} className="form-label">
 								Firmware version
 							</label>

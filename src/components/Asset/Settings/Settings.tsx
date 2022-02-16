@@ -1,3 +1,4 @@
+import type { Static } from '@sinclair/typebox'
 import type { AssetConfig } from 'asset/asset'
 import { DataModules } from 'asset/asset'
 import { defaultConfig } from 'asset/defaultConfig'
@@ -26,7 +27,7 @@ export const Settings = () => {
 	const { twin } = useAsset()
 
 	const [currentDesiredConfig, setCurrentDesiredConfig] =
-		useState<AssetConfig>()
+		useState<Static<typeof AssetConfig>>()
 
 	useEffect(() => {
 		if (twin === undefined) return
@@ -42,19 +43,19 @@ export const Settings = () => {
 const SettingsUI = ({
 	currentDesiredConfig,
 }: {
-	currentDesiredConfig: AssetConfig
+	currentDesiredConfig: Static<typeof AssetConfig>
 }) => {
 	const { update, twin } = useAsset()
 
 	const {
 		reported: { cfg: reportedConfig },
-	} = twin ?? { reported: { cfg: {} as Partial<AssetConfig> } }
+	} = twin ?? { reported: { cfg: {} as Static<typeof AssetConfig> } }
 	const [newDesiredConfig, setNewDesiredConfig] =
-		useState<Partial<AssetConfig>>(currentDesiredConfig)
+		useState<Static<typeof AssetConfig>>(currentDesiredConfig)
 
 	const hasChanges = !equal(newDesiredConfig, currentDesiredConfig)
 
-	const updateConfig = (cfg: Partial<AssetConfig>) => {
+	const updateConfig = (cfg: Partial<Static<typeof AssetConfig>>) => {
 		const updated = {
 			...newDesiredConfig,
 			...cfg,

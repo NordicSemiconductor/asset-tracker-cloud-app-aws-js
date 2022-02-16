@@ -1,5 +1,5 @@
+import type { Static } from '@sinclair/typebox'
 import type {
-	AssetHistoryDatum,
 	AssetInfo,
 	AssetWithTwin,
 	Battery,
@@ -30,8 +30,8 @@ const RoamInfo = ({
 	receivedAtSeconds,
 }: {
 	expectedSendIntervalInSeconds: number
-	roam?: AssetHistoryDatum<Roaming>
-	dev?: AssetHistoryDatum<AssetInfo>
+	roam?: Static<typeof Roaming>
+	dev?: Static<typeof AssetInfo>
 	receivedAtSeconds?: UnixTimeInSeconds
 }) => {
 	if (roam === undefined) return null
@@ -57,7 +57,7 @@ const BatteryInfo = ({
 	expectedSendIntervalInSeconds,
 	receivedAtSeconds,
 }: {
-	bat?: AssetHistoryDatum<Battery>
+	bat?: Static<typeof Battery>
 	expectedSendIntervalInSeconds: number
 	receivedAtSeconds?: UnixTimeInSeconds
 }) => {
@@ -89,7 +89,7 @@ const GNSSInfo = ({
 	expectedSendIntervalInSeconds,
 	receivedAtSeconds,
 }: {
-	gnss?: AssetHistoryDatum<GNSS>
+	gnss?: Static<typeof GNSS>
 	expectedSendIntervalInSeconds: number
 	receivedAtSeconds?: UnixTimeInSeconds
 }) => {
@@ -126,7 +126,7 @@ const EnvInfo = ({
 	expectedSendIntervalInSeconds,
 	receivedAtSeconds,
 }: {
-	env?: AssetHistoryDatum<Environment>
+	env?: Static<typeof Environment>
 	expectedSendIntervalInSeconds: number
 	receivedAtSeconds?: UnixTimeInSeconds
 }) => {

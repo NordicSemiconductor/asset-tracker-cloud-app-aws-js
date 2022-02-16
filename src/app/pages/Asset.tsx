@@ -99,7 +99,7 @@ export const Asset = () => {
 								id="cat:information"
 								data-intro="This shows hard- and software, and connection information about the asset. Click to reveal the information."
 							>
-								<AssetInformation asset={asset} twin={twin} />
+								<AssetInformation twin={twin} />
 							</Collapsable>
 							<Collapsable
 								title={

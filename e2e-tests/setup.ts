@@ -12,7 +12,8 @@ import {
 } from '@nordicsemiconductor/cell-geolocation-helpers'
 import { fromEnv } from '@nordicsemiconductor/from-env'
 import { randomWords } from '@nordicsemiconductor/random-words'
-import { ReportedSensor, Roaming } from 'asset/asset.js'
+import { Static } from '@sinclair/typebox'
+import { Roaming } from 'asset/asset.js'
 import { promises as fs } from 'fs'
 import id128 from 'id128'
 import * as path from 'path'
@@ -75,7 +76,7 @@ const globalSetup = async () => {
 
 	// Store cell geo location
 	console.log(`Storing cell geo location`)
-	const roam = state.roam as ReportedSensor<Roaming>
+	const roam = state.roam as Static<typeof Roaming>
 	await db.send(
 		new PutItemCommand({
 			TableName: cellGeoLocationCacheTableName,
@@ -97,7 +98,7 @@ const globalSetup = async () => {
 	// Publish neighboring cell measurement
 	const report = {
 		reportId: id128.Uuid4.generate().toCanonical(),
-		nw: state.roam?.v.nw,
+		nw: roam.v.nw,
 		deviceId: thingName,
 		report: ncellmeasDeviceReport,
 		timestamp: Date.now().toString(),

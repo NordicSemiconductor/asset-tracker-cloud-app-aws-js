@@ -1,16 +1,10 @@
-import type { Asset, AssetTwin } from 'asset/asset'
+import type { AssetTwin } from 'asset/asset'
 import { expectedSendIntervalInSeconds } from 'asset/expectedSendIntervalInSeconds'
 import styles from 'components/Asset/AssetInformation.module.css'
 import { NoData } from 'components/NoData'
 import { ReportedTime } from 'components/ReportedTime'
 
-export const AssetInformation = ({
-	asset,
-	twin,
-}: {
-	asset: Asset
-	twin?: AssetTwin
-}) => {
+export const AssetInformation = ({ twin }: { twin?: AssetTwin }) => {
 	const expectedInterval = expectedSendIntervalInSeconds(twin)
 	const { dev, roam } = twin?.reported ?? {}
 	if (dev === undefined) return <NoData />

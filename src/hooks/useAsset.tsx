@@ -1,4 +1,6 @@
+import type { Static } from '@sinclair/typebox'
 import type { Asset, AssetConfig, AssetTwin, AssetWithTwin } from 'asset/asset'
+import { defaultConfig } from 'asset/defaultConfig'
 import equal from 'fast-deep-equal'
 import { useAppConfig } from 'hooks/useAppConfig'
 import { useServices } from 'hooks/useServices'
@@ -17,7 +19,7 @@ export const AssetContext = createContext<{
 	deleteAsset: () => Promise<void>
 	update: (patch: {
 		name?: string
-		cfg?: Partial<AssetConfig>
+		cfg?: Static<typeof AssetConfig>
 	}) => Promise<void>
 }>({
 	setAssetId: () => undefined,
@@ -128,6 +130,7 @@ export const AssetProvider: FunctionComponent = ({ children }) => {
 							desired: {
 								...currentAsset.twin.desired,
 								cfg: {
+									...defaultConfig,
 									...currentAsset.twin.desired?.cfg,
 									...cfg,
 								},

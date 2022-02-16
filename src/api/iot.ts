@@ -22,6 +22,7 @@ import {
 } from 'api/iot/createFirmwareJob'
 import { deleteUpgradeFirmwareJob } from 'api/iot/deleteUpgradeFirmwareJob'
 import { listFirmwareJobs } from 'api/iot/listFirmwareJobs'
+import { toReported } from 'api/toReported'
 import type { AssetTwin, AssetWithTwin } from 'asset/asset'
 
 const filterTestThings = (things: ThingAttribute[]): ThingAttribute[] =>
@@ -131,7 +132,7 @@ export const iotService = ({
 				if (payload !== undefined) {
 					const shadow = JSON.parse(toUtf8(payload))
 					if (shadow.state !== undefined) {
-						twin.reported = shadow.state.reported ?? {}
+						twin.reported = toReported(shadow.state.reported ?? {})
 						twin.desired = shadow.state.desired ?? {}
 						twin.metadata = shadow.metadata ?? {}
 						twin.version = shadow.version ?? -1

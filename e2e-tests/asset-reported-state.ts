@@ -1,4 +1,5 @@
-import { ReportedState } from 'asset/asset.js'
+import { Static } from '@sinclair/typebox'
+import { NCellMeasReport, ReportedState } from 'asset/asset.js'
 import { defaultConfig } from '../src/asset/defaultConfig.js'
 
 const now = Date.now()
@@ -53,9 +54,9 @@ export const state: ReportedState = {
 		},
 		ts: now - 60 * 1000,
 	},
-} as const
+}
 
-export const ncellmeasDeviceReport = {
+export const ncellmeasDeviceReport: Static<typeof NCellMeasReport>['report'] = {
 	mcc: 242,
 	mnc: 1,
 	cell: 30976,
@@ -79,7 +80,7 @@ export const ncellmeasDeviceReport = {
 		},
 	],
 	ts: now,
-} as const
+}
 
 export const ncellmeasDeviceReportLocation = {
 	lng: 10.394017,

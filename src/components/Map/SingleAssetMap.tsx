@@ -1,4 +1,5 @@
-import type { Asset, AssetHistoryDatum, AssetWithTwin, GNSS } from 'asset/asset'
+import type { Static } from '@sinclair/typebox'
+import type { Asset, AssetWithTwin, GNSS } from 'asset/asset'
 import { SignalQuality } from 'components/Asset/SignalQuality'
 import { EventHandler } from 'components/Map/EventHandler'
 import { markerIcon } from 'components/Map/MarkerIcon'
@@ -63,7 +64,7 @@ const HeadingMarker = ({
 	</MapConsumer>
 )
 
-const toLocation = (gnss: AssetHistoryDatum<GNSS>): GeoLocation => ({
+const toLocation = (gnss: Static<typeof GNSS>): GeoLocation => ({
 	position: {
 		lat: gnss.v.lat,
 		lng: gnss.v.lng,

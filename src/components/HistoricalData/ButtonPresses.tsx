@@ -1,26 +1,10 @@
-import { SensorProperties } from 'asset/asset'
 import { ChartDateRange } from 'components/ChartDateRange'
 import { NoData } from 'components/NoData'
 import { RelativeTime } from 'components/RelativeTime'
-import { useAssetHistory } from 'hooks/useAssetHistory'
+import { useAssetButtonPressesHistory } from 'hooks/useAssetButtonPressesHistory'
 
 export const ButtonPresses = () => {
-	const history = useAssetHistory<{
-		date: Date
-		value: number
-	}>({
-		query: ({ asset, table, startDate, endDate, binInterval }) => `
-		SELECT
-        time as date,
-        measure_value::double AS value
-		FROM ${table}
-		WHERE deviceId='${asset.id}' 
-		AND measure_name='${SensorProperties.Button}' 
-		AND time >= '${startDate}'
-		AND time <= '${endDate}'
-		ORDER BY time DESC
-	`,
-	})
+	const history = useAssetButtonPressesHistory()
 
 	if (history.length === 0)
 		return (

@@ -13,8 +13,6 @@ type QueryFnArgs = {
 	binInterval: string
 }
 
-type QueryFn = (args: QueryFnArgs) => string
-
 export const useAssetHistory = <Item extends Record<string, any>>({
 	query: queryFn,
 	disabled,
@@ -36,7 +34,7 @@ export const useAssetHistory = <Item extends Record<string, any>>({
 				endDate: timeStreamFormatDate(endDate),
 				binInterval,
 			}),
-		[startDate, endDate, binInterval],
+		[startDate, endDate, binInterval, queryFn],
 	)
 
 	useEffect(() => {

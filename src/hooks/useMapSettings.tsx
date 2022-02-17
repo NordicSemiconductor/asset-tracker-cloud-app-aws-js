@@ -11,6 +11,7 @@ export type Settings = {
 	}
 	follow: boolean
 	zoom: number
+	numHistoryEntries: number
 }
 
 const defaultSettings: Settings = {
@@ -22,6 +23,7 @@ const defaultSettings: Settings = {
 		history: false,
 	},
 	zoom: 13,
+	numHistoryEntries: 100,
 }
 
 const userSettings = withLocalStorage<Settings>({

@@ -1,3 +1,4 @@
+import cx from 'classnames'
 import { ChartDateRange } from 'components/ChartDateRange'
 import { useMapSettings } from 'hooks/useMapSettings'
 
@@ -88,30 +89,6 @@ export const MapSettings = () => {
 							</label>
 						</div>
 					</div>
-					<div className="col-sm-6 d-flex">
-						<div
-							className="form-check form-switch"
-							data-intro="Whether to show location history of the asset."
-						>
-							<input
-								className="form-check-input"
-								type="checkbox"
-								name="fetchHistoricalData"
-								onChange={() => {
-									updateEnabledLayers({
-										history: !settings.enabledLayers.history,
-									})
-								}}
-								checked={settings.enabledLayers.history}
-								id="mapSettingsFetchHistory"
-							/>
-							<label htmlFor="mapSettingsFetchHistory" className="text-nowrap">
-								Fetch history
-							</label>
-						</div>
-					</div>
-				</div>
-				<div className="row ps-1 pe-1">
 					<div className="col-sm-6 pt-1 pb-1">
 						<div
 							className="form-check form-switch"
@@ -135,6 +112,51 @@ export const MapSettings = () => {
 							</label>
 						</div>
 					</div>
+				</div>
+				<div
+					className={cx('row ps-1 pe-1', {
+						'mb-2': !settings.enabledLayers.history,
+					})}
+				>
+					<div className="col-sm-6 d-flex">
+						<div
+							className="form-check form-switch"
+							data-intro="Whether to show location history of the asset."
+						>
+							<input
+								className="form-check-input"
+								type="checkbox"
+								name="fetchHistoricalData"
+								onChange={() => {
+									updateEnabledLayers({
+										history: !settings.enabledLayers.history,
+									})
+								}}
+								checked={settings.enabledLayers.history}
+								id="mapSettingsFetchHistory"
+							/>
+							<label htmlFor="mapSettingsFetchHistory" className="text-nowrap">
+								Fetch history
+							</label>
+						</div>
+					</div>
+					{settings.enabledLayers.history && (
+						<div className="col-sm-6">
+							<div className="input-group input-group-sm ">
+								<input
+									type="number"
+									className="form-control"
+									value={settings.numHistoryEntries ?? '10'}
+									min={1}
+									step={1}
+									onChange={({ target: { value } }) => {
+										updateSettings({ numHistoryEntries: parseInt(value, 10) })
+									}}
+								/>
+								<span className="input-group-text">entries</span>
+							</div>
+						</div>
+					)}
 				</div>
 			</form>
 			{settings.enabledLayers.history && (

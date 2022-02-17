@@ -1,5 +1,5 @@
+import type { CellGeoLocation } from 'components/Map/types'
 import { useAppConfig } from 'hooks/useAppConfig'
-import type { CellGeoLocation } from 'hooks/useMapData'
 import { useNeighboringCellMeasurementReport } from 'hooks/useNeighboringCellMeasurementReport'
 import { useCallback, useEffect, useState } from 'react'
 

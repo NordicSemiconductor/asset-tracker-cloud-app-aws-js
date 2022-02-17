@@ -5,18 +5,19 @@ import { EventHandler } from 'components/Map/EventHandler'
 import { markerIcon } from 'components/Map/MarkerIcon'
 import { NoMap } from 'components/Map/NoMap'
 import styles from 'components/Map/SingleAssetMap.module.css'
-import { formatDistanceToNow } from 'date-fns'
-import { useCellGeoLocation } from 'hooks/useCellGeoLocation'
 import type {
 	AssetGeoLocation,
 	CellGeoLocation,
 	GeoLocation,
 	Position,
-} from 'hooks/useMapData'
-import { useMapData } from 'hooks/useMapData'
+} from 'components/Map/types'
+import { formatDistanceToNow } from 'date-fns'
+import { useAssetLocationHistory } from 'hooks/useAssetLocationHistory'
+import { useCellGeoLocation } from 'hooks/useCellGeoLocation'
 import { useMapSettings } from 'hooks/useMapSettings'
 import { useNeighboringCellMeasurementReportGeoLocation } from 'hooks/useNeighboringCellMeasurementReportGeoLocation'
 import type { Map as LeafletMap } from 'leaflet'
+import { nanoid } from 'nanoid'
 import React, { useState } from 'react'
 import {
 	Circle,
@@ -84,27 +85,24 @@ export const SingleAssetMap = ({ asset, twin }: AssetWithTwin) => {
 	const { location: cellGeoLocation } = useCellGeoLocation()
 	const enableHistory = settings.enabledLayers.history
 
-	const locations: GeoLocation[] = []
+	const locationHistory = useAssetLocationHistory({
+		disabled: !enableHistory,
+	})
+
+	const locations: AssetGeoLocation[] = []
 
 	// If history is disabled, use current position (if available)
 	if (!enableHistory && twin.reported.gnss !== undefined)
-		locations.push(toLocation(twin.reported.gnss))
+		locations.push({
+			location: toLocation(twin.reported.gnss),
+		})
 
 	// If history is enabled, fetch positions according to selected date range
-	/*
-	const locationHistory = []
-	useAssetHistory({
-		sensor: SensorProperties.GNSS,
-		disabled: !enableHistory,
-	})
 	if (enableHistory) {
-		locations.push(...locationHistory.map(toLocation))
+		locations.push(...locationHistory)
 	}
-	*/
 
-	const { assetLocations, center } = useMapData({
-		locations,
-	})
+	const center = locations?.[0]
 
 	if (center === undefined) return <NoMap /> // No location data at all to display
 
@@ -113,7 +111,7 @@ export const SingleAssetMap = ({ asset, twin }: AssetWithTwin) => {
 			<AssetMap
 				asset={asset}
 				center={center}
-				locations={assetLocations}
+				locations={locations}
 				neighboringCellGeoLocation={neighboringCellGeoLocation}
 				cellGeoLocation={cellGeoLocation}
 			/>
@@ -140,6 +138,7 @@ const AssetMap = ({
 	if (map !== undefined && settings.follow) {
 		map.flyTo(center.location.position, settings.zoom)
 	}
+
 	return (
 		<MapContainer
 			center={center.location.position}
@@ -173,6 +172,7 @@ const AssetMap = ({
 							16,
 						)
 						const color = `#1f56d2${alpha}`
+						const id = nanoid()
 
 						return (
 							<React.Fragment key={`history-${k}`}>
@@ -180,7 +180,7 @@ const AssetMap = ({
 									<Popup pane="popupPane">{asset.name}</Popup>
 								</Marker>
 								{/* Cell Geolocation */}
-								<Pane name="cellGeolocation" style={{ zIndex: 400 }}>
+								<Pane name={`cellGeolocation-${id}`} style={{ zIndex: 400 }}>
 									{cellGeoLocation &&
 										settings.enabledLayers.singleCellGeoLocations && (
 											<Circle
@@ -196,7 +196,10 @@ const AssetMap = ({
 										)}
 								</Pane>
 								{/* Neighboring Cell Geolocation */}
-								<Pane name="neighboringCellGeoLocation" style={{ zIndex: 410 }}>
+								<Pane
+									name={`neighboringCellGeoLocation-${id}`}
+									style={{ zIndex: 410 }}
+								>
 									{neighboringCellGeoLocation &&
 										settings.enabledLayers.multiCellGeoLocations && (
 											<Circle
@@ -211,7 +214,7 @@ const AssetMap = ({
 											</Circle>
 										)}
 								</Pane>
-								<Pane name="assetLocation" style={{ zIndex: 420 }}>
+								<Pane name={`assetLocation-${id}`} style={{ zIndex: 420 }}>
 									{/* outer circle */}
 									{!batch && (
 										<Circle
@@ -229,7 +232,7 @@ const AssetMap = ({
 											color={'#ff0000'}
 											weight={2}
 											fill={false}
-											dashArray={settings.zoom > 16 ? '3 6' : '6 12'}
+											dashArray={'3 6'}
 										/>
 									)}
 									{k > 0 && (
@@ -302,36 +305,34 @@ const AssetMap = ({
 													</>
 												)}
 											</div>
-											{roaming !== undefined && !batch && (
-												<>
-													<div className={styles.historyInfo}>
-														<dt>Connection</dt>
-														<dd style={{ textAlign: 'right' }}>
-															<SignalQuality dbm={roaming.roaming.rsrp} />
-														</dd>
-														<dt>MCC/MNC</dt>
-														<dd>{roaming.roaming.mccmnc}</dd>
-														<dt>Area Code</dt>
-														<dd>{roaming.roaming.area}</dd>
-														<dt>Cell ID</dt>
-														<dd>{roaming.roaming.cell}</dd>
-														<dt>IP</dt>
-														<dd>{roaming.roaming.ip}</dd>
-														<dt>RSRP</dt>
-														<dd>{roaming.roaming.rsrp}</dd>
-														<dt>Time</dt>
-														<dd>
-															<time
-																dateTime={new Date(roaming.ts).toISOString()}
-															>
-																{formatDistanceToNow(roaming.ts, {
-																	includeSeconds: true,
-																	addSuffix: true,
-																})}
-															</time>
-														</dd>
-													</div>
-												</>
+											{roaming !== undefined && (
+												<div className={`${styles.historyInfo} mt-4`}>
+													<dt>Connection</dt>
+													<dd className="text-end">
+														<SignalQuality dbm={roaming.v.rsrp} />
+													</dd>
+													<dt>Network</dt>
+													<dt>{roaming.v.nw}</dt>
+													<dt>Band</dt>
+													<dt>{roaming.v.band}</dt>
+													<dt>MCC/MNC</dt>
+													<dd>{roaming.v.mccmnc}</dd>
+													<dt>Area Code</dt>
+													<dd>{roaming.v.area}</dd>
+													<dt>Cell ID</dt>
+													<dd>{roaming.v.cell}</dd>
+													<dt>IP</dt>
+													<dd>{roaming.v.ip}</dd>
+													<dt>Time</dt>
+													<dd>
+														<time dateTime={new Date(roaming.ts).toISOString()}>
+															{formatDistanceToNow(roaming.ts, {
+																includeSeconds: true,
+																addSuffix: true,
+															})}
+														</time>
+													</dd>
+												</div>
 											)}
 										</Popup>
 									</Circle>

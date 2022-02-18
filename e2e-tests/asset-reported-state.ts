@@ -79,7 +79,7 @@ export const ncellmeasDeviceReport: Static<typeof NCellMeasReport>['report'] = {
 			rsrq: -21,
 		},
 	],
-	ts: now,
+	ts: now - 11 * 60 * 1000,
 }
 
 export const ncellmeasDeviceReportLocation = {

@@ -12,7 +12,14 @@ test.afterEach(checkForConsoleErrors)
 
 test.beforeEach(selectCurrentAsset)
 
-test('Map with device location should be visible', async ({ page }) => {
+test('Map with historical device location should be visible', async ({
+	page,
+}) => {
+	// Enable history and turn off cell geo location
+	await page.locator('[data-test="show-map-settings"]').click()
+	await page.locator('input[name="fetchHistoricalData"]').check()
+	await page.locator('[data-test="show-map-settings"]').click()
+
 	const mapMarker = page.locator('#asset-map .leaflet-marker-icon')
 	const mapMarkerPopup = page.locator('#asset-map .leaflet-popup')
 
@@ -22,26 +29,29 @@ test('Map with device location should be visible', async ({ page }) => {
 	await expect(mapMarkerPopup).toBeVisible()
 	const { name } = await loadSessionData('asset')
 	await expect(mapMarkerPopup).toContainText(name)
+
+	// Location history should be visible
+	await expect(page.locator('.asset-location-circle-8')).toBeVisible()
+
 	await page.screenshot({
-		path: `./test-session/map-marker.png`,
+		path: `./test-session/map-historical-locations.png`,
 	})
 
 	// Zoom
-	for (let i = 0; i < 5; i++) {
+	for (let i = 0; i < 2; i++) {
 		await page.locator('.leaflet-control-zoom-in').click()
 		await page.waitForTimeout(500)
 	}
 
-	// Click on location circle should show info
-	const assetLocation = page.locator('.asset-location-circle-0')
-	const size = await assetLocation.boundingBox()
-	await assetLocation.click({
+	// Click on third location circle should show info
+	const location2 = page.locator('.asset-location-circle-2')
+	const location2Size = await location2.boundingBox()
+	await location2.click({
 		position: {
-			x: (size?.width ?? 500) * 0.75,
-			y: (size?.height ?? 500) * 0.75,
+			x: (location2Size?.width ?? 500) * 0.55,
+			y: (location2Size?.height ?? 500) * 0.55,
 		},
 	})
-
 	await expect(
 		page.locator('#asset-map .leaflet-popup:last-of-type'),
 	).toBeVisible()
@@ -49,9 +59,9 @@ test('Map with device location should be visible', async ({ page }) => {
 	// Verify location info
 	await Promise.all(
 		Object.entries({
-			accuracy: '24.8 m',
-			speed: '0.58 m/s',
-			heading: '176.12°',
+			accuracy: '50 m',
+			speed: '10 m/s',
+			heading: '32.23°',
 		}).map(async ([k, v]) =>
 			expect(
 				page.locator(
@@ -64,7 +74,7 @@ test('Map with device location should be visible', async ({ page }) => {
 	// Verify roaming info
 	await Promise.all(
 		Object.entries({
-			rsrp: '(-97 dBm)',
+			rsrp: '(-99 dBm)',
 			nw: 'LTE-M',
 			band: '20',
 			mccmnc: '24201',
@@ -81,6 +91,25 @@ test('Map with device location should be visible', async ({ page }) => {
 	)
 
 	await page.screenshot({
-		path: `./test-session/asset-location-info.png`,
+		path: `./test-session/map-historical-locations-2.png`,
+	})
+
+	// Should have different RSRP
+	const location3 = page.locator('.asset-location-circle-3')
+	const location3Size = await location3.boundingBox()
+	await location3.click({
+		position: {
+			x: (location3Size?.width ?? 500) * 0.55,
+			y: (location3Size?.height ?? 500) * 0.55,
+		},
+	})
+	await expect(
+		page.locator(
+			`#asset-map .leaflet-popup:last-of-type [data-test="asset-roaming-info-rsrp"]`,
+		),
+	).toContainText('(-97 dBm)')
+
+	await page.screenshot({
+		path: `./test-session/map-historical-locations-3.png`,
 	})
 })

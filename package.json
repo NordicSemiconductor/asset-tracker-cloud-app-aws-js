@@ -9,7 +9,7 @@
     "preview": "vite preview",
     "prepare": "husky install",
     "test": "node --experimental-vm-modules ./node_modules/jest/bin/jest.js --passWithNoTests",
-    "test:e2e": "tsc -p e2e-tests/tsconfig.json && node e2e-tests-out/e2e-tests/setup.js && npx playwright test -c e2e-tests-out/e2e-tests/unauthenticated && npx playwright test -c e2e-tests-out/e2e-tests/authenticated && npx playwright test -c e2e-tests-out/e2e-tests/clean-up"
+    "test:e2e": "npx tsc -p e2e-tests/tsconfig.json && node e2e-tests-out/e2e-tests/setup.js && npx playwright test -c e2e-tests-out/e2e-tests/unauthenticated && npx playwright test -c e2e-tests-out/e2e-tests/authenticated && npx playwright test -c e2e-tests-out/e2e-tests/clean-up"
   },
   "repository": {
     "type": "git",

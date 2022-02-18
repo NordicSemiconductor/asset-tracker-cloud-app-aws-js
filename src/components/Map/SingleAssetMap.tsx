@@ -95,6 +95,7 @@ export const SingleAssetMap = ({ asset, twin }: AssetWithTwin) => {
 	if (!enableHistory && twin.reported.gnss !== undefined)
 		locations.push({
 			location: toLocation(twin.reported.gnss),
+			roaming: twin.reported.roam,
 		})
 
 	// If history is enabled, fetch positions according to selected date range
@@ -102,7 +103,15 @@ export const SingleAssetMap = ({ asset, twin }: AssetWithTwin) => {
 		locations.push(...locationHistory)
 	}
 
-	const center = locations?.[0]
+	// Take loast known locations and sort by date, set center to most recent one.
+	const possibleCenters = [
+		locations?.[0]?.location,
+		neighboringCellGeoLocation,
+		cellGeoLocation,
+		locationHistory[0]?.location,
+	].filter((f) => f !== undefined) as GeoLocation[]
+	possibleCenters.sort(({ ts: t1 }, { ts: t2 }) => t2.getTime() - t1.getTime())
+	const center = possibleCenters[0]
 
 	if (center === undefined) return <NoMap /> // No location data at all to display
 
@@ -127,7 +136,7 @@ const AssetMap = ({
 	neighboringCellGeoLocation,
 }: {
 	asset: Asset
-	center: AssetGeoLocation
+	center: GeoLocation
 	locations: AssetGeoLocation[]
 	cellGeoLocation?: CellGeoLocation
 	neighboringCellGeoLocation?: CellGeoLocation
@@ -136,12 +145,12 @@ const AssetMap = ({
 
 	const [map, setmap] = useState<LeafletMap>()
 	if (map !== undefined && settings.follow) {
-		map.flyTo(center.location.position, settings.zoom)
+		map.flyTo(center.position, settings.zoom)
 	}
 
 	return (
 		<MapContainer
-			center={center.location.position}
+			center={center.position}
 			zoom={settings.zoom}
 			whenCreated={setmap}
 			className={styles.mapContainer}
@@ -155,9 +164,38 @@ const AssetMap = ({
 				attribution='&amp;copy <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
 				url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
 			/>
-			<Marker position={center.location.position} icon={markerIcon}>
+			<Marker position={center.position} icon={markerIcon}>
 				<Popup pane="popupPane">{asset.name}</Popup>
 			</Marker>
+			{/* Cell Geolocation */}
+			<Pane name={`cellGeolocation`} style={{ zIndex: 400 }}>
+				{cellGeoLocation && settings.enabledLayers.singleCellGeoLocations && (
+					<Circle
+						center={cellGeoLocation.position}
+						radius={cellGeoLocation.position.accuracy}
+						color={'#F6C270'}
+					>
+						<Popup pane="popupPane">
+							Approximate location based on asset's cell information.
+						</Popup>
+					</Circle>
+				)}
+			</Pane>
+			{/* Neighboring Cell Geolocation */}
+			<Pane name={`neighboringCellGeoLocation`} style={{ zIndex: 410 }}>
+				{neighboringCellGeoLocation &&
+					settings.enabledLayers.multiCellGeoLocations && (
+						<Circle
+							center={neighboringCellGeoLocation.position}
+							radius={neighboringCellGeoLocation.position.accuracy}
+							color={'#E56399'}
+						>
+							<Popup pane="popupPane">
+								Approximate location based on neighboring cell information.
+							</Popup>
+						</Circle>
+					)}
+			</Pane>
 			{(locations.length ?? 0) > 0 &&
 				locations.map(
 					(
@@ -179,41 +217,6 @@ const AssetMap = ({
 
 						return (
 							<React.Fragment key={`history-${k}`}>
-								{/* Cell Geolocation */}
-								<Pane name={`cellGeolocation-${id}`} style={{ zIndex: 400 }}>
-									{cellGeoLocation &&
-										settings.enabledLayers.singleCellGeoLocations && (
-											<Circle
-												center={cellGeoLocation.position}
-												radius={cellGeoLocation.position.accuracy}
-												color={'#F6C270'}
-											>
-												<Popup pane="popupPane">
-													Approximate location based on asset's cell
-													information.
-												</Popup>
-											</Circle>
-										)}
-								</Pane>
-								{/* Neighboring Cell Geolocation */}
-								<Pane
-									name={`neighboringCellGeoLocation-${id}`}
-									style={{ zIndex: 410 }}
-								>
-									{neighboringCellGeoLocation &&
-										settings.enabledLayers.multiCellGeoLocations && (
-											<Circle
-												center={neighboringCellGeoLocation.position}
-												radius={neighboringCellGeoLocation.position.accuracy}
-												color={'#E56399'}
-											>
-												<Popup pane="popupPane">
-													Approximate location based on neighboring cell
-													information.
-												</Popup>
-											</Circle>
-										)}
-								</Pane>
 								<Pane name={`assetLocation-${id}`} style={{ zIndex: 420 }}>
 									{/* outer circle */}
 									{!batch && (
@@ -308,21 +311,36 @@ const AssetMap = ({
 											{roaming !== undefined && (
 												<div className={`${styles.historyInfo} mt-4`}>
 													<dt>Connection</dt>
-													<dd className="text-end">
+													<dd
+														className="text-end"
+														data-test="asset-roaming-info-rsrp"
+													>
 														<SignalQuality dbm={roaming.v.rsrp} />
 													</dd>
 													<dt>Network</dt>
-													<dt>{roaming.v.nw}</dt>
+													<dt data-test="asset-roaming-info-nw">
+														{roaming.v.nw}
+													</dt>
 													<dt>Band</dt>
-													<dt>{roaming.v.band}</dt>
+													<dt data-test="asset-roaming-info-band">
+														{roaming.v.band}
+													</dt>
 													<dt>MCC/MNC</dt>
-													<dd>{roaming.v.mccmnc}</dd>
+													<dd data-test="asset-roaming-info-mccmnc">
+														{roaming.v.mccmnc}
+													</dd>
 													<dt>Area Code</dt>
-													<dd>{roaming.v.area}</dd>
+													<dd data-test="asset-roaming-info-area">
+														{roaming.v.area}
+													</dd>
 													<dt>Cell ID</dt>
-													<dd>{roaming.v.cell}</dd>
+													<dd data-test="asset-roaming-info-cell">
+														{roaming.v.cell}
+													</dd>
 													<dt>IP</dt>
-													<dd>{roaming.v.ip}</dd>
+													<dd data-test="asset-roaming-info-ip">
+														{roaming.v.ip}
+													</dd>
 													<dt>Time</dt>
 													<dd>
 														<time dateTime={new Date(roaming.ts).toISOString()}>

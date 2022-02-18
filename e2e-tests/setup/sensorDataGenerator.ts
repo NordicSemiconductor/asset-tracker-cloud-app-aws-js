@@ -290,13 +290,7 @@ export const timestreamDataGenerator = async ({
 						ts: now - 5 * 60 * 1000,
 						sensor: SensorProperties.GNSS,
 					},
-					{
-						v: {
-							rsrp: -99,
-						},
-						ts: Math.round(now - 4.5 * 60 * 1000),
-						sensor: SensorProperties.Roaming,
-					},
+
 					{
 						v: {
 							...locationCommon,
@@ -306,6 +300,13 @@ export const timestreamDataGenerator = async ({
 						},
 						ts: now - 4 * 60 * 1000,
 						sensor: SensorProperties.GNSS,
+					},
+					{
+						v: {
+							rsrp: -99,
+						},
+						ts: Math.round(now - 3.5 * 60 * 1000),
+						sensor: SensorProperties.Roaming,
 					},
 					{
 						v: {

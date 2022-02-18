@@ -35,11 +35,11 @@ const listThings =
 		limit,
 		startKey,
 	}: {
-		items?: ThingAttribute[]
+		items?: Required<ThingAttribute>[]
 		limit: number
 		startKey?: string
 	}): Promise<{
-		things: ThingAttribute[]
+		things: Required<ThingAttribute>[]
 		nextStartKey?: string
 	}> => {
 		const { things, nextToken } = await iot.send(
@@ -50,7 +50,10 @@ const listThings =
 		)
 		if (things === undefined)
 			return { things: items ?? [], nextStartKey: startKey }
-		const newItems = [...(items ?? []), ...filterTestThings(things ?? [])]
+		const newItems = [
+			...(items ?? []),
+			...filterTestThings(things ?? []),
+		] as Required<ThingAttribute>[]
 		if (nextToken === undefined || newItems.length >= limit)
 			return { things: newItems, nextStartKey: nextToken }
 		return listThings({ iot })({
@@ -64,7 +67,7 @@ export type IoTService = {
 	getThing: (thingName: string) => Promise<AssetWithTwin>
 	deleteThing: (thingName: string) => Promise<void>
 	listThings: (options?: { limit?: number; startKey?: string }) => Promise<{
-		things: ThingAttribute[]
+		things: Required<ThingAttribute>[]
 		nextStartKey?: string
 	}>
 	attachIotPolicyToIdentity: (args: {

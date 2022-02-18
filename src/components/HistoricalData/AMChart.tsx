@@ -20,8 +20,6 @@ export const AMChart = ({
 	const id = useRef<string>(nanoid())
 	const { startDate, endDate } = useChartDateRange()
 
-	console.log('AMChart', data)
-
 	useLayoutEffect(() => {
 		const root = am5.Root.new(id.current)
 		const chart = root.container.children.push(am5xy.XYChart.new(root, {}))

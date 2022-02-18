@@ -7,7 +7,7 @@ const now = Date.now()
 /**
  * @see https://github.com/NordicSemiconductor/asset-tracker-cloud-docs/blob/344a5a63945f7d9d14c8f37d4a96d6f666ba8148/docs/cloud-protocol/state.reported.aws.json
  */
-export const state: ReportedState = {
+export const state: Required<ReportedState> = {
 	bat: {
 		v: 2754,
 		ts: now,
@@ -52,7 +52,7 @@ export const state: ReportedState = {
 			cell: 30976,
 			ip: '10.96.67.53',
 		},
-		ts: now - 60 * 1000,
+		ts: now - 11 * 60 * 1000,
 	},
 }
 

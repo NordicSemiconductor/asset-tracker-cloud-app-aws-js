@@ -108,7 +108,6 @@ export const CurrentChartDateRangeProvider: FunctionComponent = ({
 						)
 						return
 					}
-					console.log(binInterval)
 					setBinInterval(binInterval)
 					storedBinInterval.set(binInterval)
 				},

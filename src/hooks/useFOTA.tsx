@@ -40,8 +40,6 @@ export const FOTAProvider: FunctionComponent = ({ children }) => {
 		let isMounted = true
 		if (asset === undefined) return
 
-		console.log('Fetching jobs...')
-
 		iot
 			.listJobs(asset.id)
 			.then((jobs) => {
@@ -92,7 +90,6 @@ export const FOTAProvider: FunctionComponent = ({ children }) => {
 			value={{
 				jobs,
 				reload: () => {
-					console.log('Reload')
 					setTimeout(() => {
 						setNonce(ulid())
 					}, 1000)

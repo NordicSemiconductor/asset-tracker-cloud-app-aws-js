@@ -155,6 +155,9 @@ const AssetMap = ({
 				attribution='&amp;copy <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
 				url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
 			/>
+			<Marker position={center.location.position} icon={markerIcon}>
+				<Popup pane="popupPane">{asset.name}</Popup>
+			</Marker>
 			{(locations.length ?? 0) > 0 &&
 				locations.map(
 					(
@@ -176,9 +179,6 @@ const AssetMap = ({
 
 						return (
 							<React.Fragment key={`history-${k}`}>
-								<Marker position={center.location.position} icon={markerIcon}>
-									<Popup pane="popupPane">{asset.name}</Popup>
-								</Marker>
 								{/* Cell Geolocation */}
 								<Pane name={`cellGeolocation-${id}`} style={{ zIndex: 400 }}>
 									{cellGeoLocation &&

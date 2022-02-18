@@ -12,8 +12,6 @@ import {
 } from '@nordicsemiconductor/cell-geolocation-helpers'
 import { fromEnv } from '@nordicsemiconductor/from-env'
 import { randomWords } from '@nordicsemiconductor/random-words'
-import { Static } from '@sinclair/typebox'
-import { Roaming } from 'asset/asset.js'
 import { promises as fs } from 'fs'
 import id128 from 'id128'
 import * as path from 'path'
@@ -22,7 +20,7 @@ import {
 	ncellmeasDeviceReportLocation,
 	state,
 } from './asset-reported-state.js'
-import { readingsGenerator } from './setup/sensorDataGenerator.js'
+import { timestreamDataGenerator } from './setup/sensorDataGenerator.js'
 
 const {
 	mqttEndpoint,
@@ -76,7 +74,7 @@ const globalSetup = async () => {
 
 	// Store cell geo location
 	console.log(`Storing cell geo location`)
-	const roam = state.roam as Static<typeof Roaming>
+	const roam = state.roam
 	await db.send(
 		new PutItemCommand({
 			TableName: cellGeoLocationCacheTableName,
@@ -116,7 +114,7 @@ const globalSetup = async () => {
 	// Historical sensor data
 	const [DatabaseName, TableName] = historicaldataTableInfo.split('|')
 	console.log(`Generating sensor readings ...`)
-	await readingsGenerator({
+	await timestreamDataGenerator({
 		thingName,
 		DatabaseName,
 		TableName,

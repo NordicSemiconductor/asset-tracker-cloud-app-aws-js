@@ -7,10 +7,12 @@ import { useChartDateRange } from 'hooks/useChartDateRange'
 import { useMapSettings } from 'hooks/useMapSettings'
 import { useServices } from 'hooks/useServices'
 import { useEffect, useState } from 'react'
-import { validPassthrough } from 'utils/validPassthrough'
+import { validateWithJSONSchema } from 'utils/validateWithJSONSchema'
+import { validFilter } from 'utils/validFilter'
 
-const validateGNSSReading = validPassthrough(GNSS)
-const validateRoamingReading = validPassthrough(Roaming)
+const validGNSSReadingFilter = validFilter(GNSS)
+const validateRoamingReading = validateWithJSONSchema(Roaming)
+const validRoamingReadingFilter = validFilter(Roaming)
 
 const toRoam = ({
 	objectValuesDouble,
@@ -94,18 +96,17 @@ export const useAssetLocationHistory = ({
 			.then((data) => {
 				// Validate the GNSS position data
 				const l = data
-					.filter(
-						({ objectValues, objectKeys, date }) =>
-							validateGNSSReading({
-								v: objectKeys.reduce(
-									(obj, k, i) => ({
-										...obj,
-										[k.split('.')[1]]: objectValues[i],
-									}),
-									{} as any,
-								),
-								ts: date.getTime(),
-							}) !== undefined,
+					.filter(({ objectValues, objectKeys, date }) =>
+						validGNSSReadingFilter({
+							v: objectKeys.reduce(
+								(obj, k, i) => ({
+									...obj,
+									[k.split('.')[1]]: objectValues[i],
+								}),
+								{} as any,
+							),
+							ts: date.getTime(),
+						}),
 					)
 					// Build the object with info whether the data came from a batch message
 					.map(({ objectValues, objectKeys, date, objectSource }) => {
@@ -188,9 +189,11 @@ export const useAssetLocationHistory = ({
 	}, [disabled, timestream, asset, startDate, endDate, numHistoryEntries])
 
 	/*
+
 	Fetch the roaming information. Since they are not published by the device
 	in the same message, we have to fetch the data from the same time frame
-	as the location data, and interleave it with the locations
+	as the location data, and interleave it with the locations.
+
 	Basically this is what the device reports:
 	> Roaming
 	> GNSS
@@ -205,85 +208,125 @@ export const useAssetLocationHistory = ({
 	> GNSS
 	> Roaming
 	> ...
+
 	So the roaming information for the GNSS reading in the result is
 	always the one reported *before* it.
+
+	Because the device can report partial updates, we need to build the
+	Roaming information from potentially multiple updates.
+
 	*/
 	useEffect(() => {
 		let isMounted = true
 		if (asset === undefined) return
 		if (locations.length === 0) return
 
-		Promise.all([
-			// So, fetch ONE roaming update, which is older than the first location.
-			timestream
-				.query<{
+		// So, first, build the state of the asset's roaming information,
+		// before the first location by fetching 100 updates older than that.
+		timestream
+			.query<{
+				objectValuesDouble: number[]
+				objectValuesVarchar: string[]
+				objectKeys: string[]
+				date: Date
+			}>((table) =>
+				[
+					`SELECT`,
+					`array_agg(measure_value::double) AS objectValuesDouble,`,
+					`array_agg(measure_value::varchar) AS objectValuesVarchar,`,
+					`array_agg(measure_name) AS objectKeys,`,
+					`time as date`,
+					`FROM ${table}`,
+					`WHERE deviceId='${asset.id}'`,
+					`AND substr(measure_name, 1, ${
+						SensorProperties.Roaming.length + 1
+					}) = '${SensorProperties.Roaming}.'`,
+					// Get the roaming updates *before* the first position
+					`AND time < '${timeStreamFormatDate(
+						locations[locations.length - 1].ts,
+					)}'`,
+					`GROUP BY measureGroup, time`,
+					// Sort descending so we can build the roaming object back starting with the latest update
+					`ORDER BY time DESC`,
+					// we have to stop somewhere, in case there was never a full update
+					// (according to what the web applications considers a full update, that is)
+					`LIMIT 100`,
+				].join('\n'),
+			)
+			.then((data) =>
+				// Build up the roaming reading by adding properties from updates to the object, until it is valid
+				data.reduce((roaming, data) => {
+					if (!('errors' in validateRoamingReading(roaming))) return roaming
+					const update = toRoam(data)
+					const roamingWithUpdate = {
+						ts: roaming.ts ?? update.ts,
+						v: {
+							// Older values will not overwrite newer values
+							...update.v,
+							...roaming.v,
+						},
+					}
+					return roamingWithUpdate
+				}, {} as Static<typeof Roaming>),
+			)
+			.then(async (firstRoam) => {
+				if (firstRoam === undefined) {
+					console.debug(
+						'[useAssetLocationHistory]',
+						`No valid roaming information found.`,
+					)
+				}
+				// Add newer (partial) roaming information, by fetch (partial)
+				// roaming updates which are newer than the first one and
+				// older than the last one.
+				const data = await timestream.query<{
 					objectValuesDouble: number[]
 					objectValuesVarchar: string[]
 					objectKeys: string[]
 					date: Date
-				}>(
-					(table) => `
-			SELECT
-			array_agg(measure_value::double) AS objectValuesDouble,
-			array_agg(measure_value::varchar) AS objectValuesVarchar,
-			array_agg(measure_name) AS objectKeys,
-			time as date
-			FROM ${table}
-			WHERE deviceId='${asset.id}'
-			AND substr(measure_name, 1, ${SensorProperties.Roaming.length + 1}) = '${
-						SensorProperties.Roaming
-					}.'
-			AND time <= '${timeStreamFormatDate(locations[0].ts)}'
-			GROUP BY measureGroup, time
-			ORDER BY time DESC
-			LIMIT 1`,
+				}>((table) =>
+					[
+						`SELECT`,
+						`array_agg(measure_value::double) AS objectValuesDouble,`,
+						`array_agg(measure_value::varchar) AS objectValuesVarchar,`,
+						`array_agg(measure_name) AS objectKeys,`,
+						`time as date`,
+						`FROM ${table}`,
+						`WHERE deviceId='${asset.id}'`,
+						`AND substr(measure_name, 1, ${
+							SensorProperties.Roaming.length + 1
+						}) = '${SensorProperties.Roaming}.'`,
+						`AND time >= '${timeStreamFormatDate(
+							locations[locations.length - 1].ts,
+						)}'`,
+						`AND time <= '${timeStreamFormatDate(locations[0].ts)}'`,
+						`GROUP BY measureGroup, time`,
+						`ORDER BY time DESC`,
+					].join('\n'),
 				)
-				.then(
-					(data) =>
-						data
-							.map(toRoam)
-							// Validate the Roaming info
-							.map(validateRoamingReading)
-							.filter((roam) => roam !== undefined) as Static<typeof Roaming>[],
-				),
-			// And, fetch roaming information which is newer than the first one and
-			// older than the last one.
-			timestream
-				.query<{
-					objectValuesDouble: number[]
-					objectValuesVarchar: string[]
-					objectKeys: string[]
-					date: Date
-				}>(
-					(table) => `
-			SELECT
-			array_agg(measure_value::double) AS objectValuesDouble,
-			array_agg(measure_value::varchar) AS objectValuesVarchar,
-			array_agg(measure_name) AS objectKeys,
-			time as date
-			FROM ${table}
-			WHERE deviceId='${asset.id}'
-			AND substr(measure_name, 1, ${SensorProperties.Roaming.length + 1}) = '${
-						SensorProperties.Roaming
-					}.'
-			AND time >= '${timeStreamFormatDate(locations[0]?.ts ?? new Date())}'
-			AND time <= '${timeStreamFormatDate(
-				locations[locations.length - 1]?.ts ?? new Date(),
-			)}'
-			GROUP BY measureGroup, time
-			ORDER BY time DESC`,
-				)
-				.then(
-					(data) =>
-						data
-							.map(toRoam)
-							// Validate the Roaming info
-							.map(validateRoamingReading)
-							.filter((roam) => roam !== undefined) as Static<typeof Roaming>[],
-				),
-		])
-			.then(([first, rest]) => [...first, ...rest])
+				return [firstRoam, data.map(toRoam)] as [
+					Static<typeof Roaming>,
+					Static<typeof Roaming>[],
+				]
+			})
+			.then(([firstRoam, updates]) => {
+				// Merge the updates with the one full update, and storing them as new full roaming states
+				const roaming: Static<typeof Roaming>[] = [firstRoam]
+				for (const update of updates) {
+					roaming.push({
+						ts: update.ts,
+						v: {
+							...roaming[roaming.length - 1].v,
+							...update.v,
+						},
+					})
+				}
+				return roaming.filter(validRoamingReadingFilter)
+			})
 			.then((roaming) => {
+				// Sort by descending time
+				roaming.sort(({ ts: t1 }, { ts: t2 }) => t2 - t1)
+				// Interleave the roaming information with the location data
 				const history = locations.map((location) => ({
 					location,
 					roaming: roaming.find(({ ts }) => ts <= location.ts.getTime()), // Find the first roaming entry that is older than the location

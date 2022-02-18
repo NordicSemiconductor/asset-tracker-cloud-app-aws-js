@@ -7,7 +7,18 @@ import {
 import { format } from 'date-fns'
 
 export const timeStreamFormatDate = (d: Date): string =>
-	format(d, 'yyyy-MM-dd HH:mm:ss.SSS')
+	format(
+		// Make sure the timezone is not dropped.
+		new Date(
+			d.getUTCFullYear(),
+			d.getUTCMonth(),
+			d.getUTCDate(),
+			d.getUTCHours(),
+			d.getUTCMinutes(),
+			d.getUTCSeconds(),
+		),
+		'yyyy-MM-dd HH:mm:ss.SSS',
+	)
 
 export type TimestreamService = {
 	query: <Result extends Record<string, any>>(
@@ -43,7 +54,7 @@ export const timestreamService = ({
 				const client = await queryClientPromise
 				const res = await client.send(new QueryCommand({ QueryString }))
 				const result = parseResult<Result>(res)
-				console.log('[Timestream]', {
+				console.debug('[Timestream]', {
 					timestreamQuery: QueryString,
 					result,
 				})

@@ -1,6 +1,6 @@
-import type { CellGeoLocation } from 'components/Map/types'
 import { useAppConfig } from 'hooks/useAppConfig'
 import { useAsset } from 'hooks/useAsset'
+import type { CellGeoLocation } from 'hooks/useMapData'
 import { useCallback, useEffect, useState } from 'react'
 
 export const useCellGeoLocation = (): {

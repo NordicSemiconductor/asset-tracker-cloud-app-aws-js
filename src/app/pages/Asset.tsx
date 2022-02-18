@@ -68,7 +68,7 @@ export const Asset = () => {
 				{asset !== undefined && twin !== undefined && (
 					<div className="card-header pt-0 pe-0 pb-0 ps-0">
 						<div data-intro="This map shows the location of your asset.">
-							<MapWithSettings asset={asset} twin={twin} />
+							<MapWithSettings asset={asset} />
 						</div>
 						<hr className="mt-0 mb-0" />
 						<div

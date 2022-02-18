@@ -1,6 +1,7 @@
 import type { Static } from '@sinclair/typebox'
 import type { Asset, GNSS } from 'asset/asset'
-import { useState } from 'react'
+import { useServices } from 'hooks/useServices'
+import { useEffect, useState } from 'react'
 
 type AssetLocation = {
 	asset: Asset
@@ -10,7 +11,17 @@ type AssetLocation = {
 export const useAssetLocations = (): AssetLocation[] => {
 	const [positions] = useState<AssetLocation[]>([])
 
+	const { iot } = useServices()
+
 	// FIXME: implement
+
+	useEffect(() => {
+		let isMounted = true
+
+		return () => {
+			isMounted = false
+		}
+	}, [iot])
 
 	return positions
 }

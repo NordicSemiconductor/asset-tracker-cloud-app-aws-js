@@ -1,11 +1,11 @@
-import type { CellGeoLocation } from 'components/Map/types'
 import { useAppConfig } from 'hooks/useAppConfig'
+import type { CellGeoLocation } from 'hooks/useMapData'
 import { useNeighboringCellMeasurementReport } from 'hooks/useNeighboringCellMeasurementReport'
 import { useCallback, useEffect, useState } from 'react'
 
-export const useNeighboringCellMeasurementReportGeoLocation = (): {
-	location?: CellGeoLocation
-} => {
+export const useNeighboringCellMeasurementReportGeoLocation = ():
+	| CellGeoLocation
+	| undefined => {
 	const { report } = useNeighboringCellMeasurementReport()
 	const [location, setLocation] = useState<CellGeoLocation>()
 	const { nCellMeasCellGeolocationApiEndpoint } = useAppConfig()
@@ -146,7 +146,5 @@ export const useNeighboringCellMeasurementReportGeoLocation = (): {
 		}
 	}, [reportId, report, geolocateReport])
 
-	return {
-		location,
-	}
+	return location
 }

@@ -1,24 +1,15 @@
-import type { Static } from '@sinclair/typebox'
-import type { Asset, AssetWithTwin, GNSS } from 'asset/asset'
+import type { Asset } from 'asset/asset'
 import { SignalQuality } from 'components/Asset/SignalQuality'
 import { EventHandler } from 'components/Map/EventHandler'
 import { markerIcon } from 'components/Map/MarkerIcon'
 import { NoMap } from 'components/Map/NoMap'
 import styles from 'components/Map/SingleAssetMap.module.css'
-import type {
-	AssetGeoLocation,
-	CellGeoLocation,
-	GeoLocation,
-	Position,
-} from 'components/Map/types'
 import { formatDistanceToNow } from 'date-fns'
-import { useAssetLocationHistory } from 'hooks/useAssetLocationHistory'
-import { useCellGeoLocation } from 'hooks/useCellGeoLocation'
+import { Position, useMapData } from 'hooks/useMapData'
 import { useMapSettings } from 'hooks/useMapSettings'
-import { useNeighboringCellMeasurementReportGeoLocation } from 'hooks/useNeighboringCellMeasurementReportGeoLocation'
 import type { Map as LeafletMap } from 'leaflet'
 import { nanoid } from 'nanoid'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import {
 	Circle,
 	MapConsumer,
@@ -65,300 +56,239 @@ const HeadingMarker = ({
 	</MapConsumer>
 )
 
-const toLocation = (gnss: Static<typeof GNSS>): GeoLocation => ({
-	position: {
-		lat: gnss.v.lat,
-		lng: gnss.v.lng,
-		accuracy: gnss.v.acc,
-		altitude: gnss.v.alt,
-		heading: gnss.v.hdg,
-		speed: gnss.v.spd,
-	},
-	ts: new Date(gnss.ts),
-	batch: false,
-})
+export const SingleAssetMap = ({ asset }: { asset: Asset }) => {
+	const { settings, update: updateSettings } = useMapSettings()
+	const { center, locations, neighboringCellGeoLocation, cellGeoLocation } =
+		useMapData()
+	const [map, setmap] = useState<LeafletMap>()
 
-export const SingleAssetMap = ({ asset, twin }: AssetWithTwin) => {
-	const { settings } = useMapSettings()
-	const { location: neighboringCellGeoLocation } =
-		useNeighboringCellMeasurementReportGeoLocation()
-	const { location: cellGeoLocation } = useCellGeoLocation()
-	const enableHistory = settings.enabledLayers.history
-
-	const locationHistory = useAssetLocationHistory({
-		disabled: !enableHistory,
-	})
-
-	const locations: AssetGeoLocation[] = []
-
-	// If history is disabled, use current position (if available)
-	if (!enableHistory && twin.reported.gnss !== undefined)
-		locations.push({
-			location: toLocation(twin.reported.gnss),
-			roaming: twin.reported.roam,
-		})
-
-	// If history is enabled, fetch positions according to selected date range
-	if (enableHistory) {
-		locations.push(...locationHistory)
-	}
-
-	// Take loast known locations and sort by date, set center to most recent one.
-	const possibleCenters = [
-		locations?.[0]?.location,
-		neighboringCellGeoLocation,
-		cellGeoLocation,
-		locationHistory[0]?.location,
-	].filter((f) => f !== undefined) as GeoLocation[]
-	possibleCenters.sort(({ ts: t1 }, { ts: t2 }) => t2.getTime() - t1.getTime())
-	const center = possibleCenters[0]
+	const { zoom, follow } = settings
+	const centerPosition = center?.position
+	useEffect(() => {
+		if (map === undefined) return
+		if (centerPosition === undefined) return
+		if (!follow) return
+		map.flyTo(centerPosition, zoom)
+	}, [map, centerPosition, zoom, follow])
 
 	if (center === undefined) return <NoMap /> // No location data at all to display
 
 	return (
 		<div id="asset-map">
-			<AssetMap
-				asset={asset}
-				center={center}
-				locations={locations}
-				neighboringCellGeoLocation={neighboringCellGeoLocation}
-				cellGeoLocation={cellGeoLocation}
-			/>
-		</div>
-	)
-}
-
-const AssetMap = ({
-	asset,
-	center,
-	locations,
-	cellGeoLocation,
-	neighboringCellGeoLocation,
-}: {
-	asset: Asset
-	center: GeoLocation
-	locations: AssetGeoLocation[]
-	cellGeoLocation?: CellGeoLocation
-	neighboringCellGeoLocation?: CellGeoLocation
-}) => {
-	const { settings, update: updateSettings } = useMapSettings()
-
-	const [map, setmap] = useState<LeafletMap>()
-	if (map !== undefined && settings.follow) {
-		map.flyTo(center.position, settings.zoom)
-	}
-
-	return (
-		<MapContainer
-			center={center.position}
-			zoom={settings.zoom}
-			whenCreated={setmap}
-			className={styles.mapContainer}
-		>
-			<EventHandler
-				onZoomEnd={({ map }) => {
-					updateSettings({ zoom: map.getZoom() })
-				}}
-			/>
-			<TileLayer
-				attribution='&amp;copy <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
-				url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-			/>
-			<Marker position={center.position} icon={markerIcon}>
-				<Popup pane="popupPane">{asset.name}</Popup>
-			</Marker>
-			{/* Cell Geolocation */}
-			<Pane name={`cellGeolocation`} style={{ zIndex: 400 }}>
-				{cellGeoLocation && settings.enabledLayers.singleCellGeoLocations && (
-					<Circle
-						center={cellGeoLocation.position}
-						radius={cellGeoLocation.position.accuracy}
-						color={'#F6C270'}
-					>
-						<Popup pane="popupPane">
-							Approximate location based on asset's cell information.
-						</Popup>
-					</Circle>
-				)}
-			</Pane>
-			{/* Neighboring Cell Geolocation */}
-			<Pane name={`neighboringCellGeoLocation`} style={{ zIndex: 410 }}>
-				{neighboringCellGeoLocation &&
-					settings.enabledLayers.multiCellGeoLocations && (
+			<MapContainer
+				center={center.position}
+				zoom={settings.zoom}
+				whenCreated={setmap}
+				className={styles.mapContainer}
+			>
+				<EventHandler
+					onZoomEnd={({ map }) => {
+						updateSettings({ zoom: map.getZoom() })
+					}}
+				/>
+				<TileLayer
+					attribution='&amp;copy <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
+					url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+				/>
+				<Marker position={center.position} icon={markerIcon}>
+					<Popup pane="popupPane">{asset.name}</Popup>
+				</Marker>
+				{/* Cell Geolocation */}
+				<Pane name={`cellGeolocation`} style={{ zIndex: 400 }}>
+					{cellGeoLocation && settings.enabledLayers.singleCellGeoLocations && (
 						<Circle
-							center={neighboringCellGeoLocation.position}
-							radius={neighboringCellGeoLocation.position.accuracy}
-							color={'#E56399'}
+							center={cellGeoLocation.position}
+							radius={cellGeoLocation.position.accuracy}
+							color={'#F6C270'}
 						>
 							<Popup pane="popupPane">
-								Approximate location based on neighboring cell information.
+								Approximate location based on asset's cell information.
 							</Popup>
 						</Circle>
 					)}
-			</Pane>
-			{(locations.length ?? 0) > 0 &&
-				locations.map(
-					(
-						{
-							location: {
-								position: { lat, lng, accuracy, heading, speed },
-								batch,
-								ts,
+				</Pane>
+				{/* Neighboring Cell Geolocation */}
+				<Pane name={`neighboringCellGeoLocation`} style={{ zIndex: 410 }}>
+					{neighboringCellGeoLocation &&
+						settings.enabledLayers.multiCellGeoLocations && (
+							<Circle
+								center={neighboringCellGeoLocation.position}
+								radius={neighboringCellGeoLocation.position.accuracy}
+								color={'#E56399'}
+							>
+								<Popup pane="popupPane">
+									Approximate location based on neighboring cell information.
+								</Popup>
+							</Circle>
+						)}
+				</Pane>
+				{(locations.length ?? 0) > 0 &&
+					locations.map(
+						(
+							{
+								location: {
+									position: { lat, lng, accuracy, heading, speed },
+									batch,
+									ts,
+								},
+								roaming,
 							},
-							roaming,
-						},
-						k,
-					) => {
-						const alpha = Math.round((1 - k / locations.length) * 255).toString(
-							16,
-						)
-						const color = `#1f56d2${alpha}`
-						const id = nanoid()
+							k,
+						) => {
+							const alpha = Math.round(
+								(1 - k / locations.length) * 255,
+							).toString(16)
+							const color = `#1f56d2${alpha}`
+							const id = nanoid()
 
-						return (
-							<React.Fragment key={`history-${k}`}>
-								<Pane name={`assetLocation-${id}`} style={{ zIndex: 420 }}>
-									{/* outer circle */}
-									{!batch && (
+							return (
+								<React.Fragment key={`history-${k}`}>
+									<Pane name={`assetLocation-${id}`} style={{ zIndex: 420 }}>
+										{/* outer circle */}
+										{!batch && (
+											<Circle
+												center={{ lat, lng }}
+												radius={accuracy}
+												color={color}
+											/>
+										)}
+										{/* red dashed circle to mark batch */}
+										{batch && (
+											<Circle
+												center={{ lat, lng }}
+												radius={accuracy}
+												stroke={true}
+												color={'#ff0000'}
+												weight={2}
+												fill={false}
+												dashArray={'3 6'}
+											/>
+										)}
+										{k > 0 && (
+											<Polyline
+												positions={[
+													locations[k - 1].location.position,
+													{ lat, lng },
+												]}
+												weight={settings.zoom > 16 ? 1 : 2}
+												lineCap={'round'}
+												color={color}
+												dashArray={'10'}
+											/>
+										)}
+										{heading !== undefined &&
+											settings.enabledLayers.headings && (
+												<HeadingMarker
+													position={{ lat, lng }}
+													heading={heading}
+													mapZoom={settings.zoom}
+													color={'#00000080'}
+												/>
+											)}
+										{/* background circle */}
 										<Circle
 											center={{ lat, lng }}
 											radius={accuracy}
-											color={color}
-										/>
-									)}
-									{/* red dashed circle to mark batch */}
-									{batch && (
-										<Circle
-											center={{ lat, lng }}
-											radius={accuracy}
-											stroke={true}
-											color={'#ff0000'}
-											weight={2}
-											fill={false}
-											dashArray={'3 6'}
-										/>
-									)}
-									{k > 0 && (
-										<Polyline
-											positions={[
-												locations[k - 1].location.position,
-												{ lat, lng },
-											]}
-											weight={settings.zoom > 16 ? 1 : 2}
-											lineCap={'round'}
-											color={color}
-											dashArray={'10'}
-										/>
-									)}
-									{heading !== undefined && settings.enabledLayers.headings && (
-										<HeadingMarker
-											position={{ lat, lng }}
-											heading={heading}
-											mapZoom={settings.zoom}
-											color={'#00000080'}
-										/>
-									)}
-									{/* background circle */}
-									<Circle
-										center={{ lat, lng }}
-										radius={accuracy}
-										fillColor={'#826717'}
-										stroke={false}
-										className={`asset-location-circle asset-location-circle-${k}`}
-									>
-										<Popup position={{ lat, lng }} pane="popupPane">
-											<div className={styles.historyInfo}>
-												{!nullOrUndefined(accuracy) && (
-													<>
-														<dt>Accuracy</dt>
-														<dd data-test="asset-location-info-accuracy">
-															{toFixed(accuracy as number)} m
-														</dd>
-													</>
-												)}
-												{!nullOrUndefined(speed) && (
-													<>
-														<dt>Speed</dt>
-														<dd data-test="asset-location-info-speed">
-															{toFixed(speed as number)} m/s
-														</dd>
-													</>
-												)}
-												{!nullOrUndefined(heading) && (
-													<>
-														<dt>Heading</dt>
-														<dd data-test="asset-location-info-heading">
-															{toFixed(heading as number)}°
-														</dd>
-													</>
-												)}
-												<dt>Time</dt>
-												<dd>
-													<time dateTime={new Date(ts).toISOString()}>
-														{formatDistanceToNow(ts, {
-															includeSeconds: true,
-															addSuffix: true,
-														})}
-													</time>
-												</dd>
-												{batch && (
-													<>
-														<dt>Batch</dt>
-														<dd>Yes</dd>
-													</>
-												)}
-											</div>
-											{roaming !== undefined && (
-												<div className={`${styles.historyInfo} mt-4`}>
-													<dt>Connection</dt>
-													<dd
-														className="text-end"
-														data-test="asset-roaming-info-rsrp"
-													>
-														<SignalQuality dbm={roaming.v.rsrp} />
-													</dd>
-													<dt>Network</dt>
-													<dt data-test="asset-roaming-info-nw">
-														{roaming.v.nw}
-													</dt>
-													<dt>Band</dt>
-													<dt data-test="asset-roaming-info-band">
-														{roaming.v.band}
-													</dt>
-													<dt>MCC/MNC</dt>
-													<dd data-test="asset-roaming-info-mccmnc">
-														{roaming.v.mccmnc}
-													</dd>
-													<dt>Area Code</dt>
-													<dd data-test="asset-roaming-info-area">
-														{roaming.v.area}
-													</dd>
-													<dt>Cell ID</dt>
-													<dd data-test="asset-roaming-info-cell">
-														{roaming.v.cell}
-													</dd>
-													<dt>IP</dt>
-													<dd data-test="asset-roaming-info-ip">
-														{roaming.v.ip}
-													</dd>
+											fillColor={'#826717'}
+											stroke={false}
+											className={`asset-location-circle asset-location-circle-${k}`}
+										>
+											<Popup position={{ lat, lng }} pane="popupPane">
+												<div className={styles.historyInfo}>
+													{!nullOrUndefined(accuracy) && (
+														<>
+															<dt>Accuracy</dt>
+															<dd data-test="asset-location-info-accuracy">
+																{toFixed(accuracy as number)} m
+															</dd>
+														</>
+													)}
+													{!nullOrUndefined(speed) && (
+														<>
+															<dt>Speed</dt>
+															<dd data-test="asset-location-info-speed">
+																{toFixed(speed as number)} m/s
+															</dd>
+														</>
+													)}
+													{!nullOrUndefined(heading) && (
+														<>
+															<dt>Heading</dt>
+															<dd data-test="asset-location-info-heading">
+																{toFixed(heading as number)}°
+															</dd>
+														</>
+													)}
 													<dt>Time</dt>
 													<dd>
-														<time dateTime={new Date(roaming.ts).toISOString()}>
-															{formatDistanceToNow(roaming.ts, {
+														<time dateTime={new Date(ts).toISOString()}>
+															{formatDistanceToNow(ts, {
 																includeSeconds: true,
 																addSuffix: true,
 															})}
 														</time>
 													</dd>
+													{batch && (
+														<>
+															<dt>Batch</dt>
+															<dd>Yes</dd>
+														</>
+													)}
 												</div>
-											)}
-										</Popup>
-									</Circle>
-								</Pane>
-							</React.Fragment>
-						)
-					},
-				)}
-		</MapContainer>
+												{roaming !== undefined && (
+													<div className={`${styles.historyInfo} mt-4`}>
+														<dt>Connection</dt>
+														<dd
+															className="text-end"
+															data-test="asset-roaming-info-rsrp"
+														>
+															<SignalQuality dbm={roaming.v.rsrp} />
+														</dd>
+														<dt>Network</dt>
+														<dt data-test="asset-roaming-info-nw">
+															{roaming.v.nw}
+														</dt>
+														<dt>Band</dt>
+														<dt data-test="asset-roaming-info-band">
+															{roaming.v.band}
+														</dt>
+														<dt>MCC/MNC</dt>
+														<dd data-test="asset-roaming-info-mccmnc">
+															{roaming.v.mccmnc}
+														</dd>
+														<dt>Area Code</dt>
+														<dd data-test="asset-roaming-info-area">
+															{roaming.v.area}
+														</dd>
+														<dt>Cell ID</dt>
+														<dd data-test="asset-roaming-info-cell">
+															{roaming.v.cell}
+														</dd>
+														<dt>IP</dt>
+														<dd data-test="asset-roaming-info-ip">
+															{roaming.v.ip}
+														</dd>
+														<dt>Time</dt>
+														<dd>
+															<time
+																dateTime={new Date(roaming.ts).toISOString()}
+															>
+																{formatDistanceToNow(roaming.ts, {
+																	includeSeconds: true,
+																	addSuffix: true,
+																})}
+															</time>
+														</dd>
+													</div>
+												)}
+											</Popup>
+										</Circle>
+									</Pane>
+								</React.Fragment>
+							)
+						},
+					)}
+			</MapContainer>
+		</div>
 	)
 }

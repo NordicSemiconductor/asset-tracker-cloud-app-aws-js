@@ -4,7 +4,7 @@ import { RelativeTime } from 'components/RelativeTime'
 import { useAssetLocations } from 'hooks/useAssetLocations'
 import type { Position } from 'hooks/useMapData'
 import type { Map as LeafletMap } from 'leaflet'
-import { useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { MapContainer, Marker, Popup, TileLayer } from 'react-leaflet'
 import { Link } from 'react-router-dom'
 
@@ -12,16 +12,20 @@ export const AllAssetsMap = () => {
 	const [map, setmap] = useState<LeafletMap>()
 	const positions = useAssetLocations()
 
-	const center: Position = {
-		lat: 63.421057567379194,
-		lng: 10.43714466087136,
-	}
+	const center: Position = useMemo(
+		() => ({
+			lat: 63.421057567379194,
+			lng: 10.43714466087136,
+		}),
+		[],
+	)
 
 	const zoom = 3
 
-	if (map) {
+	useEffect(() => {
+		if (map === undefined) return
 		map.flyTo(center)
-	}
+	}, [map, center])
 
 	return (
 		<main className={styles.assetsMap}>

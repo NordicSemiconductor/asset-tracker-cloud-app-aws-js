@@ -62,14 +62,24 @@ export const SingleAssetMap = ({ asset }: { asset: Asset }) => {
 		useMapData()
 	const [map, setmap] = useState<LeafletMap>()
 
-	const { zoom, follow } = settings
+	// Zoom to center
+	const { follow } = settings
 	const centerPosition = center?.position
 	useEffect(() => {
 		if (map === undefined) return
 		if (centerPosition === undefined) return
 		if (!follow) return
-		map.flyTo(centerPosition, zoom)
-	}, [map, centerPosition, zoom, follow])
+
+		// Wait a little before moving the map, otherwise Leaflet will act
+		// up while it's trying to zoom/center and markers are being re-rendered.
+		const centerTimeout = setTimeout(() => {
+			map.flyTo(centerPosition)
+		}, 500)
+
+		return () => {
+			clearTimeout(centerTimeout)
+		}
+	}, [map, centerPosition, follow])
 
 	if (center === undefined) return <NoMap /> // No location data at all to display
 

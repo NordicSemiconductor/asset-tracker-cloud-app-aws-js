@@ -38,7 +38,7 @@ test('Map with historical device location should be visible', async ({
 	})
 
 	// Zoom
-	for (let i = 0; i < 2; i++) {
+	for (let i = 0; i < 4; i++) {
 		await page.locator('.leaflet-control-zoom-in').click()
 		await page.waitForTimeout(500)
 	}

@@ -34,7 +34,7 @@ function* dataGenerator({
 	}
 }
 
-const writeHistoricalDataForDevice = async ({
+const writeHistoricalDataForAsset = async ({
 	deviceId,
 	data,
 	sensor,
@@ -150,7 +150,7 @@ export const timestreamDataGenerator = async ({
 		for (let i = 0; i < 24; i++) {
 			data.push(b.next().value)
 		}
-		await writeHistoricalDataForDevice({
+		await writeHistoricalDataForAsset({
 			DatabaseName,
 			TableName,
 			deviceId: thingName,

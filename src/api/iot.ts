@@ -9,21 +9,20 @@ import {
 	UpdateThingCommand,
 } from '@aws-sdk/client-iot'
 import {
-	GetThingShadowCommand,
 	IoTDataPlaneClient,
 	UpdateThingShadowCommand,
 } from '@aws-sdk/client-iot-data-plane'
 import type { S3Client } from '@aws-sdk/client-s3'
-import { fromUtf8, toUtf8 } from '@aws-sdk/util-utf8-browser'
+import { fromUtf8 } from '@aws-sdk/util-utf8-browser'
 import { cancelUpgradeFirmwareJob } from 'api/iot/cancelUpgradeFirmwareJob'
 import {
 	createFirmwareJob,
 	DeviceUpgradeFirmwareJob,
 } from 'api/iot/createFirmwareJob'
 import { deleteUpgradeFirmwareJob } from 'api/iot/deleteUpgradeFirmwareJob'
+import { getTwin } from 'api/iot/getTwin'
 import { listFirmwareJobs } from 'api/iot/listFirmwareJobs'
-import { toReported } from 'api/toReported'
-import type { AssetTwin, AssetWithTwin } from 'asset/asset'
+import type { Asset, AssetTwin, AssetWithTwin } from 'asset/asset'
 
 const filterTestThings = (things: ThingAttribute[]): ThingAttribute[] =>
 	things.filter((thing) => thing.attributes?.test === undefined)
@@ -35,11 +34,11 @@ const listThings =
 		limit,
 		startKey,
 	}: {
-		items?: Required<ThingAttribute>[]
+		items?: Asset[]
 		limit: number
 		startKey?: string
 	}): Promise<{
-		things: Required<ThingAttribute>[]
+		things: Asset[]
 		nextStartKey?: string
 	}> => {
 		const { things, nextToken } = await iot.send(
@@ -52,8 +51,12 @@ const listThings =
 			return { things: items ?? [], nextStartKey: startKey }
 		const newItems = [
 			...(items ?? []),
-			...filterTestThings(things ?? []),
-		] as Required<ThingAttribute>[]
+			...filterTestThings(things ?? []).map((item) => ({
+				id: item.thingName as string,
+				name: (item.attributes?.name ?? item.thingName) as string,
+				version: item.version ?? -1,
+			})),
+		] as Asset[]
 		if (nextToken === undefined || newItems.length >= limit)
 			return { things: newItems, nextStartKey: nextToken }
 		return listThings({ iot })({
@@ -65,9 +68,10 @@ const listThings =
 
 export type IoTService = {
 	getThing: (thingName: string) => Promise<AssetWithTwin>
+	getTwin: (thingName: string) => Promise<AssetTwin | undefined>
 	deleteThing: (thingName: string) => Promise<void>
 	listThings: (options?: { limit?: number; startKey?: string }) => Promise<{
-		things: Required<ThingAttribute>[]
+		things: Asset[]
 		nextStartKey?: string
 	}>
 	attachIotPolicyToIdentity: (args: {
@@ -112,46 +116,16 @@ export const iotService = ({
 					thingName,
 				}),
 			),
-			iotData
-				.send(
-					new GetThingShadowCommand({
-						thingName,
-					}),
-				)
-				.catch((err) => {
-					if (err.name !== 'ResourceNotFoundException') {
-						console.error(`Failed to fetch thing shadow`, err)
-					}
-					return { payload: undefined }
-				}),
-		]).then(
-			([{ thingName, attributes, version: thingVersion }, { payload }]) => {
-				const twin: AssetTwin = {
-					reported: {},
-					desired: {},
-					metadata: {},
-					version: -1,
-				}
-				if (payload !== undefined) {
-					const shadow = JSON.parse(toUtf8(payload))
-					if (shadow.state !== undefined) {
-						twin.reported = toReported(shadow.state.reported ?? {})
-						twin.desired = shadow.state.desired ?? {}
-						twin.metadata = shadow.metadata ?? {}
-						twin.version = shadow.version ?? -1
-					}
-				}
-
-				return {
-					asset: {
-						id: thingName as string,
-						name: (attributes?.name ?? thingName) as string,
-						version: thingVersion ?? -1,
-					},
-					twin,
-				}
+			getTwin({ iotData })(thingName),
+		]).then(([{ thingName, attributes, version: thingVersion }, twin]) => ({
+			asset: {
+				id: thingName as string,
+				name: (attributes?.name ?? thingName) as string,
+				version: thingVersion ?? -1,
 			},
-		),
+			twin,
+		})),
+	getTwin: getTwin({ iotData }),
 	deleteThing: async (thingName: string) => {
 		await iot.send(
 			new DeleteThingCommand({

@@ -14,7 +14,7 @@ export const selectCurrentAsset = async ({
 	await assetLink.waitFor()
 
 	while ((await assetLink.count()) === 0) {
-		console.debug(`Link to device ${name} not visible, load next page`)
+		console.debug(`Link to asset ${name} not visible, load next page`)
 		const loadMoreButton = page.locator(
 			`button:not(disabled):has-text("Load more")`,
 		)

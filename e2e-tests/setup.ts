@@ -16,8 +16,8 @@ import { promises as fs } from 'fs'
 import id128 from 'id128'
 import * as path from 'path'
 import {
-	ncellmeasDeviceReport,
-	ncellmeasDeviceReportLocation,
+	ncellmeasReport,
+	ncellmeasReportLocation,
 	state,
 } from './asset-reported-state.js'
 import { timestreamDataGenerator } from './setup/sensorDataGenerator.js'
@@ -39,7 +39,7 @@ const globalSetup = async () => {
 	const words = await randomWords({ numWords: 3 })
 	const name = words.join('-')
 	const thingName = `web-app-ci-${name}`
-	console.debug(`Creating device`, thingName)
+	console.debug(`Creating asset`, thingName)
 
 	const { thingArn, thingId } = await new IoTClient({}).send(
 		new CreateThingCommand({
@@ -98,10 +98,10 @@ const globalSetup = async () => {
 		reportId: id128.Uuid4.generate().toCanonical(),
 		nw: roam.v.nw,
 		deviceId: thingName,
-		report: ncellmeasDeviceReport,
+		report: ncellmeasReport,
 		timestamp: Date.now().toString(),
 		unresolved: false,
-		...ncellmeasDeviceReportLocation,
+		...ncellmeasReportLocation,
 	}
 	console.log(`Storing neighboring cell report`)
 	await db.send(

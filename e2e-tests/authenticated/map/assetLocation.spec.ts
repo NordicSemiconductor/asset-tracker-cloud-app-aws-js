@@ -12,7 +12,7 @@ test.afterEach(checkForConsoleErrors)
 
 test.beforeEach(selectCurrentAsset)
 
-test('Map with device location should be visible', async ({ page }) => {
+test('Map with asset location should be visible', async ({ page }) => {
 	const mapMarker = page.locator('#asset-map .leaflet-marker-icon')
 	const mapMarkerPopup = page.locator('#asset-map .leaflet-popup')
 

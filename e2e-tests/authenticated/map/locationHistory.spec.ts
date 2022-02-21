@@ -12,7 +12,7 @@ test.afterEach(checkForConsoleErrors)
 
 test.beforeEach(selectCurrentAsset)
 
-test('Map with historical device location should be visible', async ({
+test('Map with historical asset location should be visible', async ({
 	page,
 }) => {
 	// Enable history and turn off cell geo location

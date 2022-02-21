@@ -56,7 +56,7 @@ export const state: Required<ReportedState> = {
 	},
 }
 
-export const ncellmeasDeviceReport: Static<typeof NCellMeasReport>['report'] = {
+export const ncellmeasReport: Static<typeof NCellMeasReport>['report'] = {
 	mcc: 242,
 	mnc: 1,
 	cell: 30976,
@@ -82,7 +82,7 @@ export const ncellmeasDeviceReport: Static<typeof NCellMeasReport>['report'] = {
 	ts: now - 11 * 60 * 1000,
 }
 
-export const ncellmeasDeviceReportLocation = {
+export const ncellmeasReportLocation = {
 	lng: 10.394017,
 	lat: 63.417746,
 	accuracy: 2000,

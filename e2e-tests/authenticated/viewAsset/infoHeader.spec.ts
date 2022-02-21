@@ -11,7 +11,7 @@ test.afterEach(checkForConsoleErrors)
 
 test.beforeEach(selectCurrentAsset)
 
-test('Info header should show device information', async ({ page }) => {
+test('Info header should show asset information', async ({ page }) => {
 	// Connection info
 	const connInfoLocator = page.locator(
 		`#info-header [data-test="connection-info"]`,

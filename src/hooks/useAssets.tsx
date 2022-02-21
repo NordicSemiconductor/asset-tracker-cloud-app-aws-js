@@ -54,14 +54,7 @@ export const AssetsProvider: FunctionComponent = ({ children }) => {
 		iot
 			.listThings({ startKey: nextStartKey })
 			.then(({ things, nextStartKey }) => {
-				setAssets((current) => [
-					...(current ?? []),
-					...things.map((thing) => ({
-						id: thing.thingName as string,
-						name: (thing.attributes?.name ?? thing.thingName) as string,
-						version: thing.version ?? -1,
-					})),
-				])
+				setAssets((current) => [...(current ?? []), ...things])
 				setPageState((state) => ({
 					...state,
 					nextStartKey,

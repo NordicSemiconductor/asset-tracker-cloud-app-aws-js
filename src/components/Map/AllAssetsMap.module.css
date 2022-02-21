@@ -11,3 +11,33 @@
   height: calc(100vh - 58px);
   width: 100%;
 }
+
+.dateRangeControl {
+  position: absolute;
+  background-color: #ffffff;
+  position: absolute;
+  z-index: 2000;
+  display: flex;
+  align-content: center;
+  justify-content: center;
+  align-items: center;
+  bottom: 12px;
+  left: 12px;
+  border-radius: 2px;
+}
+
+.dateRangeControl form {
+  margin: 0 0.5rem 0.5rem 0.5rem;
+  position: absolut;
+  z-index: 2001;
+}
+
+.dateRangeControl::after {
+  content: "";
+  width: calc(100% + 4px);
+  height: calc(100% + 4px);
+  border: 2px solid rgba(0, 0, 0, 0.2);
+  position: absolute;
+  border-radius: 4px;
+  z-index: 1999;
+}

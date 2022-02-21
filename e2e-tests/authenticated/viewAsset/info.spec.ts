@@ -15,7 +15,7 @@ test.beforeEach(selectCurrentAsset)
 test('Asset Information', async ({ page }) => {
 	await page.click('header[role="button"]:has-text("Asset Information")')
 
-	// Check device information
+	// Check asset information
 	for (const prop of ['imei', 'iccid', 'modV', 'brdV', 'appV']) {
 		await expect(
 			page.locator(`#asset-information [data-test="dev-${prop}"]`),

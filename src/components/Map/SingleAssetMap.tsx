@@ -1,5 +1,6 @@
 import type { Asset } from 'asset/asset'
 import { SignalQuality } from 'components/Asset/SignalQuality'
+import { CenterIcon } from 'components/FeatherIcon'
 import { EventHandler } from 'components/Map/EventHandler'
 import { markerIcon } from 'components/Map/MarkerIcon'
 import { NoMap } from 'components/Map/NoMap'
@@ -298,6 +299,17 @@ export const SingleAssetMap = ({ asset }: { asset: Asset }) => {
 							)
 						},
 					)}
+				<div className={styles.centerControl}>
+					<button
+						type="button"
+						onClick={() => {
+							map?.flyTo(center.position)
+						}}
+						title="Center map on asset"
+					>
+						<CenterIcon />
+					</button>
+				</div>
 			</MapContainer>
 		</div>
 	)

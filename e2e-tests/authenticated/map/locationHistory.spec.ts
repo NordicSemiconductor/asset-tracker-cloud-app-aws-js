@@ -38,18 +38,23 @@ test('Map with historical device location should be visible', async ({
 	})
 
 	// Zoom
-	for (let i = 0; i < 4; i++) {
+	for (let i = 0; i < 2; i++) {
 		await page.locator('.leaflet-control-zoom-in').click()
-		await page.waitForTimeout(500)
+		await page.waitForTimeout(750)
 	}
+
+	// Center
+	await page.locator(`button[title="Center map on asset"]`).click()
 
 	// Click on third location circle should show info
 	const location2 = page.locator('.asset-location-circle-2')
-	const location2Size = await location2.boundingBox()
+	await page.waitForSelector('.asset-location-circle-2')
+	const box2 = await location2.boundingBox()
+	// Click a bit off-center
 	await location2.click({
 		position: {
-			x: (location2Size?.width ?? 500) * 0.55,
-			y: (location2Size?.height ?? 500) * 0.55,
+			x: (box2?.width ?? 150) * 0.55,
+			y: (box2?.height ?? 150) * 0.55,
 		},
 	})
 	await expect(
@@ -96,11 +101,12 @@ test('Map with historical device location should be visible', async ({
 
 	// Should have different RSRP
 	const location3 = page.locator('.asset-location-circle-3')
-	const location3Size = await location3.boundingBox()
+	const box3 = await location3.boundingBox()
+	// Click a bit off-center
 	await location3.click({
 		position: {
-			x: (location3Size?.width ?? 500) * 0.55,
-			y: (location3Size?.height ?? 500) * 0.55,
+			x: (box3?.width ?? 150) * 0.55,
+			y: (box3?.height ?? 150) * 0.55,
 		},
 	})
 	await expect(

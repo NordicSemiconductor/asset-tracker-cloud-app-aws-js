@@ -19,3 +19,36 @@
 .historyInfo dd {
   flex-grow: 1;
 }
+
+.centerControl {
+  position: absolute;
+  background-color: #ffffff;
+  position: absolute;
+  z-index: 2000;
+  width: 30px;
+  height: 30px;
+  display: flex;
+  align-content: center;
+  justify-content: center;
+  align-items: center;
+  top: 80px;
+  left: 12px;
+  border-radius: 2px;
+}
+
+.centerControl::after {
+  content: "";
+  width: 34px;
+  height: 34px;
+  border: 2px solid rgba(0, 0, 0, 0.2);
+  position: absolute;
+  border-radius: 4px;
+  z-index: 1999;
+}
+
+.centerControl button {
+  background-color: transparent;
+  border: 0;
+  position: absolute;
+  z-index: 2001;
+}

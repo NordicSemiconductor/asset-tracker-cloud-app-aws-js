@@ -29,16 +29,17 @@ test('Map with device location should be visible', async ({ page }) => {
 	// Zoom
 	for (let i = 0; i < 5; i++) {
 		await page.locator('.leaflet-control-zoom-in').click()
-		await page.waitForTimeout(500)
+		await page.waitForTimeout(750)
 	}
 
 	// Click on location circle should show info
+	const box = await page.locator('.asset-location-circle-0').boundingBox()
 	const assetLocation = page.locator('.asset-location-circle-0')
-	const size = await assetLocation.boundingBox()
+	// Click a bit off-center
 	await assetLocation.click({
 		position: {
-			x: (size?.width ?? 500) * 0.75,
-			y: (size?.height ?? 500) * 0.75,
+			x: (box?.width ?? 250) * 0.55,
+			y: (box?.height ?? 250) * 0.55,
 		},
 	})
 

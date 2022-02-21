@@ -455,6 +455,10 @@ export const FOTAIcon = (options?: TypedIconOptions) => (
 	<FeatherIcon {...options} title="FOTA" type="download-cloud" />
 )
 
+export const CenterIcon = (options?: TypedIconOptions) => (
+	<FeatherIcon {...options} title="center" type="crosshair" />
+)
+
 export const QueuedAtIcon = CloudUploadIcon
 
 export const LoadingIcon = (options?: TypedIconOptions) => (

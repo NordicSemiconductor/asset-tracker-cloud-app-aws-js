@@ -64,7 +64,7 @@ The frontend provides [end-to-end tests](./e2e-tests) using
 
 ### Configure AWS credentials
 
-The end-to-end tests run against a real instance of the
+The end-to-end tests run against an instance of the
 [nRF Asset Tracker for AWS](https://github.com/NordicSemiconductor/asset-tracker-cloud-aws-js).
 
 Either, use the credentials you created, when setting up the solution, or enable
@@ -73,7 +73,7 @@ The latter option is the recommended approach since it limits the permission
 scope to only the needed ones. They can also be used to
 [run the end-to-end tests on GitHub Actions](#running-end-to-end-tests-using-github-actions).
 
-Add these environment variables to you `.envrc`. Then run `direnv allow` to
+Add these environment variables to your `.envrc`. Then run `direnv allow` to
 allow it.
 
 ```bash
@@ -95,7 +95,7 @@ You can then run the tests using
 For developing tests it is helpful to run the
 [Playwright Inspector](https://playwright.dev/docs/inspector).
 
-Then launch the inspector **on your local machine** using
+You can enabled the inspector during the tests by running
 
     PWDEBUG=1 npx playwright test
 
@@ -133,7 +133,8 @@ You can set the secrets through the GitHub UI (make sure to create the
 [environment](https://docs.github.com/en/actions/deployment/targeting-different-environments/using-environments-for-deployment)
 in your repository first).
 
-Alternatively you can use the [GitHub CLI](https://cli.github.com/):
+Alternatively you can use the [GitHub CLI](https://cli.github.com/) using the
+environment settings from above:
 
 ```bash
 gh secret set AWS_REGION --env production --body "${AWS_REGION}"

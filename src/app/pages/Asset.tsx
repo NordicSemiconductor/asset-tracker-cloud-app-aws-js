@@ -199,13 +199,9 @@ export const Asset = () => {
 								data-intro="This allows to delete the asset."
 							>
 								<DeleteAsset
-									onDelete={() => {
-										deleteAsset()
-											.then(() => {
-												setDeleted(true)
-												reload()
-											})
-											.catch((err) => console.error(`[delete asset]`, err))
+									onDeleted={() => {
+										setDeleted(true)
+										reload()
 									}}
 								/>
 							</Collapsable>

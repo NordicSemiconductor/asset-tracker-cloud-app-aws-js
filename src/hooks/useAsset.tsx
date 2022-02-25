@@ -100,12 +100,9 @@ export const AssetProvider: FunctionComponent = ({ children }) => {
 				twin: currentAsset?.twin,
 				deleteAsset: async () => {
 					if (currentAsset?.asset === undefined) return
-					return iot
-						.deleteThing(currentAsset.asset.id)
-						.then(() => {
-							setAssetId(undefined)
-						})
-						.catch((err) => console.error(`[useAsset:deleteAsset]`, err))
+					return iot.deleteThing(currentAsset.asset.id).then(() => {
+						setAssetId(undefined)
+					})
 				},
 				update: async ({ name, cfg }) => {
 					if (currentAsset?.asset === undefined) return

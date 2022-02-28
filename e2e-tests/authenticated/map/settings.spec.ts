@@ -17,7 +17,7 @@ test('Show map settings', async ({ page }) => {
 	await expect(page.locator('#mapSettingsSingleCellGeoLocations')).toBeChecked()
 	await expect(page.locator('#mapSettingsMultiCellGeoLocations')).toBeChecked()
 	await expect(page.locator('#mapSettingsHeadings')).not.toBeChecked()
-	await expect(page.locator('#mapSettingsFetchHistory')).not.toBeChecked()
+	await expect(page.locator('#mapSettingsFetchGNSSHistory')).not.toBeChecked()
 	await page.screenshot({
 		path: `./test-session/map-settings.png`,
 	})

@@ -1,4 +1,10 @@
+import {
+	cellId,
+	NetworkMode,
+} from '@nordicsemiconductor/cell-geolocation-helpers'
 import type { Static } from '@sinclair/typebox'
+import { fetchRoamingData } from 'api/fetchRoamingData'
+import { geolocateCell } from 'api/geolocateCell'
 import type { GNSS, Roaming } from 'asset/asset'
 import { useAsset } from 'hooks/useAsset'
 import { useAssetLocationHistory } from 'hooks/useAssetLocationHistory'
@@ -13,6 +19,8 @@ import {
 	useEffect,
 	useState,
 } from 'react'
+import { useAppConfig } from './useAppConfig'
+import { useServices } from './useServices'
 
 export type Position = { lat: number; lng: number }
 
@@ -25,6 +33,7 @@ export type GeoLocation = {
 	}
 	batch: boolean
 	ts: Date
+	source: 'GNSS' | 'SingleCell' | 'NeighboringCell'
 }
 
 export type CellGeoLocation = {
@@ -49,6 +58,7 @@ const toLocation = (gnss: Static<typeof GNSS>): GeoLocation => ({
 	},
 	ts: new Date(gnss.ts),
 	batch: false,
+	source: 'GNSS',
 })
 
 export const MapDataContext = createContext<{
@@ -74,18 +84,27 @@ export const MapDataProvider: FunctionComponent = ({ children }) => {
 	const {
 		range: { start, end },
 	} = useChartDateRange()
+	const { timestream } = useServices()
+	const [singleCellGeoLocations, setSingleCellGeoLocations] = useState<
+		{
+			roaming: Static<typeof Roaming>
+			location: GeoLocation
+		}[]
+	>([])
 
-	const numHistoryEntries = settings.numHistoryEntries
-	const enableHistory = settings.enabledLayers.history
-
+	/**
+	 * Fetch GNSS history
+	 */
+	const maxGnssHistoryEntries = settings.maxGnssHistoryEntries
+	const enableGNSSHistory = settings.enabledLayers.gnssHistory
 	useEffect(() => {
 		let isMounted = true
-		if (!enableHistory) return
+		if (!enableGNSSHistory) return
 		if (asset === undefined) return
 
 		history({
 			asset,
-			limit: numHistoryEntries,
+			limit: maxGnssHistoryEntries,
 			range: { start, end },
 		})
 			.then((data) => {
@@ -99,25 +118,111 @@ export const MapDataProvider: FunctionComponent = ({ children }) => {
 		return () => {
 			isMounted = false
 		}
-	}, [enableHistory, asset, start, end, numHistoryEntries, history])
+	}, [enableGNSSHistory, asset, start, end, maxGnssHistoryEntries, history])
+
+	/**
+	 * Fetch single cell geo location history
+	 */
+	const maxSingleCellGeoLocationHistoryEntries =
+		settings.maxSingleCellGeoLocationHistoryEntries
+	const enabledSingleCellGeoLocationHistory =
+		settings.enabledLayers.singleCellGeoLocationHistory
+	const { geolocationApiEndpoint } = useAppConfig()
+	const locate = geolocateCell({
+		geolocationApiEndpoint,
+	})
+	useEffect(() => {
+		let isMounted = true
+		if (!enabledSingleCellGeoLocationHistory) return
+		if (asset === undefined) return
+
+		fetchRoamingData({
+			asset,
+			timestream,
+			start,
+			end,
+		})
+			// Build list of unique cells
+			.then((data) =>
+				data.reduce((cellMap, roam) => {
+					const id = cellId({
+						...roam.v,
+						nw: roam.v.nw.includes('NB-IoT')
+							? NetworkMode.NBIoT
+							: NetworkMode.LTEm,
+					})
+					if (cellMap[id] === undefined) {
+						cellMap[id] = roam
+					}
+					return cellMap
+				}, {} as Record<string, Static<typeof Roaming>>),
+			)
+			// Resolve
+			.then((cellMap) =>
+				Promise.all(
+					Object.values(cellMap).map((roam) =>
+						locate({
+							area: roam.v.area,
+							cell: roam.v.cell,
+							mccmnc: roam.v.mccmnc,
+							nw: roam.v.nw.includes('NB-IoT') ? 'nbiot' : 'ltem',
+							reportedAt: new Date(roam.ts),
+						}).promise.then((maybeLocation) => {
+							// Make locations available immediately as they are resolved
+							if (maybeLocation === undefined) return
+							if (!isMounted) return
+							setSingleCellGeoLocations((locations) => [
+								...locations,
+								{
+									roaming: roam,
+									location: {
+										source: 'SingleCell',
+										batch: false,
+										ts: maybeLocation.ts,
+										position: maybeLocation.position,
+									},
+								},
+							])
+						}),
+					),
+				),
+			)
+			.catch((err) => console.error(`[useMapData]`, err))
+
+		return () => {
+			isMounted = false
+		}
+	}, [
+		asset,
+		maxSingleCellGeoLocationHistoryEntries,
+		enabledSingleCellGeoLocationHistory,
+		start,
+		end,
+	])
 
 	const locations: AssetGeoLocation[] = []
 
 	// If history is disabled, use current position (if available)
-	if (!enableHistory && twin?.reported?.gnss !== undefined)
+	if (!enableGNSSHistory && twin?.reported?.gnss !== undefined)
 		locations.push({
 			location: toLocation(twin.reported.gnss),
 			roaming: twin.reported.roam,
 		})
 
 	// If history is enabled, fetch positions according to selected date range
-	if (enableHistory) {
+	if (enableGNSSHistory) {
 		locations.push(...locationHistory)
+	}
+
+	// Add single cell locations if available
+	if (enabledSingleCellGeoLocationHistory) {
+		locations.push(...singleCellGeoLocations)
 	}
 
 	// Take loast known locations and sort by date, set center to most recent one.
 	const possibleCenters = [
-		locations?.[0]?.location,
+		locations?.filter(({ location: { source } }) => source === 'GNSS')?.[0]
+			?.location,
 		neighboringCellGeoLocation,
 		cellGeoLocation,
 		locationHistory[0]?.location,

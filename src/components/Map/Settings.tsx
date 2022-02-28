@@ -1,6 +1,6 @@
-import cx from 'classnames'
 import { ChartDateRange } from 'components/ChartDateRange/ChartDateRange'
 import { useMapSettings } from 'hooks/useMapSettings'
+import { SwitchWithNumber } from './SwitchWithNumber'
 
 export const MapSettings = () => {
 	const { settings, update: updateSettings } = useMapSettings()
@@ -100,11 +100,11 @@ export const MapSettings = () => {
 								name="multiCellGeoLocation"
 								onChange={() => {
 									updateEnabledLayers({
-										multiCellGeoLocations:
-											!settings.enabledLayers.multiCellGeoLocations,
+										neighboringCellGeoLocations:
+											!settings.enabledLayers.neighboringCellGeoLocations,
 									})
 								}}
-								checked={settings.enabledLayers.multiCellGeoLocations}
+								checked={settings.enabledLayers.neighboringCellGeoLocations}
 								id="mapSettingsMultiCellGeoLocations"
 							/>
 							<label htmlFor="mapSettingsMultiCellGeoLocations">
@@ -113,53 +113,64 @@ export const MapSettings = () => {
 						</div>
 					</div>
 				</div>
-				<div
-					className={cx('row ps-1 pe-1', {
-						'mb-2': !settings.enabledLayers.history,
-					})}
-				>
-					<div className="col-sm-6 d-flex">
-						<div
-							className="form-check form-switch"
-							data-intro="Whether to show location history of the asset."
-						>
-							<input
-								className="form-check-input"
-								type="checkbox"
-								name="fetchHistoricalData"
-								onChange={() => {
-									updateEnabledLayers({
-										history: !settings.enabledLayers.history,
-									})
-								}}
-								checked={settings.enabledLayers.history}
-								id="mapSettingsFetchHistory"
-							/>
-							<label htmlFor="mapSettingsFetchHistory" className="text-nowrap">
-								Fetch history
-							</label>
-						</div>
-					</div>
-					{settings.enabledLayers.history && (
-						<div className="col-sm-6">
-							<div className="input-group input-group-sm ">
-								<input
-									type="number"
-									className="form-control"
-									value={settings.numHistoryEntries ?? '10'}
-									min={1}
-									step={1}
-									onChange={({ target: { value } }) => {
-										updateSettings({ numHistoryEntries: parseInt(value, 10) })
-									}}
-								/>
-								<span className="input-group-text">entries</span>
-							</div>
-						</div>
-					)}
+				<div className="row ps-1 pe-1 mb-1">
+					<SwitchWithNumber
+						id="mapSettingsFetchGNSSHistory"
+						label="GNSS location history"
+						enabled={settings.enabledLayers.gnssHistory}
+						onChange={(gnssHistory) =>
+							updateEnabledLayers({
+								gnssHistory,
+							})
+						}
+						value={settings.maxGnssHistoryEntries}
+						updateValue={(maxGnssHistoryEntries) =>
+							updateSettings({
+								maxGnssHistoryEntries,
+							})
+						}
+					/>
+				</div>
+				<div className="row ps-1 pe-1 mb-1">
+					<SwitchWithNumber
+						id="mapSettingsFetchSingleCellHistory"
+						label="Single cell location history"
+						enabled={settings.enabledLayers.singleCellGeoLocationHistory}
+						onChange={(singleCellGeoLocationHistory) =>
+							updateEnabledLayers({
+								singleCellGeoLocationHistory,
+							})
+						}
+						value={settings.maxSingleCellGeoLocationHistoryEntries}
+						updateValue={(maxSingleCellGeoLocationHistoryEntries) =>
+							updateSettings({
+								maxSingleCellGeoLocationHistoryEntries,
+							})
+						}
+					/>
+				</div>
+				<div className="row ps-1 pe-1 mb-1">
+					<SwitchWithNumber
+						id="mapSettingsFetchNeighboringCellHistory"
+						label="Neighboring cell location history"
+						enabled={settings.enabledLayers.neighboringCellGeoLocationHistory}
+						onChange={(neighboringCellGeoLocationHistory) =>
+							updateEnabledLayers({
+								neighboringCellGeoLocationHistory,
+							})
+						}
+						value={settings.maxNeighboringCellGeoLocationHistoryEntries}
+						updateValue={(maxNeighboringCellGeoLocationHistoryEntries) =>
+							updateSettings({
+								maxNeighboringCellGeoLocationHistoryEntries,
+							})
+						}
+					/>
 				</div>
 			</form>
-			{settings.enabledLayers.history && (
+			{(settings.enabledLayers.gnssHistory ||
+				settings.enabledLayers.singleCellGeoLocationHistory ||
+				settings.enabledLayers.neighboringCellGeoLocationHistory) && (
 				<div data-intro="This configures the date range for which to fetch historical locations for the asset.">
 					<ChartDateRange className="ms-2 me-2 mb-2 mt-2" hideBinControls />
 				</div>

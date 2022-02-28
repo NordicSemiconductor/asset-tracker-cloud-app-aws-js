@@ -6,14 +6,13 @@ import { markerIcon } from 'components/Map/MarkerIcon'
 import { NoMap } from 'components/Map/NoMap'
 import styles from 'components/Map/SingleAssetMap.module.css'
 import { formatDistanceToNow } from 'date-fns'
-import { Position, useMapData } from 'hooks/useMapData'
+import { GeoLocation, useMapData } from 'hooks/useMapData'
 import { useMapSettings } from 'hooks/useMapSettings'
 import type { Map as LeafletMap } from 'leaflet'
 import { nanoid } from 'nanoid'
 import React, { useEffect, useState } from 'react'
 import {
 	Circle,
-	MapConsumer,
 	MapContainer,
 	Marker,
 	Pane,
@@ -23,39 +22,7 @@ import {
 } from 'react-leaflet'
 import { nullOrUndefined } from 'utils/nullOrUndefined'
 import { toFixed } from 'utils/toFixed'
-
-const HeadingMarker = ({
-	heading,
-	position,
-	mapZoom,
-	color,
-}: {
-	position: Position
-	heading: number
-	mapZoom: number
-	color?: string
-}) => (
-	<MapConsumer key={mapZoom}>
-		{(map) => {
-			const { x, y } = map.project(position, mapZoom)
-			const endpoint = map.unproject(
-				[
-					x + mapZoom * 3 * Math.cos((((heading - 90) % 360) * Math.PI) / 180),
-					y + mapZoom * 3 * Math.sin((((heading - 90) % 360) * Math.PI) / 180),
-				],
-				mapZoom,
-			)
-			return (
-				<Polyline
-					positions={[position, endpoint]}
-					weight={mapZoom > 16 ? 1 : 2}
-					lineCap={'round'}
-					color={color ?? '#000000'}
-				/>
-			)
-		}}
-	</MapConsumer>
-)
+import { HeadingMarker } from './HeadingMarker'
 
 export const SingleAssetMap = ({ asset }: { asset: Asset }) => {
 	const { settings, update: updateSettings } = useMapSettings()
@@ -121,7 +88,7 @@ export const SingleAssetMap = ({ asset }: { asset: Asset }) => {
 				{/* Neighboring Cell Geolocation */}
 				<Pane name={`neighboringCellGeoLocation`} style={{ zIndex: 410 }}>
 					{neighboringCellGeoLocation &&
-						settings.enabledLayers.multiCellGeoLocations && (
+						settings.enabledLayers.neighboringCellGeoLocations && (
 							<Circle
 								center={neighboringCellGeoLocation.position}
 								radius={neighboringCellGeoLocation.position.accuracy}
@@ -141,6 +108,7 @@ export const SingleAssetMap = ({ asset }: { asset: Asset }) => {
 									position: { lat, lng, accuracy, heading, speed },
 									batch,
 									ts,
+									source,
 								},
 								roaming,
 							},
@@ -245,6 +213,8 @@ export const SingleAssetMap = ({ asset }: { asset: Asset }) => {
 															<dd>Yes</dd>
 														</>
 													)}
+													<dt>Source</dt>
+													<dd>{formatSource(source)}</dd>
 												</div>
 												{roaming !== undefined && (
 													<div className={`${styles.historyInfo} mt-4`}>
@@ -313,4 +283,17 @@ export const SingleAssetMap = ({ asset }: { asset: Asset }) => {
 			</MapContainer>
 		</div>
 	)
+}
+
+const formatSource = (source: GeoLocation['source']): string => {
+	switch (source) {
+		case 'GNSS':
+			return 'GNSS'
+		case 'NeighboringCell':
+			return 'Neighboring cell geo location'
+		case 'SingleCell':
+			return 'Single cell geo location'
+		default:
+			return source
+	}
 }

@@ -33,7 +33,7 @@ import { useParams } from 'react-router-dom'
 
 export const Asset = () => {
 	const { id } = useParams()
-	const { setAssetId, asset, twin, deleteAsset } = useAsset()
+	const { setAssetId, asset, twin, error } = useAsset()
 	const { reload } = useAssets()
 	const [deleted, setDeleted] = useState<boolean>(false)
 
@@ -47,13 +47,16 @@ export const Asset = () => {
 	if (deleted)
 		return (
 			<Main>
-				<div className="card">
-					<div className="card-body">
-						<div className="alert alert-success mb-0" role="alert">
-							Asset <code>{id}</code> has been deleted.
-						</div>
-					</div>
+				<div className="alert alert-success mb-0" role="alert">
+					Asset <code>{id}</code> has been deleted.
 				</div>
+			</Main>
+		)
+
+	if (error)
+		return (
+			<Main>
+				<div className="alert alert-danger">{error.message}</div>
 			</Main>
 		)
 

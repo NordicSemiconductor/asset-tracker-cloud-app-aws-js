@@ -21,6 +21,7 @@ export const AssetContext = createContext<{
 		name?: string
 		cfg?: Static<typeof AssetConfig>
 	}) => Promise<void>
+	error?: Error
 }>({
 	setAssetId: () => undefined,
 	deleteAsset: async () => Promise.resolve(undefined),
@@ -35,6 +36,7 @@ export const AssetProvider: FunctionComponent = ({ children }) => {
 	const [assetId, setAssetId] = useState<string>()
 	const [currentAsset, setCurrentAsset] = useState<AssetWithTwin>()
 	const { autoUpdateIntervalInSeconds } = useAppConfig()
+	const [error, setError] = useState<Error>()
 
 	// Load current device
 	useEffect(() => {
@@ -42,13 +44,18 @@ export const AssetProvider: FunctionComponent = ({ children }) => {
 		if (assetId === undefined) return
 		if (currentAsset !== undefined) return // Already loaded
 
+		setError(undefined)
+
 		iot
 			.getThing(assetId)
 			.then((asset) => {
 				if (!isMounted) return
 				setCurrentAsset(asset)
 			})
-			.catch((err) => console.error(`[AssetContext]`, err))
+			.catch((err) => {
+				console.error(`[useAsset]`, err)
+				setError(err)
+			})
 
 		return () => {
 			isMounted = false
@@ -70,7 +77,7 @@ export const AssetProvider: FunctionComponent = ({ children }) => {
 					console.debug(`[autoUpdateAsset]`, 'update')
 					setCurrentAsset(updatedAsset)
 				})
-				.catch((err) => console.error(`[AssetContext]`, err))
+				.catch((err) => console.error(`[useAsset]`, err))
 		}
 
 		console.debug(`[autoUpdateAsset]`, 'enabled', autoUpdateIntervalInSeconds)
@@ -135,6 +142,7 @@ export const AssetProvider: FunctionComponent = ({ children }) => {
 						},
 					})
 				},
+				error,
 			}}
 		>
 			{children}

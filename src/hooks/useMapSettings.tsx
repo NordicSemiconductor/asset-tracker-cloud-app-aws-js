@@ -43,6 +43,7 @@ export const useMapSettings = () => useContext(MapSettingsContext)
 
 export const MapSettingsProvider: FunctionComponent = ({ children }) => {
 	const [settings, update] = useState<Settings>(userSettings.get())
+
 	return (
 		<MapSettingsContext.Provider
 			value={{

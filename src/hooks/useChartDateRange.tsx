@@ -3,18 +3,33 @@ import { createContext, FunctionComponent, useContext, useState } from 'react'
 import { dateFreezer, withLocalStorage } from 'utils/withLocalStorage'
 
 const defaultStart = sub(new Date(), { months: 1 })
-
-const storedStartDate = withLocalStorage<Date>({
-	key: 'chart:startDate',
-	defaultValue: defaultStart,
-	freezer: dateFreezer,
-})
-
 const defaultEnd = new Date()
-const storedEndDate = withLocalStorage<Date>({
-	key: 'chart:endDate',
-	defaultValue: defaultEnd,
-	freezer: dateFreezer,
+
+type DateRange = {
+	start: Date
+	end: Date
+}
+
+const storedDateRange = withLocalStorage<DateRange>({
+	key: 'chart:dateRange',
+	defaultValue: {
+		start: defaultStart,
+		end: new Date(),
+	},
+	freezer: {
+		freeze: (v) =>
+			JSON.stringify({
+				start: dateFreezer.freeze(v.start),
+				end: dateFreezer.freeze(v.end),
+			}),
+		unfreeze: (v) => {
+			const { start, end } = JSON.parse(v)
+			return {
+				start: dateFreezer.unfreeze(start),
+				end: dateFreezer.unfreeze(end),
+			}
+		},
+	},
 })
 
 const defaultBinInterval = '1hour'
@@ -42,11 +57,9 @@ const binIntevalPattern = new RegExp(
 )
 
 export const CurrentChartDateRangeContext = createContext<{
-	startDate: Date
-	endDate: Date
+	range: DateRange
 	binInterval: string
-	setStartDate: (_: Date) => void
-	setEndDate: (_: Date) => void
+	setRange: (range: DateRange) => void
 	setBinInterval: (_: string) => void
 	defaultStart: Date
 	defaultEnd: Date
@@ -55,11 +68,9 @@ export const CurrentChartDateRangeContext = createContext<{
 	binIntervalUnit: keyof typeof binIntervalUnits
 	binIntervalValue: number
 }>({
-	startDate: storedStartDate.get(),
-	endDate: storedEndDate.get(),
+	range: storedDateRange.get(),
 	binInterval: storedBinInterval.get(),
-	setStartDate: () => undefined,
-	setEndDate: () => undefined,
+	setRange: () => undefined,
 	setBinInterval: () => undefined,
 	defaultStart,
 	defaultEnd,
@@ -78,8 +89,7 @@ export const useChartDateRange = () => useContext(CurrentChartDateRangeContext)
 export const CurrentChartDateRangeProvider: FunctionComponent = ({
 	children,
 }) => {
-	const [startDate, setStartDate] = useState<Date>(storedStartDate.get())
-	const [endDate, setEndDate] = useState<Date>(storedEndDate.get())
+	const [range, setDateRange] = useState<DateRange>(storedDateRange.get())
 	const [binInterval, setBinInterval] = useState<string>(
 		storedBinInterval.get(),
 	)
@@ -87,18 +97,14 @@ export const CurrentChartDateRangeProvider: FunctionComponent = ({
 	return (
 		<CurrentChartDateRangeContext.Provider
 			value={{
-				startDate,
-				endDate,
+				range,
 				binInterval,
-				setStartDate: (startDate) => {
+				setRange: (range) => {
+					const { start: startDate, end: endDate } = range
 					if (startDate.getTime() > endDate.getTime()) return
-					setStartDate(startDate)
-					storedStartDate.set(startDate)
-				},
-				setEndDate: (endDate) => {
 					if (endDate.getTime() < startDate.getTime()) return
-					setEndDate(endDate)
-					storedEndDate.set(endDate)
+					setDateRange(range)
+					storedDateRange.set(range)
 				},
 				setBinInterval: (binInterval) => {
 					// See https://docs.aws.amazon.com/timestream/latest/developerguide/supported-data-types.html

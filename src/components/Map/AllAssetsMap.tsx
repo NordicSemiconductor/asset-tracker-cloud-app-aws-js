@@ -1,4 +1,4 @@
-import { ChartDateRange } from 'components/ChartDateRange'
+import { ChartDateRange } from 'components/ChartDateRange/ChartDateRange'
 import styles from 'components/Map/AllAssetsMap.module.css'
 import { markerIcon } from 'components/Map/MarkerIcon'
 import { RelativeTime } from 'components/RelativeTime'
@@ -13,7 +13,9 @@ import { Link } from 'react-router-dom'
 export const AllAssetsMap = () => {
 	const [map, setmap] = useState<LeafletMap>()
 	const positions = useAssetLocations()
-	const { startDate, endDate } = useChartDateRange()
+	const {
+		range: { start: startDate, end: endDate },
+	} = useChartDateRange()
 
 	const center: Position = useMemo(
 		() => ({
@@ -57,7 +59,7 @@ export const AllAssetsMap = () => {
 					</Marker>
 				))}
 				<div className={styles.dateRangeControl}>
-					<ChartDateRange hideBinControls />
+					<ChartDateRange hideBinControls noBorder />
 				</div>
 			</MapContainer>
 		</main>

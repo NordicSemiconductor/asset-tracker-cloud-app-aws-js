@@ -21,7 +21,10 @@ export const useAssetHistory = <Item extends Record<string, any>>({
 	disabled?: boolean
 }): Item[] => {
 	const [history, setHistory] = useState<Item[]>([])
-	const { startDate, endDate, binInterval } = useChartDateRange()
+	const {
+		range: { start: startDate, end: endDate },
+		binInterval,
+	} = useChartDateRange()
 	const { timestream } = useServices()
 	const { asset } = useAsset()
 

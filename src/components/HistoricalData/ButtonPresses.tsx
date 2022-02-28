@@ -1,4 +1,4 @@
-import { ChartDateRange } from 'components/ChartDateRange'
+import { ChartDateRange } from 'components/ChartDateRange/ChartDateRange'
 import { NoData } from 'components/NoData'
 import { RelativeTime } from 'components/RelativeTime'
 import { useAssetButtonPressesHistory } from 'hooks/useAssetButtonPressesHistory'
@@ -9,14 +9,14 @@ export const ButtonPresses = () => {
 	if (history.length === 0)
 		return (
 			<>
-				<ChartDateRange hideBinControls />
+				<ChartDateRange hideBinControls className="mb-4" />
 				<NoData />
 			</>
 		)
 
 	return (
 		<>
-			<ChartDateRange hideBinControls />
+			<ChartDateRange hideBinControls className="mb-4" />
 			<table className="table button-presses">
 				<thead>
 					<tr>

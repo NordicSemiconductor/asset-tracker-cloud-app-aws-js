@@ -47,7 +47,7 @@ export const ReportedTime = ({
 			staleAfterSeconds,
 		})
 	return (
-		<span className={`reportedTime d-flex ${className}`} {...restProps}>
+		<span className={`reportedTime d-flex ${className ?? ''}`} {...restProps}>
 			<IconWithText>
 				{staleAfterSeconds !== undefined && (
 					<OldWarning

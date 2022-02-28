@@ -18,7 +18,9 @@ export const AMChart = ({
 	className?: string
 }) => {
 	const id = useRef<string>(nanoid())
-	const { startDate, endDate } = useChartDateRange()
+	const {
+		range: { start: startDate, end: endDate },
+	} = useChartDateRange()
 
 	useLayoutEffect(() => {
 		const root = am5.Root.new(id.current)
@@ -84,7 +86,7 @@ export const AMChart = ({
 		<div
 			style={{ width: '100%', height: '400px' }}
 			id={id.current}
-			className={`historical-data-chart ${className}`}
+			className={`historical-data-chart ${className ?? ''}`}
 		/>
 	)
 }

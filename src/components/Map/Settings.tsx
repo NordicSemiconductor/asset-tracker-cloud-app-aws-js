@@ -1,5 +1,5 @@
 import cx from 'classnames'
-import { ChartDateRange } from 'components/ChartDateRange'
+import { ChartDateRange } from 'components/ChartDateRange/ChartDateRange'
 import { useMapSettings } from 'hooks/useMapSettings'
 
 export const MapSettings = () => {
@@ -161,7 +161,7 @@ export const MapSettings = () => {
 			</form>
 			{settings.enabledLayers.history && (
 				<div data-intro="This configures the date range for which to fetch historical locations for the asset.">
-					<ChartDateRange className="ms-2 me-2 mb-2" hideBinControls />
+					<ChartDateRange className="ms-2 me-2 mb-2 mt-2" hideBinControls />
 				</div>
 			)}
 		</>

@@ -30,7 +30,7 @@ export const Toggle = ({
 
 	return (
 		<div
-			className={`${className} toggle`}
+			className={`${className ?? ''} toggle`}
 			onClick={handleClick}
 			role={'button'}
 			tabIndex={0}

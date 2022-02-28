@@ -21,13 +21,12 @@
   align-content: center;
   justify-content: center;
   align-items: center;
-  bottom: 12px;
-  left: 12px;
+  top: 12px;
+  right: 12px;
   border-radius: 2px;
 }
 
 .dateRangeControl form {
-  margin: 0 0.5rem 0.5rem 0.5rem;
   position: absolut;
   z-index: 2001;
 }

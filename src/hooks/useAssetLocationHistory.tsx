@@ -44,7 +44,9 @@ export const useAssetLocationHistory = ({
 		settings: { numHistoryEntries },
 	} = useMapSettings()
 	const { timestream } = useServices()
-	const { startDate, endDate } = useChartDateRange()
+	const {
+		range: { start: startDate, end: endDate },
+	} = useChartDateRange()
 	const { asset } = useAsset()
 
 	const [locations, setLocations] = useState<GeoLocation[]>([])

@@ -1,4 +1,4 @@
-import { ChartDateRange } from 'components/ChartDateRange'
+import { ChartDateRange } from 'components/ChartDateRange/ChartDateRange'
 import { AMChart } from 'components/HistoricalData/AMChart'
 import { NoData } from 'components/NoData'
 import React from 'react'
@@ -11,7 +11,7 @@ export const AssetHistoryChart = ({
 	className?: string
 }) => (
 	<>
-		<ChartDateRange />
+		<ChartDateRange className="mb-4" />
 		{history.length === 0 ? (
 			<NoData />
 		) : (

@@ -357,6 +357,9 @@ export const XIcon = (options?: TypedIconOptions) => (
 export const XSquareIcon = (options?: TypedIconOptions) => (
 	<FeatherIcon {...options} title="[X]" type="x-square" />
 )
+export const CloseIcon = (options?: TypedIconOptions) => (
+	<FeatherIcon {...options} title="close" type="x" />
+)
 export const UnknownIcon = (options?: TypedIconOptions) => (
 	<FeatherIcon {...options} title="❓" type="alert-circle" />
 )

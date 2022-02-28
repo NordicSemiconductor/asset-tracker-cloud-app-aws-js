@@ -3,8 +3,16 @@ import type { GNSS, Roaming } from 'asset/asset'
 import { useAsset } from 'hooks/useAsset'
 import { useAssetLocationHistory } from 'hooks/useAssetLocationHistory'
 import { useCellGeoLocation } from 'hooks/useCellGeoLocation'
+import { useChartDateRange } from 'hooks/useChartDateRange'
 import { useMapSettings } from 'hooks/useMapSettings'
 import { useNeighboringCellMeasurementReportGeoLocation } from 'hooks/useNeighboringCellMeasurementReportGeoLocation'
+import {
+	createContext,
+	FunctionComponent,
+	useContext,
+	useEffect,
+	useState,
+} from 'react'
 
 export type Position = { lat: number; lng: number }
 
@@ -43,21 +51,55 @@ const toLocation = (gnss: Static<typeof GNSS>): GeoLocation => ({
 	batch: false,
 })
 
-export const useMapData = (): {
+export const MapDataContext = createContext<{
 	center?: GeoLocation
 	locations: AssetGeoLocation[]
 	neighboringCellGeoLocation?: CellGeoLocation
 	cellGeoLocation?: CellGeoLocation
-} => {
+}>({
+	locations: [],
+})
+
+export const useMapData = () => useContext(MapDataContext)
+
+export const MapDataProvider: FunctionComponent = ({ children }) => {
 	const { twin } = useAsset()
 	const { settings } = useMapSettings()
 	const neighboringCellGeoLocation =
 		useNeighboringCellMeasurementReportGeoLocation()
 	const { location: cellGeoLocation } = useCellGeoLocation()
+	const { history } = useAssetLocationHistory()
+	const [locationHistory, setLocationHistory] = useState<AssetGeoLocation[]>([])
+	const { asset } = useAsset()
+	const {
+		range: { start, end },
+	} = useChartDateRange()
+
+	const numHistoryEntries = settings.numHistoryEntries
 	const enableHistory = settings.enabledLayers.history
-	const locationHistory = useAssetLocationHistory({
-		disabled: !enableHistory,
-	})
+
+	useEffect(() => {
+		let isMounted = true
+		if (!enableHistory) return
+		if (asset === undefined) return
+
+		history({
+			asset,
+			limit: numHistoryEntries,
+			range: { start, end },
+		})
+			.then((data) => {
+				if (!isMounted) {
+					return
+				}
+				setLocationHistory(data)
+			})
+			.catch((err) => console.error(`[useMapData]`, err))
+
+		return () => {
+			isMounted = false
+		}
+	}, [enableHistory, asset, start, end, numHistoryEntries, history])
 
 	const locations: AssetGeoLocation[] = []
 
@@ -83,10 +125,16 @@ export const useMapData = (): {
 	possibleCenters.sort(({ ts: t1 }, { ts: t2 }) => t2.getTime() - t1.getTime())
 	const center = possibleCenters[0]
 
-	return {
-		center,
-		locations,
-		neighboringCellGeoLocation,
-		cellGeoLocation,
-	}
+	return (
+		<MapDataContext.Provider
+			value={{
+				center,
+				locations,
+				neighboringCellGeoLocation,
+				cellGeoLocation,
+			}}
+		>
+			{children}
+		</MapDataContext.Provider>
+	)
 }

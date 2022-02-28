@@ -77,7 +77,6 @@ export const useAssetLocations = (): AssetLocation[] => {
 			})
 
 		return () => {
-			console.log(`Unmounting ...`)
 			isMounted = false
 		}
 	}, [iot, startKey, fetchedStartKeys])

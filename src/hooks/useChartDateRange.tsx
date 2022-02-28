@@ -5,7 +5,7 @@ import { dateFreezer, withLocalStorage } from 'utils/withLocalStorage'
 const defaultStart = sub(new Date(), { months: 1 })
 const defaultEnd = new Date()
 
-type DateRange = {
+export type DateRange = {
 	start: Date
 	end: Date
 }

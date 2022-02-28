@@ -51,7 +51,7 @@ export const ServicesProvider: FunctionComponent<{
 	})
 
 	useEffect(() => {
-		// This attaches the
+		// This attaches the neccessary IoT policy to the user
 		iot
 			.attachIotPolicyToIdentity({
 				policyName: userIotPolicyName,

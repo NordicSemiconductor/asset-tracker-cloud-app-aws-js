@@ -1,14 +1,20 @@
 import { useAppConfig } from 'hooks/useAppConfig'
-import type { CellGeoLocation } from 'hooks/useMapData'
+import {
+	AssetGeoLocation,
+	GeoLocation,
+	GeoLocationSource,
+} from 'hooks/useMapData'
 import { useNeighboringCellMeasurementReport } from 'hooks/useNeighboringCellMeasurementReport'
 import { useCallback, useEffect, useState } from 'react'
+import { useMapSettings } from './useMapSettings'
 
 export const useNeighboringCellMeasurementReportGeoLocation = ():
-	| CellGeoLocation
+	| AssetGeoLocation
 	| undefined => {
 	const { report } = useNeighboringCellMeasurementReport()
-	const [location, setLocation] = useState<CellGeoLocation>()
+	const [location, setLocation] = useState<GeoLocation>()
 	const { nCellMeasCellGeolocationApiEndpoint } = useAppConfig()
+	const { settings } = useMapSettings()
 
 	const reportId = report?.reportId
 
@@ -17,14 +23,14 @@ export const useNeighboringCellMeasurementReportGeoLocation = ():
 			retryCount?: number,
 			maxTries?: number,
 		) => {
-			promise: Promise<CellGeoLocation | undefined>
+			promise: Promise<GeoLocation | undefined>
 			cancel: () => void
 		}
 	>(
 		(retryCount = 0, maxTries = 10) => {
 			let cancelled = false
 			let retryTimeout: NodeJS.Timeout
-			const promise = new Promise<CellGeoLocation | undefined>(
+			const promise = new Promise<GeoLocation | undefined>(
 				(resolve, reject) => {
 					if (report === undefined)
 						return reject(new Error(`No report defined`))
@@ -34,6 +40,7 @@ export const useNeighboringCellMeasurementReportGeoLocation = ():
 								? {
 										position: report.position,
 										ts: report.reportedAt,
+										source: GeoLocationSource.NeighboringCell,
 								  }
 								: undefined,
 						)
@@ -57,9 +64,10 @@ export const useNeighboringCellMeasurementReportGeoLocation = ():
 								console.debug('[nCellMeas:geolocateReport]', {
 									location,
 								})
-								const cellGeoLocation: CellGeoLocation = {
-									position: location as unknown as CellGeoLocation['position'],
+								const cellGeoLocation: GeoLocation = {
+									position: location as unknown as GeoLocation['position'],
 									ts: report.reportedAt,
+									source: GeoLocationSource.NeighboringCell,
 								}
 								return resolve(cellGeoLocation)
 							} else if (res.status === 409) {
@@ -117,14 +125,18 @@ export const useNeighboringCellMeasurementReportGeoLocation = ():
 		[report, nCellMeasCellGeolocationApiEndpoint],
 	)
 
+	const enabled = settings.enabledLayers.neighboringCellGeoLocations
+
 	useEffect(() => {
 		let isMounted = true
 		if (report === undefined) return // No report defined
+		if (!enabled) return
 		if (report.unresolved !== undefined) {
 			if (report.position !== undefined)
 				setLocation({
 					position: report.position,
 					ts: report.reportedAt,
+					source: GeoLocationSource.NeighboringCell,
 				})
 			return // Already resolved
 		}
@@ -144,7 +156,11 @@ export const useNeighboringCellMeasurementReportGeoLocation = ():
 			isMounted = false
 			cancel()
 		}
-	}, [reportId, report, geolocateReport])
+	}, [reportId, report, geolocateReport, enabled])
 
-	return location
+	return location === undefined
+		? undefined
+		: {
+				location,
+		  }
 }

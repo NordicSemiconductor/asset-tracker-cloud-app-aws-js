@@ -21,6 +21,7 @@ export const AllAssetsMap = () => {
 		() => ({
 			lat: 63.421057567379194,
 			lng: 10.43714466087136,
+			accuracy: 50,
 		}),
 		[],
 	)

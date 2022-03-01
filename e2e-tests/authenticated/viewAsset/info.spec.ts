@@ -10,7 +10,7 @@ test.use({
 
 test.afterEach(checkForConsoleErrors)
 
-test.beforeEach(selectCurrentAsset)
+test.beforeEach(selectCurrentAsset())
 
 test('Asset Information', async ({ page }) => {
 	await page.click('header[role="button"]:has-text("Asset Information")')

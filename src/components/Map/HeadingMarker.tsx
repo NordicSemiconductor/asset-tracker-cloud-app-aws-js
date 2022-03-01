@@ -8,7 +8,7 @@ export const HeadingMarker = ({
 	mapZoom,
 	color,
 }: {
-	position: Position
+	position: Pick<Position, 'lat' | 'lng'>
 	heading: number
 	mapZoom: number
 	color?: string

@@ -1,21 +1,25 @@
 import { geolocateCell } from 'api/geolocateCell'
 import { useAppConfig } from 'hooks/useAppConfig'
 import { useAsset } from 'hooks/useAsset'
-import type { CellGeoLocation } from 'hooks/useMapData'
+import type { AssetGeoLocation } from 'hooks/useMapData'
 import { useEffect, useState } from 'react'
+import { useMapSettings } from './useMapSettings'
 
 export const useCellGeoLocation = (): {
-	location?: CellGeoLocation
+	location?: AssetGeoLocation
 } => {
 	const { twin } = useAsset()
-	const [location, setLocation] = useState<CellGeoLocation>()
+	const [location, setLocation] = useState<AssetGeoLocation>()
 	const { geolocationApiEndpoint } = useAppConfig()
 	const locate = geolocateCell({
 		geolocationApiEndpoint,
 	})
+	const { settings } = useMapSettings()
 
+	const enabled = settings.enabledLayers.singleCellGeoLocations
 	useEffect(() => {
 		let isMounted = true
+		if (!enabled) return
 		if (twin?.reported?.roam?.v === undefined) return
 		const { cancel, promise } = locate({
 			...twin.reported.roam.v,
@@ -25,7 +29,13 @@ export const useCellGeoLocation = (): {
 		promise
 			.then((position) => {
 				if (!isMounted) return
-				setLocation(position)
+				setLocation(
+					position === undefined
+						? undefined
+						: {
+								location: position,
+						  },
+				)
 			})
 			.catch((err) => {
 				console.error(`[useCellLocation]`, err.message)
@@ -35,7 +45,7 @@ export const useCellGeoLocation = (): {
 			isMounted = false
 			cancel()
 		}
-	}, [twin, geolocateCell])
+	}, [twin, geolocateCell, enabled])
 
 	return {
 		location,

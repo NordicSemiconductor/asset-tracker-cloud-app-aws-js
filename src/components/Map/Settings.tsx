@@ -30,7 +30,7 @@ export const MapSettings = () => {
 							<input
 								className="form-check-input"
 								type="checkbox"
-								name="follow"
+								name="mapSettingsFollow"
 								onChange={() => {
 									const newSettings = {
 										...settings,
@@ -74,7 +74,7 @@ export const MapSettings = () => {
 							<input
 								className="form-check-input"
 								type="checkbox"
-								name="singleCellGeoLocation"
+								name="mapSettingsSingleCellGeoLocations"
 								onChange={() => {
 									updateEnabledLayers({
 										singleCellGeoLocations:
@@ -97,7 +97,7 @@ export const MapSettings = () => {
 							<input
 								className="form-check-input"
 								type="checkbox"
-								name="multiCellGeoLocation"
+								name="mapSettingsMultiCellGeoLocations"
 								onChange={() => {
 									updateEnabledLayers({
 										neighboringCellGeoLocations:

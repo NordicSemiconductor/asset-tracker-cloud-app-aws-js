@@ -9,7 +9,7 @@ test.use({
 
 test.afterEach(checkForConsoleErrors)
 
-test.beforeEach(selectCurrentAsset)
+test.beforeEach(selectCurrentAsset())
 
 test('Show map settings', async ({ page }) => {
 	await page.click('button[data-test="show-map-settings"]')

@@ -2,7 +2,7 @@ import {
 	cellId,
 	NetworkMode,
 } from '@nordicsemiconductor/cell-geolocation-helpers'
-import type { CellGeoLocation } from 'hooks/useMapData'
+import { GeoLocation, GeoLocationSource } from 'hooks/useMapData'
 
 /**
  * Looks up cell geolocation.
@@ -34,7 +34,7 @@ export const geolocateCell =
 		nw: 'ltem' | 'nbiot'
 		reportedAt: Date
 	}): {
-		promise: Promise<CellGeoLocation | undefined>
+		promise: Promise<GeoLocation | undefined>
 		cancel: () => void
 	} => {
 		let cancelled = false
@@ -45,85 +45,84 @@ export const geolocateCell =
 			cell,
 			nw: nw === 'nbiot' ? NetworkMode.NBIoT : NetworkMode.LTEm,
 		})
-		const promise = new Promise<CellGeoLocation | undefined>(
-			(resolve, reject) => {
-				if ((retryCount ?? 0) >= (maxTries ?? 10))
-					return reject(
-						new Error(
-							`Maximum retryCount reached (${retryCount}) resolving cell ${id}`,
-						),
-					)
-				fetch(
-					`${geolocationApiEndpoint}/cell?${Object.entries({
-						area,
-						mccmnc,
-						cell,
-						nw,
-					})
-						.map(
-							([key, value]) =>
-								encodeURIComponent(key) + '=' + encodeURIComponent(value),
-						)
-						.join('&')}`,
+		const promise = new Promise<GeoLocation | undefined>((resolve, reject) => {
+			if ((retryCount ?? 0) >= (maxTries ?? 10))
+				return reject(
+					new Error(
+						`Maximum retryCount reached (${retryCount}) resolving cell ${id}`,
+					),
 				)
-					.then(async (res) => {
-						if (cancelled) return reject(new Error(`Cancelled.`))
-						if (res.status === 200) {
-							const geolocation = await res.json()
-							console.debug('[geolocateCell]', id, {
-								cell: { area, mccmnc, cell },
-								geolocation,
-							})
-							return resolve({
-								position: geolocation,
-								ts: reportedAt,
-							})
-						} else if (res.status === 409) {
-							const expires = res.headers.get('expires')
-							const retryInMs =
-								expires !== null
-									? Math.floor(new Date(expires).getTime() - Date.now())
-									: 60000
-							console.debug(
-								'[geolocateCell]',
-								id,
-								`Location currently not available, will try again in ${Math.round(
-									retryInMs / 1000,
-								)} seconds.`,
-							)
-							retryTimeout = setTimeout(async () => {
-								try {
-									resolve(
-										await geolocateCell({
-											geolocationApiEndpoint,
-											retryCount: (retryCount ?? 0) + 1,
-											maxTries,
-										})({ area, mccmnc, cell, nw, reportedAt }).promise,
-									)
-								} catch (err) {
-									return reject(err)
-								}
-							}, Math.max(retryInMs, 10000))
-						} else if (res.status === 404) {
-							console.error(
-								'[geolocateCell]',
-								id,
-								'Geolocation for cell not found',
-								{
-									cell,
-								},
-							)
-							return reject(new Error(`Geolocation for cell ${id} not found.`))
-						} else {
-							console.error('[geolocateCell]', id, res)
-							return reject(
-								new Error(`Request failed for cell ${id}: ${res.status}.`),
-							)
-						}
-					})
-					.catch(reject)
-			},
-		)
+			fetch(
+				`${geolocationApiEndpoint}/cell?${Object.entries({
+					area,
+					mccmnc,
+					cell,
+					nw,
+				})
+					.map(
+						([key, value]) =>
+							encodeURIComponent(key) + '=' + encodeURIComponent(value),
+					)
+					.join('&')}`,
+			)
+				.then(async (res) => {
+					if (cancelled) return reject(new Error(`Cancelled.`))
+					if (res.status === 200) {
+						const geolocation = await res.json()
+						console.debug('[geolocateCell]', id, {
+							cell: { area, mccmnc, cell },
+							geolocation,
+						})
+						return resolve({
+							position: geolocation,
+							ts: reportedAt,
+							source: GeoLocationSource.SingleCell,
+						})
+					} else if (res.status === 409) {
+						const expires = res.headers.get('expires')
+						const retryInMs =
+							expires !== null
+								? Math.floor(new Date(expires).getTime() - Date.now())
+								: 60000
+						console.debug(
+							'[geolocateCell]',
+							id,
+							`Location currently not available, will try again in ${Math.round(
+								retryInMs / 1000,
+							)} seconds.`,
+						)
+						retryTimeout = setTimeout(async () => {
+							try {
+								resolve(
+									await geolocateCell({
+										geolocationApiEndpoint,
+										retryCount: (retryCount ?? 0) + 1,
+										maxTries,
+									})({ area, mccmnc, cell, nw, reportedAt }).promise,
+								)
+							} catch (err) {
+								return reject(err)
+							}
+						}, Math.max(retryInMs, 10000))
+					} else if (res.status === 404) {
+						console.error(
+							'[geolocateCell]',
+							id,
+							'Geolocation for cell not found',
+							{
+								cell,
+							},
+						)
+						return reject(new Error(`Geolocation for cell ${id} not found.`))
+					} else {
+						console.error('[geolocateCell]', id, res)
+						return reject(
+							new Error(`Request failed for cell ${id}: ${res.status}.`),
+						)
+					}
+				})
+				.catch(reject)
+		})
 		return {
 			promise,
 			cancel: () => {

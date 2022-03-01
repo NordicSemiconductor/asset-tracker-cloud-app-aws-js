@@ -22,8 +22,8 @@ const defaultSettings: Settings = {
 	follow: true,
 	enabledLayers: {
 		headings: false,
-		singleCellGeoLocations: true,
-		neighboringCellGeoLocations: true,
+		singleCellGeoLocations: false,
+		neighboringCellGeoLocations: false,
 		gnssHistory: false,
 		singleCellGeoLocationHistory: false,
 		neighboringCellGeoLocationHistory: false,

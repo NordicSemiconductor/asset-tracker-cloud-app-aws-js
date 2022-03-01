@@ -7,6 +7,7 @@ import { toRecord } from '@nordicsemiconductor/timestream-helpers'
 import { SensorProperties } from '../../src/asset/asset.js'
 import { ulid } from '../../src/utils/ulid.js'
 import { state } from '../asset-reported-state.js'
+import { AssetType } from '../authenticated/lib.js'
 
 function* dataGenerator({
 	min,
@@ -72,11 +73,13 @@ const writeHistoricalDataForAsset = async ({
 
 const storeSensorUpdate =
 	({
+		type,
 		client,
 		DatabaseName,
 		TableName,
 		thingName,
 	}: {
+		type: AssetType
 		client: TimestreamWriteClient
 		DatabaseName: string
 		TableName: string
@@ -93,6 +96,7 @@ const storeSensorUpdate =
 		ts: number
 		sensor: SensorProperties
 	}) => {
+		if (sensor === SensorProperties.GNSS && type === AssetType.NoGNSS) return
 		const measureGroup = ulid()
 		return client.send(
 			new WriteRecordsCommand({
@@ -121,10 +125,12 @@ const storeSensorUpdate =
  * Prepares data in timestream for querying
  */
 export const timestreamDataGenerator = async ({
+	type,
 	thingName,
 	DatabaseName,
 	TableName,
 }: {
+	type: AssetType
 	thingName: string
 	DatabaseName: string
 	TableName: string
@@ -165,6 +171,7 @@ export const timestreamDataGenerator = async ({
 		thingName,
 		DatabaseName,
 		TableName,
+		type,
 	})
 
 	await Promise.all([
@@ -229,6 +236,16 @@ export const timestreamDataGenerator = async ({
 				[
 					{
 						v: {
+							...state.roam.v,
+							cell: 18933760,
+							area: 31801,
+							mccmnc: 24201,
+						},
+						ts: now - 12 * 60 * 1000,
+						sensor: SensorProperties.Roaming,
+					},
+					{
+						v: {
 							...locationCommon,
 							lat: 63.40916157841286,
 							lng: 10.441174507141115,
@@ -290,7 +307,6 @@ export const timestreamDataGenerator = async ({
 						ts: now - 5 * 60 * 1000,
 						sensor: SensorProperties.GNSS,
 					},
-
 					{
 						v: {
 							...locationCommon,
@@ -329,7 +345,13 @@ export const timestreamDataGenerator = async ({
 						sensor: SensorProperties.GNSS,
 					},
 				].map(
-					storeSensorUpdate({ client, DatabaseName, TableName, thingName }),
+					storeSensorUpdate({
+						client,
+						DatabaseName,
+						TableName,
+						thingName,
+						type,
+					}),
 				),
 			)
 		})(),

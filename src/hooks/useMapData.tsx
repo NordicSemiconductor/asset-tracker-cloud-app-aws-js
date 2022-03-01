@@ -22,23 +22,23 @@ import {
 import { useAppConfig } from './useAppConfig'
 import { useServices } from './useServices'
 
-export type Position = { lat: number; lng: number }
+export type Position = { lat: number; lng: number; accuracy: number }
+
+export enum GeoLocationSource {
+	GNSS = 'GNSS',
+	SingleCell = 'SingleCell',
+	NeighboringCell = 'NeighboringCell',
+}
 
 export type GeoLocation = {
 	position: Position & {
-		accuracy?: number
 		heading?: number
 		altitude?: number
 		speed?: number
 	}
-	batch: boolean
+	batch?: boolean
 	ts: Date
-	source: 'GNSS' | 'SingleCell' | 'NeighboringCell'
-}
-
-export type CellGeoLocation = {
-	position: Position & { accuracy: number }
-	ts: Date
+	source: GeoLocationSource
 }
 
 export type AssetGeoLocation = {
@@ -57,15 +57,12 @@ const toLocation = (gnss: Static<typeof GNSS>): GeoLocation => ({
 		speed: gnss.v.spd,
 	},
 	ts: new Date(gnss.ts),
-	batch: false,
-	source: 'GNSS',
+	source: GeoLocationSource.GNSS,
 })
 
 export const MapDataContext = createContext<{
 	center?: GeoLocation
 	locations: AssetGeoLocation[]
-	neighboringCellGeoLocation?: CellGeoLocation
-	cellGeoLocation?: CellGeoLocation
 }>({
 	locations: [],
 })
@@ -176,8 +173,7 @@ export const MapDataProvider: FunctionComponent = ({ children }) => {
 								{
 									roaming: roam,
 									location: {
-										source: 'SingleCell',
-										batch: false,
+										source: GeoLocationSource.SingleCell,
 										ts: maybeLocation.ts,
 										position: maybeLocation.position,
 									},
@@ -217,26 +213,31 @@ export const MapDataProvider: FunctionComponent = ({ children }) => {
 	// Add single cell locations if available
 	if (enabledSingleCellGeoLocationHistory) {
 		locations.push(...singleCellGeoLocations)
+	} else if (
+		settings.enabledLayers.singleCellGeoLocations &&
+		cellGeoLocation !== undefined
+	) {
+		locations.push(cellGeoLocation)
 	}
 
-	// Take loast known locations and sort by date, set center to most recent one.
-	const possibleCenters = [
-		locations?.filter(({ location: { source } }) => source === 'GNSS')?.[0]
-			?.location,
-		neighboringCellGeoLocation,
-		cellGeoLocation,
-		locationHistory[0]?.location,
-	].filter((f) => f !== undefined) as GeoLocation[]
-	possibleCenters.sort(({ ts: t1 }, { ts: t2 }) => t2.getTime() - t1.getTime())
-	const center = possibleCenters[0]
+	// Add neighboring cell locations if available
+	if (neighboringCellGeoLocation !== undefined) {
+		locations.push(neighboringCellGeoLocation)
+	}
+
+	// Sort by date, set center to most recent one.
+	locations.sort(
+		({ location: { ts: t1 } }, { location: { ts: t2 } }) =>
+			t2.getTime() - t1.getTime(),
+	)
+
+	const center = locations[0]?.location
 
 	return (
 		<MapDataContext.Provider
 			value={{
 				center,
 				locations,
-				neighboringCellGeoLocation,
-				cellGeoLocation,
 			}}
 		>
 			{children}

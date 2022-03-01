@@ -9,7 +9,7 @@ test.use({
 
 test.afterEach(checkForConsoleErrors)
 
-test.beforeEach(selectCurrentAsset)
+test.beforeEach(selectCurrentAsset())
 
 test('Info header should show asset information', async ({ page }) => {
 	// Connection info

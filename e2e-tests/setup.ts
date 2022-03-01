@@ -20,6 +20,7 @@ import {
 	ncellmeasReportLocation,
 	state,
 } from './asset-reported-state.js'
+import { AssetType } from './authenticated/lib.js'
 import { timestreamDataGenerator } from './setup/sensorDataGenerator.js'
 
 const {
@@ -34,12 +35,12 @@ const {
 	historicaldataTableInfo: 'PUBLIC_HISTORICALDATA_TABLE_INFO',
 })(process.env)
 
-const globalSetup = async () => {
+const globalSetup = async (type: AssetType) => {
 	// Create Asset Tracker
 	const words = await randomWords({ numWords: 3 })
 	const name = words.join('-')
 	const thingName = `web-app-ci-${name}`
-	console.debug(`Creating asset`, thingName)
+	console.debug(`Creating asset`, type, thingName)
 
 	const { thingArn, thingId } = await new IoTClient({}).send(
 		new CreateThingCommand({
@@ -57,13 +58,15 @@ const globalSetup = async () => {
 	})
 
 	// Report configuration
+	const reportedState: Record<string, any> = { ...state }
+	if (type === AssetType.NoGNSS) reportedState.gnss = undefined
 	await iotData.send(
 		new UpdateThingShadowCommand({
 			thingName,
 			payload: fromUtf8(
 				JSON.stringify({
 					state: {
-						reported: state,
+						reported: reportedState,
 					},
 				}),
 			),
@@ -75,23 +78,42 @@ const globalSetup = async () => {
 	// Store cell geo location
 	console.log(`Storing cell geo location`)
 	const roam = state.roam
-	await db.send(
-		new PutItemCommand({
-			TableName: cellGeoLocationCacheTableName,
-			Item: marshall({
-				cellId: cellId({
-					...roam.v,
-					nw: roam.v.nw.includes('NB-IoT')
-						? NetworkMode.NBIoT
-						: NetworkMode.LTEm,
+	await Promise.all([
+		db.send(
+			new PutItemCommand({
+				TableName: cellGeoLocationCacheTableName,
+				Item: marshall({
+					cellId: cellId({
+						area: 30401,
+						mccmnc: 24201,
+						cell: 30976,
+						nw: NetworkMode.LTEm,
+					}),
+					ttl: Math.floor(Date.now() / 1000) + 30 * 24 * 60,
+					lat: 63.421133000000026,
+					lng: 10.436642000000063,
+					accuracy: 5000,
 				}),
-				ttl: Math.floor(Date.now() / 1000) + 30 * 24 * 60,
-				lat: 63.421133000000026,
-				lng: 10.436642000000063,
-				accuracy: 5000,
 			}),
-		}),
-	)
+		),
+		db.send(
+			new PutItemCommand({
+				TableName: cellGeoLocationCacheTableName,
+				Item: marshall({
+					cellId: cellId({
+						cell: 18933760,
+						area: 31801,
+						mccmnc: 24201,
+						nw: NetworkMode.LTEm,
+					}),
+					ttl: Math.floor(Date.now() / 1000) + 30 * 24 * 60,
+					lat: 63.79018114489696,
+					lng: 11.49213362240647,
+					accuracy: 5000,
+				}),
+			}),
+		),
+	])
 
 	// Publish neighboring cell measurement
 	const report = {
@@ -118,6 +140,7 @@ const globalSetup = async () => {
 		thingName,
 		DatabaseName,
 		TableName,
+		type,
 	})
 
 	try {
@@ -127,14 +150,15 @@ const globalSetup = async () => {
 	}
 
 	await fs.writeFile(
-		path.join(process.cwd(), 'test-session', 'asset.json'),
+		path.join(process.cwd(), 'test-session', `${type}.json`),
 		JSON.stringify({ thingArn, thingId, thingName, name }),
 		'utf-8',
 	)
 }
 
 try {
-	await globalSetup()
+	await globalSetup(AssetType.Default)
+	await globalSetup(AssetType.NoGNSS)
 } catch (error) {
 	console.error(error)
 	process.exit(1)

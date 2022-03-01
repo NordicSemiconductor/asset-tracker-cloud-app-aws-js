@@ -6,7 +6,7 @@ import { markerIcon } from 'components/Map/MarkerIcon'
 import { NoMap } from 'components/Map/NoMap'
 import styles from 'components/Map/SingleAssetMap.module.css'
 import { formatDistanceToNow } from 'date-fns'
-import { GeoLocation, useMapData } from 'hooks/useMapData'
+import { GeoLocationSource, useMapData } from 'hooks/useMapData'
 import { useMapSettings } from 'hooks/useMapSettings'
 import type { Map as LeafletMap } from 'leaflet'
 import { nanoid } from 'nanoid'
@@ -24,10 +24,16 @@ import { nullOrUndefined } from 'utils/nullOrUndefined'
 import { toFixed } from 'utils/toFixed'
 import { HeadingMarker } from './HeadingMarker'
 
+const baseColors = {
+	[GeoLocationSource.NeighboringCell]: '#E56399',
+	[GeoLocationSource.SingleCell]: '#F6C270',
+	[GeoLocationSource.GNSS]: '#1f56d2',
+} as const
+const lineColor = `#1f56d2`
+
 export const SingleAssetMap = ({ asset }: { asset: Asset }) => {
 	const { settings, update: updateSettings } = useMapSettings()
-	const { center, locations, neighboringCellGeoLocation, cellGeoLocation } =
-		useMapData()
+	const { center, locations } = useMapData()
 	const [map, setmap] = useState<LeafletMap>()
 
 	// Zoom to center
@@ -71,35 +77,6 @@ export const SingleAssetMap = ({ asset }: { asset: Asset }) => {
 				<Marker position={center.position} icon={markerIcon}>
 					<Popup pane="popupPane">{asset.name}</Popup>
 				</Marker>
-				{/* Cell Geolocation */}
-				<Pane name={`cellGeolocation`} style={{ zIndex: 400 }}>
-					{cellGeoLocation && settings.enabledLayers.singleCellGeoLocations && (
-						<Circle
-							center={cellGeoLocation.position}
-							radius={cellGeoLocation.position.accuracy}
-							color={'#F6C270'}
-						>
-							<Popup pane="popupPane">
-								Approximate location based on asset's cell information.
-							</Popup>
-						</Circle>
-					)}
-				</Pane>
-				{/* Neighboring Cell Geolocation */}
-				<Pane name={`neighboringCellGeoLocation`} style={{ zIndex: 410 }}>
-					{neighboringCellGeoLocation &&
-						settings.enabledLayers.neighboringCellGeoLocations && (
-							<Circle
-								center={neighboringCellGeoLocation.position}
-								radius={neighboringCellGeoLocation.position.accuracy}
-								color={'#E56399'}
-							>
-								<Popup pane="popupPane">
-									Approximate location based on neighboring cell information.
-								</Popup>
-							</Circle>
-						)}
-				</Pane>
 				{(locations.length ?? 0) > 0 &&
 					locations.map(
 						(
@@ -117,7 +94,9 @@ export const SingleAssetMap = ({ asset }: { asset: Asset }) => {
 							const alpha = Math.round(
 								(1 - k / locations.length) * 255,
 							).toString(16)
-							const color = `#1f56d2${alpha}`
+
+							const borderColor = `${baseColors[source]}${alpha}`
+							const fillColor = baseColors[source]
 							const id = nanoid()
 
 							return (
@@ -128,7 +107,8 @@ export const SingleAssetMap = ({ asset }: { asset: Asset }) => {
 											<Circle
 												center={{ lat, lng }}
 												radius={accuracy}
-												color={color}
+												color={borderColor}
+												fill={false}
 											/>
 										)}
 										{/* red dashed circle to mark batch */}
@@ -151,7 +131,7 @@ export const SingleAssetMap = ({ asset }: { asset: Asset }) => {
 												]}
 												weight={settings.zoom > 16 ? 1 : 2}
 												lineCap={'round'}
-												color={color}
+												color={lineColor}
 												dashArray={'10'}
 											/>
 										)}
@@ -168,7 +148,7 @@ export const SingleAssetMap = ({ asset }: { asset: Asset }) => {
 										<Circle
 											center={{ lat, lng }}
 											radius={accuracy}
-											fillColor={'#826717'}
+											fillColor={fillColor}
 											stroke={false}
 											className={`asset-location-circle asset-location-circle-${k}`}
 										>
@@ -214,7 +194,9 @@ export const SingleAssetMap = ({ asset }: { asset: Asset }) => {
 														</>
 													)}
 													<dt>Source</dt>
-													<dd>{formatSource(source)}</dd>
+													<dd data-test="asset-location-info-source">
+														{formatSource(source)}
+													</dd>
 												</div>
 												{roaming !== undefined && (
 													<div className={`${styles.historyInfo} mt-4`}>
@@ -285,13 +267,13 @@ export const SingleAssetMap = ({ asset }: { asset: Asset }) => {
 	)
 }
 
-const formatSource = (source: GeoLocation['source']): string => {
+const formatSource = (source: GeoLocationSource): string => {
 	switch (source) {
-		case 'GNSS':
+		case GeoLocationSource.GNSS:
 			return 'GNSS'
-		case 'NeighboringCell':
+		case GeoLocationSource.NeighboringCell:
 			return 'Neighboring cell geo location'
-		case 'SingleCell':
+		case GeoLocationSource.SingleCell:
 			return 'Single cell geo location'
 		default:
 			return source

@@ -2,7 +2,11 @@ import { fetchRoamingData } from 'api/fetchRoamingData'
 import { timeStreamFormatDate } from 'api/timestream'
 import { Asset, GNSS, SensorProperties } from 'asset/asset'
 import type { DateRange } from 'hooks/useChartDateRange'
-import type { AssetGeoLocation, GeoLocation } from 'hooks/useMapData'
+import {
+	AssetGeoLocation,
+	GeoLocation,
+	GeoLocationSource,
+} from 'hooks/useMapData'
 import { useServices } from 'hooks/useServices'
 import { createContext, FunctionComponent, useContext } from 'react'
 import { validFilter } from 'utils/validFilter'
@@ -142,7 +146,7 @@ export const AssetLocationHistoryProvider: FunctionComponent = ({
 						pos.spd.source,
 					].includes('batch'),
 					ts: date,
-					source: 'GNSS',
+					source: GeoLocationSource.GNSS,
 				}
 				return l
 			})

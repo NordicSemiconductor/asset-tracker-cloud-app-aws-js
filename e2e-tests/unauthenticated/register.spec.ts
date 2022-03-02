@@ -12,7 +12,7 @@ test.afterEach(checkForConsoleErrors)
 
 test('Register a new account', async ({ page }) => {
 	const password = `U${ulid()}!`
-	const email = chance.email({ domain: 'example.com' })
+	const email = chance.email({ domain: 'example.com', length: 16 })
 
 	// Open start page
 	await page.goto('http://localhost:8080/')

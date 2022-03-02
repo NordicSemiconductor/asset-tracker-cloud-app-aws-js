@@ -11,6 +11,7 @@ test.use({
 test.afterEach(checkForConsoleErrors)
 
 test('Users can delete assets', async ({ page }) => {
+	let open = false
 	for (const type of [AssetType.Default, AssetType.NoGNSS]) {
 		const { name, thingName } = await loadSessionData(type)
 
@@ -28,7 +29,10 @@ test('Users can delete assets', async ({ page }) => {
 		}
 
 		await assetLink.click()
-		await page.click('header[role="button"]:has-text("Danger zone")')
+		if (!open) {
+			await page.click('header[role="button"]:has-text("Danger zone")')
+			open = true
+		}
 		await page.click('text=Enable to unlock asset deletion')
 		await page.click('text=Delete asset')
 

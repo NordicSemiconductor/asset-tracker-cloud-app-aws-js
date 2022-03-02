@@ -2,6 +2,7 @@ import type { Asset } from 'asset/asset'
 import { SignalQuality } from 'components/Asset/SignalQuality'
 import { CenterIcon } from 'components/FeatherIcon'
 import { EventHandler } from 'components/Map/EventHandler'
+import { HeadingMarker } from 'components/Map/HeadingMarker'
 import { markerIcon } from 'components/Map/MarkerIcon'
 import { NoMap } from 'components/Map/NoMap'
 import styles from 'components/Map/SingleAssetMap.module.css'
@@ -22,7 +23,6 @@ import {
 } from 'react-leaflet'
 import { nullOrUndefined } from 'utils/nullOrUndefined'
 import { toFixed } from 'utils/toFixed'
-import { HeadingMarker } from './HeadingMarker'
 
 const baseColors = {
 	[GeoLocationSource.NeighboringCell]: '#E56399',
@@ -30,6 +30,11 @@ const baseColors = {
 	[GeoLocationSource.GNSS]: '#1f56d2',
 } as const
 const lineColor = `#1f56d2`
+const zIndexBySource = {
+	[GeoLocationSource.GNSS]: 420,
+	[GeoLocationSource.NeighboringCell]: 410,
+	[GeoLocationSource.SingleCell]: 400,
+} as const
 
 export const SingleAssetMap = ({ asset }: { asset: Asset }) => {
 	const { settings, update: updateSettings } = useMapSettings()
@@ -100,10 +105,13 @@ export const SingleAssetMap = ({ asset }: { asset: Asset }) => {
 							const id = nanoid()
 
 							return (
-								<React.Fragment key={`history-${k}`}>
-									<Pane name={`assetLocation-${id}`} style={{ zIndex: 420 }}>
+								<React.Fragment key={`${nanoid()}`}>
+									<Pane
+										name={`assetLocation-${id}`}
+										style={{ zIndex: zIndexBySource[source] }}
+									>
 										{/* outer circle */}
-										{!batch && (
+										{!(batch ?? false) && (
 											<Circle
 												center={{ lat, lng }}
 												radius={accuracy}
@@ -112,7 +120,7 @@ export const SingleAssetMap = ({ asset }: { asset: Asset }) => {
 											/>
 										)}
 										{/* red dashed circle to mark batch */}
-										{batch && (
+										{(batch ?? false) && (
 											<Circle
 												center={{ lat, lng }}
 												radius={accuracy}
@@ -157,15 +165,17 @@ export const SingleAssetMap = ({ asset }: { asset: Asset }) => {
 													{!nullOrUndefined(accuracy) && (
 														<>
 															<dt>Accuracy</dt>
-															<dd data-test="asset-location-info-accuracy">
-																{toFixed(accuracy as number)} m
+															<dd
+																data-test={`asset-location-info-${k}-accuracy`}
+															>
+																{toFixed(accuracy)} m
 															</dd>
 														</>
 													)}
 													{!nullOrUndefined(speed) && (
 														<>
 															<dt>Speed</dt>
-															<dd data-test="asset-location-info-speed">
+															<dd data-test={`asset-location-info-${k}-speed`}>
 																{toFixed(speed as number)} m/s
 															</dd>
 														</>
@@ -173,7 +183,9 @@ export const SingleAssetMap = ({ asset }: { asset: Asset }) => {
 													{!nullOrUndefined(heading) && (
 														<>
 															<dt>Heading</dt>
-															<dd data-test="asset-location-info-heading">
+															<dd
+																data-test={`asset-location-info-${k}-heading`}
+															>
 																{toFixed(heading as number)}°
 															</dd>
 														</>
@@ -187,14 +199,14 @@ export const SingleAssetMap = ({ asset }: { asset: Asset }) => {
 															})}
 														</time>
 													</dd>
-													{batch && (
+													{(batch ?? false) && (
 														<>
 															<dt>Batch</dt>
 															<dd>Yes</dd>
 														</>
 													)}
 													<dt>Source</dt>
-													<dd data-test="asset-location-info-source">
+													<dd data-test={`asset-location-info-${k}-source`}>
 														{formatSource(source)}
 													</dd>
 												</div>
@@ -203,32 +215,32 @@ export const SingleAssetMap = ({ asset }: { asset: Asset }) => {
 														<dt>Connection</dt>
 														<dd
 															className="text-end"
-															data-test="asset-roaming-info-rsrp"
+															data-test={`asset-roaming-info-${k}-rsrp`}
 														>
 															<SignalQuality dbm={roaming.v.rsrp} />
 														</dd>
 														<dt>Network</dt>
-														<dt data-test="asset-roaming-info-nw">
+														<dt data-test={`asset-roaming-info-${k}-nw`}>
 															{roaming.v.nw}
 														</dt>
 														<dt>Band</dt>
-														<dt data-test="asset-roaming-info-band">
+														<dt data-test={`asset-roaming-info-${k}-band`}>
 															{roaming.v.band}
 														</dt>
 														<dt>MCC/MNC</dt>
-														<dd data-test="asset-roaming-info-mccmnc">
+														<dd data-test={`asset-roaming-info-${k}-mccmnc`}>
 															{roaming.v.mccmnc}
 														</dd>
 														<dt>Area Code</dt>
-														<dd data-test="asset-roaming-info-area">
+														<dd data-test={`asset-roaming-info-${k}-area`}>
 															{roaming.v.area}
 														</dd>
 														<dt>Cell ID</dt>
-														<dd data-test="asset-roaming-info-cell">
+														<dd data-test={`asset-roaming-info-${k}-cell`}>
 															{roaming.v.cell}
 														</dd>
 														<dt>IP</dt>
-														<dd data-test="asset-roaming-info-ip">
+														<dd data-test={`asset-roaming-info-${k}-ip`}>
 															{roaming.v.ip}
 														</dd>
 														<dt>Time</dt>

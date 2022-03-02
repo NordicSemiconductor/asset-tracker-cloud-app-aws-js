@@ -6,21 +6,22 @@ import type { Static } from '@sinclair/typebox'
 import { fetchRoamingData } from 'api/fetchRoamingData'
 import { geolocateCell } from 'api/geolocateCell'
 import type { GNSS, Roaming } from 'asset/asset'
+import { useAppConfig } from 'hooks/useAppConfig'
 import { useAsset } from 'hooks/useAsset'
 import { useAssetLocationHistory } from 'hooks/useAssetLocationHistory'
 import { useCellGeoLocation } from 'hooks/useCellGeoLocation'
 import { useChartDateRange } from 'hooks/useChartDateRange'
 import { useMapSettings } from 'hooks/useMapSettings'
 import { useNeighboringCellMeasurementReportGeoLocation } from 'hooks/useNeighboringCellMeasurementReportGeoLocation'
+import { useServices } from 'hooks/useServices'
 import {
 	createContext,
 	FunctionComponent,
+	useCallback,
 	useContext,
 	useEffect,
 	useState,
 } from 'react'
-import { useAppConfig } from './useAppConfig'
-import { useServices } from './useServices'
 
 export type Position = { lat: number; lng: number; accuracy: number }
 
@@ -92,11 +93,14 @@ export const MapDataProvider: FunctionComponent = ({ children }) => {
 	/**
 	 * Fetch GNSS history
 	 */
-	const maxGnssHistoryEntries = settings.maxGnssHistoryEntries
-	const enableGNSSHistory = settings.enabledLayers.gnssHistory
+	const maxGnssHistoryEntries = settings.history.maxGnssEntries
+	const enableGNSSHistory = settings.history.gnss
 	useEffect(() => {
 		let isMounted = true
-		if (!enableGNSSHistory) return
+		if (!enableGNSSHistory) {
+			setLocationHistory([])
+			return
+		}
 		if (asset === undefined) return
 
 		history({
@@ -121,16 +125,23 @@ export const MapDataProvider: FunctionComponent = ({ children }) => {
 	 * Fetch single cell geo location history
 	 */
 	const maxSingleCellGeoLocationHistoryEntries =
-		settings.maxSingleCellGeoLocationHistoryEntries
+		settings.history.maxSingleCellGeoLocationEntries
 	const enabledSingleCellGeoLocationHistory =
-		settings.enabledLayers.singleCellGeoLocationHistory
+		settings.enabledLayers.singleCellGeoLocations && settings.history.singleCell
 	const { geolocationApiEndpoint } = useAppConfig()
-	const locate = geolocateCell({
-		geolocationApiEndpoint,
-	})
+	const locate = useCallback<ReturnType<typeof geolocateCell>>(
+		(args: Parameters<ReturnType<typeof geolocateCell>>[0]) =>
+			geolocateCell({
+				geolocationApiEndpoint,
+			})(args),
+		[geolocationApiEndpoint],
+	)
 	useEffect(() => {
 		let isMounted = true
-		if (!enabledSingleCellGeoLocationHistory) return
+		if (!enabledSingleCellGeoLocationHistory) {
+			setSingleCellGeoLocations([])
+			return
+		}
 		if (asset === undefined) return
 
 		fetchRoamingData({
@@ -155,9 +166,9 @@ export const MapDataProvider: FunctionComponent = ({ children }) => {
 				}, {} as Record<string, Static<typeof Roaming>>),
 			)
 			// Resolve
-			.then((cellMap) =>
+			.then(async (cellMap) =>
 				Promise.all(
-					Object.values(cellMap).map((roam) =>
+					Object.values(cellMap).map(async (roam) =>
 						locate({
 							area: roam.v.area,
 							cell: roam.v.cell,
@@ -194,6 +205,8 @@ export const MapDataProvider: FunctionComponent = ({ children }) => {
 		enabledSingleCellGeoLocationHistory,
 		start,
 		end,
+		locate,
+		timestream,
 	])
 
 	const locations: AssetGeoLocation[] = []

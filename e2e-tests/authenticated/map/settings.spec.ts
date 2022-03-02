@@ -14,10 +14,18 @@ test.beforeEach(selectCurrentAsset())
 test('Show map settings', async ({ page }) => {
 	await page.click('button[data-test="show-map-settings"]')
 	await expect(page.locator('#mapSettingsFollow')).toBeChecked()
+	await expect(page.locator('#mapSettingsHeadings')).toBeChecked()
+	await expect(page.locator('#mapSettingsFetchGNSSHistory')).toBeChecked()
 	await expect(page.locator('#mapSettingsSingleCellGeoLocations')).toBeChecked()
-	await expect(page.locator('#mapSettingsMultiCellGeoLocations')).toBeChecked()
-	await expect(page.locator('#mapSettingsHeadings')).not.toBeChecked()
-	await expect(page.locator('#mapSettingsFetchGNSSHistory')).not.toBeChecked()
+	await expect(
+		page.locator('#mapSettingsFetchSingleCellHistory'),
+	).not.toBeChecked()
+	await expect(
+		page.locator('#mapSettingsNeighboringCellGeoLocations'),
+	).toBeChecked()
+	await expect(
+		page.locator('#mapSettingsFetchNeighboringCellHistory'),
+	).not.toBeChecked()
 	await page.screenshot({
 		path: `./test-session/map-settings.png`,
 	})

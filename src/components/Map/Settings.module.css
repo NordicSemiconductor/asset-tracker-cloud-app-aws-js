@@ -1,0 +1,14 @@
+.settings {
+  margin: 0.5rem;
+}
+
+.settings form {
+  margin-bottom: 0.5rem;
+}
+
+.settings form > div {
+  height: 36px;
+  display: flex;
+  align-content: center;
+  align-items: center;
+}

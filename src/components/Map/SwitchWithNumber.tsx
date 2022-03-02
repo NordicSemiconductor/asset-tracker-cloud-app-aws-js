@@ -1,20 +1,29 @@
+import cx from 'classnames'
+
 export const SwitchWithNumber = ({
-	enabled,
+	checked,
 	onChange,
 	label,
 	id,
 	value,
 	updateValue,
+	disabled,
 }: {
 	id: string
-	enabled: boolean
+	checked: boolean
 	onChange: (checked: boolean) => void
 	label: string
 	value: number
 	updateValue: (value: number) => void
+	disabled?: boolean
 }) => (
 	<>
-		<div className="col-sm-6 d-flex">
+		<div
+			className={cx('d-flex', {
+				'col-sm-7': checked,
+				'col-sm-12': !checked,
+			})}
+		>
 			<div
 				className="form-check form-switch"
 				data-intro="Whether to show location history of the asset."
@@ -26,27 +35,30 @@ export const SwitchWithNumber = ({
 					onChange={({ target: { checked } }) => {
 						onChange(checked)
 					}}
-					checked={enabled}
+					checked={checked}
 					id={id}
+					disabled={disabled ?? false}
 				/>
 				<label htmlFor={id}>{label}</label>
 			</div>
 		</div>
-		<div className="col-sm-6">
-			<div className="input-group input-group-sm">
-				<span className="input-group-text">max. entries</span>
-				<input
-					type="number"
-					className="form-control"
-					value={(value ?? 10).toString()}
-					min={1}
-					step={1}
-					onChange={({ target: { value } }) => {
-						updateValue(parseInt(value, 10))
-					}}
-					disabled={!enabled}
-				/>
+		{checked && (
+			<div className="col-sm-5">
+				<div className="input-group input-group-sm">
+					<span className="input-group-text">max. entries</span>
+					<input
+						type="number"
+						className="form-control"
+						value={(value ?? 10).toString()}
+						min={1}
+						step={1}
+						onChange={({ target: { value } }) => {
+							updateValue(parseInt(value, 10))
+						}}
+						disabled={(disabled ?? false) || !checked}
+					/>
+				</div>
 			</div>
-		</div>
+		)}
 	</>
 )

@@ -4,9 +4,9 @@ import {
 	GeoLocation,
 	GeoLocationSource,
 } from 'hooks/useMapData'
+import { useMapSettings } from 'hooks/useMapSettings'
 import { useNeighboringCellMeasurementReport } from 'hooks/useNeighboringCellMeasurementReport'
 import { useCallback, useEffect, useState } from 'react'
-import { useMapSettings } from './useMapSettings'
 
 export const useNeighboringCellMeasurementReportGeoLocation = ():
 	| AssetGeoLocation
@@ -69,6 +69,7 @@ export const useNeighboringCellMeasurementReportGeoLocation = ():
 									ts: report.reportedAt,
 									source: GeoLocationSource.NeighboringCell,
 								}
+
 								return resolve(cellGeoLocation)
 							} else if (res.status === 409) {
 								const expires = res.headers.get('expires')
@@ -130,7 +131,10 @@ export const useNeighboringCellMeasurementReportGeoLocation = ():
 	useEffect(() => {
 		let isMounted = true
 		if (report === undefined) return // No report defined
-		if (!enabled) return
+		if (!enabled) {
+			setLocation(undefined)
+			return
+		}
 		if (report.unresolved !== undefined) {
 			if (report.position !== undefined)
 				setLocation({

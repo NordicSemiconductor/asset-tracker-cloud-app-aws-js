@@ -3,6 +3,7 @@ import * as path from 'path'
 import { checkForConsoleErrors } from '../../lib/checkForConsoleErrors.js'
 import { selectCurrentAsset } from '../lib.js'
 import { offsetClick } from './helper/offsetClick.js'
+import { updateSettings } from './helper/settings.js'
 import { verifyLocationInfo, verifyRoamingInfo } from './helper/verifyInfo.js'
 import { verifyMapMarker } from './helper/verifyMapMarker.js'
 import { zoom } from './helper/zoom.js'
@@ -16,24 +17,35 @@ test.afterEach(checkForConsoleErrors)
 test.beforeEach(selectCurrentAsset())
 
 test('Map with asset location should be visible', async ({ page }) => {
+	await updateSettings(page)({
+		gnssHistory: false,
+		singleCell: false,
+		neighboringCell: false,
+	})
 	await verifyMapMarker(page)
 
 	await page.screenshot({
 		path: `./test-session/map-marker.png`,
 	})
 
-	await zoom(page, 4)
+	await zoom(page, 3)
 
 	// Click on location circle should show info
 	const circle = page.locator('.asset-location-circle-0')
 	await offsetClick(circle)
-	await verifyLocationInfo(page)({
+	await verifyLocationInfo(
+		page,
+		0,
+	)({
 		accuracy: '24.8 m',
 		speed: '0.58 m/s',
 		heading: '176.12°',
 		source: 'GNSS',
 	})
-	await verifyRoamingInfo(page)({
+	await verifyRoamingInfo(
+		page,
+		0,
+	)({
 		rsrp: '(-97 dBm)',
 		nw: 'LTE-M',
 		band: '20',

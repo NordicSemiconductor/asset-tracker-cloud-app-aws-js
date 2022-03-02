@@ -2,8 +2,8 @@ import { geolocateCell } from 'api/geolocateCell'
 import { useAppConfig } from 'hooks/useAppConfig'
 import { useAsset } from 'hooks/useAsset'
 import type { AssetGeoLocation } from 'hooks/useMapData'
-import { useEffect, useState } from 'react'
-import { useMapSettings } from './useMapSettings'
+import { useMapSettings } from 'hooks/useMapSettings'
+import { useCallback, useEffect, useState } from 'react'
 
 export const useCellGeoLocation = (): {
 	location?: AssetGeoLocation
@@ -11,15 +11,22 @@ export const useCellGeoLocation = (): {
 	const { twin } = useAsset()
 	const [location, setLocation] = useState<AssetGeoLocation>()
 	const { geolocationApiEndpoint } = useAppConfig()
-	const locate = geolocateCell({
-		geolocationApiEndpoint,
-	})
+	const locate = useCallback<ReturnType<typeof geolocateCell>>(
+		(args: Parameters<ReturnType<typeof geolocateCell>>[0]) =>
+			geolocateCell({
+				geolocationApiEndpoint,
+			})(args),
+		[geolocationApiEndpoint],
+	)
 	const { settings } = useMapSettings()
 
 	const enabled = settings.enabledLayers.singleCellGeoLocations
 	useEffect(() => {
 		let isMounted = true
-		if (!enabled) return
+		if (!enabled) {
+			setLocation(undefined)
+			return
+		}
 		if (twin?.reported?.roam?.v === undefined) return
 		const { cancel, promise } = locate({
 			...twin.reported.roam.v,
@@ -34,6 +41,7 @@ export const useCellGeoLocation = (): {
 						? undefined
 						: {
 								location: position,
+								roaming: twin.reported.roam,
 						  },
 				)
 			})
@@ -45,7 +53,7 @@ export const useCellGeoLocation = (): {
 			isMounted = false
 			cancel()
 		}
-	}, [twin, geolocateCell, enabled])
+	}, [twin, enabled, locate])
 
 	return {
 		location,

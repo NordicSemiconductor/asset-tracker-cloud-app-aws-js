@@ -5,7 +5,7 @@ export const NoMap = () => (
 		style={{
 			backgroundColor: '#ccc',
 			display: 'flex',
-			height: '400px',
+			height: '500px',
 			justifyContent: 'space-around',
 			alignItems: 'center',
 		}}

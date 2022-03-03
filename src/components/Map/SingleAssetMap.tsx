@@ -210,6 +210,24 @@ export const SingleAssetMap = ({ asset }: { asset: Asset }) => {
 														{formatSource(source)}
 													</dd>
 												</div>
+												<div className="mt-2">
+													<p className="mt-1 mb-1">
+														<a
+															href={`https://www.google.com/maps/search/?api=1&query=${lat},${lng}`}
+															target="_blank"
+														>
+															View location in Google Maps
+														</a>
+													</p>
+													<p className="mt-1 mb-1">
+														<a
+															href={`https://www.openstreetmap.org/?mlat=${lat}&mlon=${lng}#map=9/${lat}/${lng}`}
+															target="_blank"
+														>
+															View location in OpenStreetMap
+														</a>
+													</p>
+												</div>
 												{roaming !== undefined && (
 													<div className={`${styles.historyInfo} mt-4`}>
 														<dt>Connection</dt>

@@ -5,49 +5,57 @@ import { useCellGeoLocation } from 'hooks/useCellGeoLocation'
 import { useCellGeoLocationHistory } from 'hooks/useCellGeoLocationHistory'
 import { useGNSSLocationHistory } from 'hooks/useGNSSHistory'
 import { useMapSettings } from 'hooks/useMapSettings'
+import { useNeighboringCellGeoLocationHistory } from 'hooks/useNeighboringCellGeoLocationHistory'
 import { useNeighboringCellMeasurementReportGeoLocation } from 'hooks/useNeighboringCellMeasurementReportGeoLocation'
 import { createContext, FunctionComponent, useContext } from 'react'
 
 export type Position = { lat: number; lng: number; accuracy: number }
 
-export enum GeoLocationSource {
+export enum AssetGeoLocationSource {
 	GNSS = 'GNSS',
 	SingleCell = 'SingleCell',
 	NeighboringCell = 'NeighboringCell',
 }
 
-export type GeoLocation = {
-	position: Position & {
-		heading?: number
-		altitude?: number
-		speed?: number
-	}
-	batch?: boolean
-	ts: Date
-	source: GeoLocationSource
-}
-
 export type AssetGeoLocation = {
-	location: GeoLocation
+	location: {
+		position: Position & {
+			heading?: number
+			altitude?: number
+			speed?: number
+		}
+		batch?: boolean
+		ts: Date
+		source: AssetGeoLocationSource
+	}
 	/** Roaming information */
-	roaming?: Static<typeof Roaming>
+	roaming?: Omit<Static<typeof Roaming>, 'v'> & {
+		v: Omit<Static<typeof Roaming>['v'], 'band' | 'ip'> &
+			Partial<Pick<Static<typeof Roaming>['v'], 'band' | 'ip'>>
+	}
 }
 
-const toLocation = (gnss: Static<typeof GNSS>): GeoLocation => ({
-	position: {
-		lat: gnss.v.lat,
-		lng: gnss.v.lng,
-		accuracy: gnss.v.acc,
-		altitude: gnss.v.alt,
-		heading: gnss.v.hdg,
-		speed: gnss.v.spd,
+const toLocation = (
+	gnss: Static<typeof GNSS>,
+	roam?: Static<typeof Roaming>,
+): AssetGeoLocation => ({
+	location: {
+		position: {
+			lat: gnss.v.lat,
+			lng: gnss.v.lng,
+			accuracy: gnss.v.acc,
+			altitude: gnss.v.alt,
+			heading: gnss.v.hdg,
+			speed: gnss.v.spd,
+		},
+		ts: new Date(gnss.ts),
+		source: AssetGeoLocationSource.GNSS,
 	},
-	ts: new Date(gnss.ts),
-	source: GeoLocationSource.GNSS,
+	roaming: roam,
 })
 
 export const MapDataContext = createContext<{
-	center?: GeoLocation
+	center?: AssetGeoLocation
 	locations: AssetGeoLocation[]
 }>({
 	locations: [],
@@ -63,15 +71,13 @@ export const MapDataProvider: FunctionComponent = ({ children }) => {
 	const cellGeoLocation = useCellGeoLocation()
 	const locationHistory = useGNSSLocationHistory()
 	const singleCellGeoLocations = useCellGeoLocationHistory()
+	const neighboringCellLocations = useNeighboringCellGeoLocationHistory()
 
 	const locations: AssetGeoLocation[] = []
 
 	// If history is disabled, use current position (if available)
 	if (!settings.history.gnss && twin?.reported?.gnss !== undefined)
-		locations.push({
-			location: toLocation(twin.reported.gnss),
-			roaming: twin.reported.roam,
-		})
+		locations.push(toLocation(twin.reported.gnss, twin.reported.roam))
 
 	// If history is enabled, fetch positions according to selected date range
 	if (settings.history.gnss) {
@@ -90,7 +96,7 @@ export const MapDataProvider: FunctionComponent = ({ children }) => {
 	// Add neighboring cell locations if enabled and available
 	if (settings.enabledLayers.neighboringCellGeoLocations) {
 		if (settings.history.neighboringCell) {
-			// FIXME: Implement
+			locations.push(...neighboringCellLocations)
 		} else if (neighboringCellGeoLocation !== undefined) {
 			locations.push(neighboringCellGeoLocation)
 		}
@@ -102,7 +108,7 @@ export const MapDataProvider: FunctionComponent = ({ children }) => {
 			t2.getTime() - t1.getTime(),
 	)
 
-	const center = locations[0]?.location
+	const center = locations[0]
 
 	return (
 		<MapDataContext.Provider

@@ -11,7 +11,7 @@ export const NeighborCellMeasurementsReport = ({
 	twin?: AssetTwin
 }) => {
 	const expectedInterval = expectedSendIntervalInSeconds(twin)
-	const { report } = useNeighboringCellMeasurementReport()
+	const report = useNeighboringCellMeasurementReport()
 
 	if (report === undefined) return <NoData />
 

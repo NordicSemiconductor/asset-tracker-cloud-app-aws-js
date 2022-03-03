@@ -9,7 +9,7 @@ import type { Roaming } from 'asset/asset'
 import { useAppConfig } from 'hooks/useAppConfig'
 import { useAsset } from 'hooks/useAsset'
 import { useChartDateRange } from 'hooks/useChartDateRange'
-import { AssetGeoLocation, GeoLocationSource } from 'hooks/useMapData'
+import type { AssetGeoLocation } from 'hooks/useMapData'
 import { useMapSettings } from 'hooks/useMapSettings'
 import { useServices } from 'hooks/useServices'
 import { useCallback, useEffect, useState } from 'react'
@@ -86,12 +86,8 @@ export const useCellGeoLocationHistory = (): AssetGeoLocation[] => {
 							setSingleCellGeoLocations((locations) => [
 								...locations,
 								{
+									...maybeLocation,
 									roaming: roam,
-									location: {
-										source: GeoLocationSource.SingleCell,
-										ts: maybeLocation.ts,
-										position: maybeLocation.position,
-									},
 								},
 							])
 						}),

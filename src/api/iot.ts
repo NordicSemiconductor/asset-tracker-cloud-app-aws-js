@@ -134,30 +134,26 @@ export const iotService = ({
 		const { principals } = await iot.send(
 			new ListThingPrincipalsCommand({ thingName }),
 		)
-		await Promise.all(
-			(principals ?? []).map(async (certificateArn) => {
-				const certificateId = certificateArn.split('/')[1]
-				await Promise.all([
-					iot.send(
-						new DetachThingPrincipalCommand({
-							thingName,
-							principal: certificateArn,
-						}),
-					),
-					iot.send(
-						new UpdateCertificateCommand({
-							certificateId,
-							newStatus: 'INACTIVE',
-						}),
-					),
-				])
-				await iot.send(
-					new DeleteCertificateCommand({
-						certificateId,
-					}),
-				)
-			}),
-		)
+		for (const certificateArn of principals ?? []) {
+			const certificateId = certificateArn.split('/')[1]
+			await iot.send(
+				new DetachThingPrincipalCommand({
+					thingName,
+					principal: certificateArn,
+				}),
+			)
+			await iot.send(
+				new UpdateCertificateCommand({
+					certificateId,
+					newStatus: 'INACTIVE',
+				}),
+			)
+			await iot.send(
+				new DeleteCertificateCommand({
+					certificateId,
+				}),
+			)
+		}
 		await iot.send(
 			new DeleteThingCommand({
 				thingName,

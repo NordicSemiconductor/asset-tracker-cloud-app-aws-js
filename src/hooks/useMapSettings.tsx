@@ -6,24 +6,36 @@ export type Settings = {
 	enabledLayers: {
 		headings: boolean
 		singleCellGeoLocations: boolean
-		multiCellGeoLocations: boolean
-		history: boolean
+		neighboringCellGeoLocations: boolean
+	}
+	history: {
+		gnss: boolean
+		maxGnssEntries: number
+		singleCell: boolean
+		maxSingleCellGeoLocationEntries: number
+		neighboringCell: boolean
+		maxNeighboringCellGeoLocationEntries: number
 	}
 	follow: boolean
 	zoom: number
-	numHistoryEntries: number
 }
 
 const defaultSettings: Settings = {
 	follow: true,
 	enabledLayers: {
-		headings: false,
+		headings: true,
 		singleCellGeoLocations: true,
-		multiCellGeoLocations: true,
-		history: false,
+		neighboringCellGeoLocations: true,
+	},
+	history: {
+		gnss: true,
+		maxGnssEntries: 100,
+		singleCell: false,
+		maxSingleCellGeoLocationEntries: 100,
+		neighboringCell: false,
+		maxNeighboringCellGeoLocationEntries: 100,
 	},
 	zoom: 13,
-	numHistoryEntries: 100,
 }
 
 const userSettings = withLocalStorage<Settings>({

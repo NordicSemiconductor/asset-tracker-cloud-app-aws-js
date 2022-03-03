@@ -9,7 +9,7 @@ test.use({
 
 test.afterEach(checkForConsoleErrors)
 
-test.beforeEach(selectCurrentAsset)
+test.beforeEach(selectCurrentAsset())
 
 test('Battery history', async ({ page }) => {
 	await page.click('header[role="button"]:has-text("Battery")')

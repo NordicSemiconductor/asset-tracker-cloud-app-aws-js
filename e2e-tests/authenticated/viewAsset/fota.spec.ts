@@ -3,7 +3,7 @@ import * as fs from 'fs'
 import * as path from 'path'
 import { checkForConsoleErrors } from '../../lib/checkForConsoleErrors.js'
 import { loadSessionData } from '../../lib/loadSessionData.js'
-import { selectCurrentAsset } from '../lib.js'
+import { AssetType, selectCurrentAsset } from '../lib.js'
 
 test.use({
 	storageState: path.join(process.cwd(), 'test-session', 'authenticated.json'),
@@ -11,7 +11,7 @@ test.use({
 
 test.afterEach(checkForConsoleErrors)
 
-test.beforeEach(selectCurrentAsset)
+test.beforeEach(selectCurrentAsset())
 
 const updateFileWithVersion = path.join(
 	process.cwd(),
@@ -29,7 +29,7 @@ const updateFileWithoutVersion = path.join(
 
 test('Create firmware update from file', async ({ page }) => {
 	await page.click('header[role="button"]:has-text("Firmware Upgrade")')
-	const { thingName } = await loadSessionData('asset')
+	const { thingName } = await loadSessionData(AssetType.Default)
 
 	await page.locator('input[type="file"]').setInputFiles(updateFileWithVersion)
 

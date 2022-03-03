@@ -9,7 +9,7 @@ import * as path from 'path'
 import { DataModules } from '../../src/asset/asset.js'
 import { checkForConsoleErrors } from '../lib/checkForConsoleErrors.js'
 import { loadSessionData } from '../lib/loadSessionData.js'
-import { selectCurrentAsset } from './lib.js'
+import { AssetType, selectCurrentAsset } from './lib.js'
 
 const { mqttEndpoint } = fromEnv({
 	mqttEndpoint: 'PUBLIC_MQTT_ENDPOINT',
@@ -21,11 +21,11 @@ test.use({
 
 test.afterEach(checkForConsoleErrors)
 
-test.beforeEach(selectCurrentAsset)
+test.beforeEach(selectCurrentAsset())
 
 test('Change asset name', async ({ page }) => {
 	await page.click('header[role="button"]:has-text("Settings")')
-	const { name } = await loadSessionData('asset')
+	const { name } = await loadSessionData(AssetType.Default)
 	await page.fill('input[id="asset-name"]', `${name}-renamed`)
 	await page.click('form[id="personalization-form"] button:has-text("Update")')
 	await page.screenshot({
@@ -70,7 +70,7 @@ test('Update asset configuration', async ({ page }) => {
 	})
 
 	// Verify
-	const { thingName } = await loadSessionData('asset')
+	const { thingName } = await loadSessionData(AssetType.Default)
 	const { payload } = await new IoTDataPlaneClient({
 		endpoint: `https://${mqttEndpoint}`,
 	}).send(

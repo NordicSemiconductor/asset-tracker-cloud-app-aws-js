@@ -17,29 +17,27 @@ export const deleteUpgradeFirmwareJob =
 		thingArn,
 		executionNumber,
 	}: DeviceUpgradeFirmwareJob): Promise<void> => {
-		await Promise.all([
-			await s3
-				.send(
-					new DeleteObjectCommand({
-						Bucket: fotaBucketName,
-						Key: jobId,
-					}),
-				)
-				.catch((error) => {
-					console.error(`Failed to delete firmware file for job ${jobId}`)
-					console.error(error)
+		await s3
+			.send(
+				new DeleteObjectCommand({
+					Bucket: fotaBucketName,
+					Key: jobId,
 				}),
-			await iot
-				.send(
-					new DeleteJobExecutionCommand({
-						jobId,
-						thingName: thingArn.split('/')[1],
-						executionNumber,
-					}),
-				)
-				.catch((error) => {
-					console.error(`Failed to delete job ${jobId}`)
-					console.error(error)
+			)
+			.catch((error) => {
+				console.error(`Failed to delete firmware file for job ${jobId}`)
+				console.error(error)
+			})
+		await iot
+			.send(
+				new DeleteJobExecutionCommand({
+					jobId,
+					thingName: thingArn.split('/')[1],
+					executionNumber,
 				}),
-		])
+			)
+			.catch((error) => {
+				console.error(`Failed to delete job ${jobId}`)
+				console.error(error)
+			})
 	}

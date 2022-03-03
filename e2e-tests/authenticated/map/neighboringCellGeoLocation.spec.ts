@@ -1,7 +1,11 @@
-import { expect, test } from '@playwright/test'
+import { test } from '@playwright/test'
 import * as path from 'path'
 import { checkForConsoleErrors } from '../../lib/checkForConsoleErrors.js'
 import { selectCurrentAsset } from '../lib.js'
+import { offsetClick } from './helper/offsetClick.js'
+import { updateSettings } from './helper/settings.js'
+import { verifyLocationInfo } from './helper/verifyInfo.js'
+import { zoom } from './helper/zoom.js'
 
 test.use({
 	storageState: path.join(process.cwd(), 'test-session', 'authenticated.json'),
@@ -9,17 +13,25 @@ test.use({
 
 test.afterEach(checkForConsoleErrors)
 
-test.beforeEach(selectCurrentAsset)
+test.beforeEach(selectCurrentAsset())
 
 test('Show neighboring cells geo location on map', async ({ page }) => {
+	await updateSettings(page)({
+		gnssHistory: false,
+		singleCell: false,
+	})
+	await zoom(page, -1)
+
 	// Neighboring cell location circle should exist
-	await page.click('#asset-map path[stroke="#E56399"]')
+	await offsetClick(page.locator('#asset-map path[fill="#E56399"]'))
 	// And popup should be shown
-	await expect(
-		page.locator(
-			'text=Approximate location based on neighboring cell information.',
-		),
-	).toBeVisible()
+	await verifyLocationInfo(
+		page,
+		1,
+	)({
+		accuracy: '2000 m',
+		source: 'Neighboring cell geo location',
+	})
 	await page.screenshot({
 		path: `./test-session/neighboring-cells-geo-location.png`,
 	})

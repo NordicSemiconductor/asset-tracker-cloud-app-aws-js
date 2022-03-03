@@ -1,5 +1,6 @@
-import cx from 'classnames'
 import { ChartDateRange } from 'components/ChartDateRange/ChartDateRange'
+import styles from 'components/Map/Settings.module.css'
+import { SwitchWithNumber } from 'components/Map/SwitchWithNumber'
 import { useMapSettings } from 'hooks/useMapSettings'
 
 export const MapSettings = () => {
@@ -18,152 +19,168 @@ export const MapSettings = () => {
 		updateSettings(newState)
 	}
 
+	const updateHistory = (update: Partial<typeof settings['history']>) => {
+		const newState: typeof settings = {
+			...settings,
+			history: {
+				...settings.history,
+				...update,
+			},
+		}
+		updateSettings(newState)
+	}
+
 	return (
-		<>
-			<form className="pt-2 pe-2 ps-2">
-				<div className="row ps-1 pe-1">
-					<div className="col-sm-6 pt-1 pb-1">
-						<div
-							className="form-check form-switch"
-							data-intro="Whether to always re-center the map on the position of the asset."
-						>
-							<input
-								className="form-check-input"
-								type="checkbox"
-								name="follow"
-								onChange={() => {
-									const newSettings = {
-										...settings,
-										follow: !settings.follow,
-									}
-									updateSettings(newSettings)
-								}}
-								checked={settings.follow}
-								id="mapSettingsFollow"
-							/>
-							<label htmlFor="mapSettingsFollow">Re-center on position</label>
-						</div>
-					</div>
-					<div className="col-sm-6 pt-1 pb-1">
-						<div
-							className="form-check form-switch"
-							data-intro="Whether to show the heading (direction) information with locations."
-						>
-							<input
-								className="form-check-input"
-								type="checkbox"
-								name="headings"
-								onChange={() => {
-									updateEnabledLayers({
-										headings: !settings.enabledLayers.headings,
-									})
-								}}
-								checked={settings.enabledLayers.headings}
-								id="mapSettingsHeadings"
-							/>
-							<label htmlFor="mapSettingsHeadings">Headingmarker</label>
-						</div>
+		<div className={styles.settings}>
+			<form>
+				<div>
+					<div
+						className="form-check form-switch"
+						data-intro="Whether to always re-center the map on the position of the asset."
+					>
+						<input
+							className="form-check-input"
+							type="checkbox"
+							name="mapSettingsFollow"
+							onChange={() => {
+								const newSettings = {
+									...settings,
+									follow: !settings.follow,
+								}
+								updateSettings(newSettings)
+							}}
+							checked={settings.follow}
+							id="mapSettingsFollow"
+						/>
+						<label htmlFor="mapSettingsFollow">Re-center on position</label>
 					</div>
 				</div>
-				<div className="row ps-1 pe-1">
-					<div className="col-sm-6 pt-1 pb-1">
-						<div
-							className="form-check form-switch"
-							data-intro="Whether to show the approximate location based on the asset's cell information."
-						>
-							<input
-								className="form-check-input"
-								type="checkbox"
-								name="singleCellGeoLocation"
-								onChange={() => {
-									updateEnabledLayers({
-										singleCellGeoLocations:
-											!settings.enabledLayers.singleCellGeoLocations,
-									})
-								}}
-								checked={settings.enabledLayers.singleCellGeoLocations}
-								id="mapSettingsSingleCellGeoLocations"
-							/>
-							<label htmlFor="mapSettingsSingleCellGeoLocations">
-								Location based on asset's cell information
-							</label>
-						</div>
-					</div>
-					<div className="col-sm-6 pt-1 pb-1">
-						<div
-							className="form-check form-switch"
-							data-intro="Whether to show the approximate location based on the asset's neighboring cell information."
-						>
-							<input
-								className="form-check-input"
-								type="checkbox"
-								name="multiCellGeoLocation"
-								onChange={() => {
-									updateEnabledLayers({
-										multiCellGeoLocations:
-											!settings.enabledLayers.multiCellGeoLocations,
-									})
-								}}
-								checked={settings.enabledLayers.multiCellGeoLocations}
-								id="mapSettingsMultiCellGeoLocations"
-							/>
-							<label htmlFor="mapSettingsMultiCellGeoLocations">
-								Location based on asset's neighboring cell information
-							</label>
-						</div>
+				<div>
+					<div
+						className="form-check form-switch"
+						data-intro="Whether to show the heading (direction) information with locations."
+					>
+						<input
+							className="form-check-input"
+							type="checkbox"
+							name="headings"
+							onChange={() => {
+								updateEnabledLayers({
+									headings: !settings.enabledLayers.headings,
+								})
+							}}
+							checked={settings.enabledLayers.headings}
+							id="mapSettingsHeadings"
+						/>
+						<label htmlFor="mapSettingsHeadings">Headingmarker</label>
 					</div>
 				</div>
-				<div
-					className={cx('row ps-1 pe-1', {
-						'mb-2': !settings.enabledLayers.history,
-					})}
-				>
-					<div className="col-sm-6 d-flex">
-						<div
-							className="form-check form-switch"
-							data-intro="Whether to show location history of the asset."
-						>
-							<input
-								className="form-check-input"
-								type="checkbox"
-								name="fetchHistoricalData"
-								onChange={() => {
-									updateEnabledLayers({
-										history: !settings.enabledLayers.history,
-									})
-								}}
-								checked={settings.enabledLayers.history}
-								id="mapSettingsFetchHistory"
-							/>
-							<label htmlFor="mapSettingsFetchHistory" className="text-nowrap">
-								Fetch history
-							</label>
-						</div>
+				<div className="row">
+					<SwitchWithNumber
+						id="mapSettingsFetchGNSSHistory"
+						label="GNSS location history"
+						checked={settings.history.gnss}
+						onChange={(gnss) =>
+							updateHistory({
+								gnss,
+							})
+						}
+						value={settings.history.maxGnssEntries}
+						updateValue={(maxGnssEntries) =>
+							updateHistory({
+								maxGnssEntries,
+							})
+						}
+					/>
+				</div>
+				<div>
+					<div
+						className="form-check form-switch"
+						data-intro="Whether to show the approximate location based on the asset's cell information."
+					>
+						<input
+							className="form-check-input"
+							type="checkbox"
+							name="mapSettingsSingleCellGeoLocations"
+							onChange={() => {
+								updateEnabledLayers({
+									singleCellGeoLocations:
+										!settings.enabledLayers.singleCellGeoLocations,
+								})
+							}}
+							checked={settings.enabledLayers.singleCellGeoLocations}
+							id="mapSettingsSingleCellGeoLocations"
+						/>
+						<label htmlFor="mapSettingsSingleCellGeoLocations">
+							Location based on asset's cell information
+						</label>
 					</div>
-					{settings.enabledLayers.history && (
-						<div className="col-sm-6">
-							<div className="input-group input-group-sm ">
-								<input
-									type="number"
-									className="form-control"
-									value={settings.numHistoryEntries ?? '10'}
-									min={1}
-									step={1}
-									onChange={({ target: { value } }) => {
-										updateSettings({ numHistoryEntries: parseInt(value, 10) })
-									}}
-								/>
-								<span className="input-group-text">entries</span>
-							</div>
-						</div>
-					)}
+				</div>
+				<div className="row">
+					<SwitchWithNumber
+						id="mapSettingsFetchSingleCellHistory"
+						label="Single cell location history"
+						disabled={!settings.enabledLayers.singleCellGeoLocations}
+						checked={settings.history.singleCell}
+						onChange={(singleCell) =>
+							updateHistory({
+								singleCell,
+							})
+						}
+						value={settings.history.maxSingleCellGeoLocationEntries}
+						updateValue={(maxSingleCellGeoLocationEntries) =>
+							updateHistory({
+								maxSingleCellGeoLocationEntries,
+							})
+						}
+					/>
+				</div>
+				<div>
+					<div
+						className="form-check form-switch"
+						data-intro="Whether to show the approximate location based on the asset's neighboring cell information."
+					>
+						<input
+							className="form-check-input"
+							type="checkbox"
+							name="mapSettingsNeighboringCellGeoLocations"
+							onChange={() => {
+								updateEnabledLayers({
+									neighboringCellGeoLocations:
+										!settings.enabledLayers.neighboringCellGeoLocations,
+								})
+							}}
+							checked={settings.enabledLayers.neighboringCellGeoLocations}
+							id="mapSettingsNeighboringCellGeoLocations"
+						/>
+						<label htmlFor="mapSettingsNeighboringCellGeoLocations">
+							Location based on asset's neighboring cell information
+						</label>
+					</div>
+				</div>
+				<div className="row">
+					<SwitchWithNumber
+						id="mapSettingsFetchNeighboringCellHistory"
+						label="Neighboring cell location history"
+						disabled={!settings.enabledLayers.neighboringCellGeoLocations}
+						checked={settings.history.neighboringCell}
+						onChange={(neighboringCell) =>
+							updateHistory({
+								neighboringCell,
+							})
+						}
+						value={settings.history.maxNeighboringCellGeoLocationEntries}
+						updateValue={(maxNeighboringCellGeoLocationEntries) =>
+							updateHistory({
+								maxNeighboringCellGeoLocationEntries,
+							})
+						}
+					/>
 				</div>
 			</form>
-			{settings.enabledLayers.history && (
-				<div data-intro="This configures the date range for which to fetch historical locations for the asset.">
-					<ChartDateRange className="ms-2 me-2 mb-2 mt-2" hideBinControls />
-				</div>
-			)}
-		</>
+			<div data-intro="This configures the date range for which to fetch historical locations for the asset.">
+				<ChartDateRange hideBinControls />
+			</div>
+		</div>
 	)
 }

@@ -50,7 +50,7 @@ jobs:
           PUBLIC_VERSION: ${{ github.sha }}
         run: npm run build
 
-      - uses: actions/upload-artifact@v2
+      - uses: actions/upload-artifact@v3
         if: always()
         with:
           name: asset-tracker-cloud-app-aws-${{ github.sha }}
@@ -70,7 +70,7 @@ jobs:
         run: |
           aws iot delete-thing --thing-name `cat test-session/asset.json| jq -r '.thingName'`
 
-      - uses: actions/upload-artifact@v2
+      - uses: actions/upload-artifact@v3
         if: always()
         with:
           name: playwright-artifacts-${{ github.sha }}

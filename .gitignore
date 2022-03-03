@@ -7,3 +7,4 @@ npm-debug.log
 build/
 test-session/
 e2e-tests-out/
+.swc/

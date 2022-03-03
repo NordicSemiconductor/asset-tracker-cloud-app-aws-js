@@ -2,11 +2,7 @@ import { fetchRoamingData } from 'api/fetchRoamingData'
 import { timeStreamFormatDate } from 'api/timestream'
 import { Asset, GNSS, SensorProperties } from 'asset/asset'
 import type { DateRange } from 'hooks/useChartDateRange'
-import {
-	AssetGeoLocation,
-	GeoLocation,
-	GeoLocationSource,
-} from 'hooks/useMapData'
+import { AssetGeoLocation, AssetGeoLocationSource } from 'hooks/useMapData'
 import { useServices } from 'hooks/useServices'
 import { createContext, FunctionComponent, useContext } from 'react'
 import { validFilter } from 'utils/validFilter'
@@ -77,7 +73,7 @@ export const AssetLocationHistoryProvider: FunctionComponent = ({
 		)
 
 		// Validate the GNSS position data
-		const locations: GeoLocation[] = data
+		const locations: Omit<AssetGeoLocation, 'roaming'>[] = data
 			.filter(({ objectValues, objectKeys, date }) =>
 				validGNSSReadingFilter({
 					v: objectKeys.reduce(
@@ -128,25 +124,27 @@ export const AssetLocationHistoryProvider: FunctionComponent = ({
 					},
 				)
 
-				const l: GeoLocation = {
-					position: {
-						lat: pos.lat.v,
-						lng: pos.lng.v,
-						accuracy: pos.acc.v,
-						heading: pos.hdg.v,
-						altitude: pos.alt.v,
-						speed: pos.spd.v,
+				const l: Omit<AssetGeoLocation, 'roaming'> = {
+					location: {
+						position: {
+							lat: pos.lat.v,
+							lng: pos.lng.v,
+							accuracy: pos.acc.v,
+							heading: pos.hdg.v,
+							altitude: pos.alt.v,
+							speed: pos.spd.v,
+						},
+						batch: [
+							pos.lat.source,
+							pos.lng.source,
+							pos.acc.source,
+							pos.hdg.source,
+							pos.alt.source,
+							pos.spd.source,
+						].includes('batch'),
+						ts: date,
+						source: AssetGeoLocationSource.GNSS,
 					},
-					batch: [
-						pos.lat.source,
-						pos.lng.source,
-						pos.acc.source,
-						pos.hdg.source,
-						pos.alt.source,
-						pos.spd.source,
-					].includes('batch'),
-					ts: date,
-					source: GeoLocationSource.GNSS,
 				}
 				return l
 			})
@@ -157,12 +155,12 @@ export const AssetLocationHistoryProvider: FunctionComponent = ({
 		const sortedRoaming = await fetchRoamingData({
 			timestream,
 			asset,
-			start: locations[locations.length - 1].ts,
-			end: locations[0].ts,
+			start: locations[locations.length - 1].location.ts,
+			end: locations[0].location.ts,
 		})
 
 		// Interleave the roaming information with the location data
-		const history = locations.map((location) => ({
+		const history = locations.map(({ location }) => ({
 			location,
 			roaming: sortedRoaming.find(({ ts }) => ts <= location.ts.getTime()), // Find the first roaming entry that is older than the location
 		}))

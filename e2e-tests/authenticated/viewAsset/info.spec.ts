@@ -1,7 +1,7 @@
 import { expect, test } from '@playwright/test'
 import * as path from 'path'
-import { state as reported } from '../../asset-reported-state.js'
 import { checkForConsoleErrors } from '../../lib/checkForConsoleErrors.js'
+import { state as reported } from '../../setup/asset-reported-state.js'
 import { selectCurrentAsset } from '../lib.js'
 
 test.use({

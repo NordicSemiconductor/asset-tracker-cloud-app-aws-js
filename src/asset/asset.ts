@@ -403,11 +403,11 @@ export const NCellMeasReport = Type.Object(
 			},
 		),
 		timestamp: Type.String({
-			minLength: 13,
 			description:
-				'Timestamp as Unix epoch with millisecond precision (UTC) as string (so it can be used as a sort column in DynamoDB',
-			pattern: '^[1-9][0-9]{12}$',
-			examples: ['1584533788029'],
+				'Timestamp as RFC3339 string (so it can be used as a sort column in DynamoDB)',
+			examples: ['2022-03-03T14:45:45.555Z'],
+			pattern:
+				'^2[0-9]{3}-[01][0-9]-[0-3][0-9]T[0-2][0-9]:[0-5][0-9]:[0-5][0-9](.[0-9]+)',
 		}),
 		unresolved: Type.Optional(
 			Type.Boolean({

@@ -7,12 +7,14 @@ export const updateSettings =
 		singleCell,
 		singleCellHistory,
 		neighboringCell,
+		neighboringCellHistory,
 		follow,
 	}: {
 		gnssHistory?: boolean
 		singleCell?: boolean
 		singleCellHistory?: boolean
 		neighboringCell?: boolean
+		neighboringCellHistory?: boolean
 		follow?: boolean
 	}): Promise<void> => {
 		await page.click('button[data-test="show-map-settings"]')
@@ -42,6 +44,13 @@ export const updateSettings =
 				await page.locator('#mapSettingsNeighboringCellGeoLocations').check()
 			} else {
 				await page.locator('#mapSettingsNeighboringCellGeoLocations').uncheck()
+			}
+		}
+		if (neighboringCellHistory !== undefined) {
+			if (neighboringCellHistory) {
+				await page.locator('#mapSettingsFetchNeighboringCellHistory').check()
+			} else {
+				await page.locator('#mapSettingsFetchNeighboringCellHistory').uncheck()
 			}
 		}
 		if (follow !== undefined) {

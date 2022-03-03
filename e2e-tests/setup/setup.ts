@@ -13,15 +13,11 @@ import {
 import { fromEnv } from '@nordicsemiconductor/from-env'
 import { randomWords } from '@nordicsemiconductor/random-words'
 import { promises as fs } from 'fs'
-import id128 from 'id128'
 import * as path from 'path'
-import {
-	ncellmeasReport,
-	ncellmeasReportLocation,
-	state,
-} from './asset-reported-state.js'
-import { AssetType } from './authenticated/lib.js'
-import { timestreamDataGenerator } from './setup/sensorDataGenerator.js'
+import { AssetType } from '../authenticated/lib.js'
+import { state } from './asset-reported-state.js'
+import { neighboringCellLocations } from './neighboringCellLocations.js'
+import { timestreamDataGenerator } from './sensorDataGenerator.js'
 
 const {
 	mqttEndpoint,
@@ -77,7 +73,6 @@ const globalSetup = async (type: AssetType) => {
 
 	// Store cell geo location
 	console.log(`Storing cell geo location`)
-	const roam = state.roam
 	await Promise.all([
 		db.send(
 			new PutItemCommand({
@@ -116,21 +111,17 @@ const globalSetup = async (type: AssetType) => {
 	])
 
 	// Publish neighboring cell measurement
-	const report = {
-		reportId: id128.Uuid4.generate().toCanonical(),
-		nw: roam.v.nw,
-		deviceId: thingName,
-		report: ncellmeasReport,
-		timestamp: Date.now().toString(),
-		unresolved: false,
-		...ncellmeasReportLocation,
-	}
+	const reports = neighboringCellLocations({ thingName })
 	console.log(`Storing neighboring cell report`)
-	await db.send(
-		new PutItemCommand({
-			TableName: neighborCellMeasurementsStorageTable,
-			Item: marshall(report),
-		}),
+	await Promise.all(
+		reports.map(async (report) =>
+			db.send(
+				new PutItemCommand({
+					TableName: neighborCellMeasurementsStorageTable,
+					Item: marshall(report),
+				}),
+			),
+		),
 	)
 
 	// Historical sensor data

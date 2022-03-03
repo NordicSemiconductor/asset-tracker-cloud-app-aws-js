@@ -7,7 +7,7 @@ import { markerIcon } from 'components/Map/MarkerIcon'
 import { NoMap } from 'components/Map/NoMap'
 import styles from 'components/Map/SingleAssetMap.module.css'
 import { formatDistanceToNow } from 'date-fns'
-import { GeoLocationSource, useMapData } from 'hooks/useMapData'
+import { AssetGeoLocationSource, useMapData } from 'hooks/useMapData'
 import { useMapSettings } from 'hooks/useMapSettings'
 import type { Map as LeafletMap } from 'leaflet'
 import { nanoid } from 'nanoid'
@@ -25,15 +25,15 @@ import { nullOrUndefined } from 'utils/nullOrUndefined'
 import { toFixed } from 'utils/toFixed'
 
 const baseColors = {
-	[GeoLocationSource.NeighboringCell]: '#E56399',
-	[GeoLocationSource.SingleCell]: '#F6C270',
-	[GeoLocationSource.GNSS]: '#1f56d2',
+	[AssetGeoLocationSource.NeighboringCell]: '#E56399',
+	[AssetGeoLocationSource.SingleCell]: '#F6C270',
+	[AssetGeoLocationSource.GNSS]: '#1f56d2',
 } as const
 const lineColor = `#1f56d2`
 const zIndexBySource = {
-	[GeoLocationSource.GNSS]: 420,
-	[GeoLocationSource.NeighboringCell]: 410,
-	[GeoLocationSource.SingleCell]: 400,
+	[AssetGeoLocationSource.GNSS]: 420,
+	[AssetGeoLocationSource.NeighboringCell]: 410,
+	[AssetGeoLocationSource.SingleCell]: 400,
 } as const
 
 export const SingleAssetMap = ({ asset }: { asset: Asset }) => {
@@ -43,7 +43,7 @@ export const SingleAssetMap = ({ asset }: { asset: Asset }) => {
 
 	// Zoom to center
 	const { follow } = settings
-	const centerPosition = center?.position
+	const centerPosition = center?.location.position
 	useEffect(() => {
 		if (map === undefined) return
 		if (centerPosition === undefined) return
@@ -65,7 +65,7 @@ export const SingleAssetMap = ({ asset }: { asset: Asset }) => {
 	return (
 		<div id="asset-map">
 			<MapContainer
-				center={center.position}
+				center={center.location.position}
 				zoom={settings.zoom}
 				whenCreated={setmap}
 				className={styles.mapContainer}
@@ -79,7 +79,7 @@ export const SingleAssetMap = ({ asset }: { asset: Asset }) => {
 					attribution='&amp;copy <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
 					url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
 				/>
-				<Marker position={center.position} icon={markerIcon}>
+				<Marker position={center.location.position} icon={markerIcon}>
 					<Popup pane="popupPane">{asset.name}</Popup>
 				</Marker>
 				{(locations.length ?? 0) > 0 &&
@@ -223,10 +223,14 @@ export const SingleAssetMap = ({ asset }: { asset: Asset }) => {
 														<dt data-test={`asset-roaming-info-${k}-nw`}>
 															{roaming.v.nw}
 														</dt>
-														<dt>Band</dt>
-														<dt data-test={`asset-roaming-info-${k}-band`}>
-															{roaming.v.band}
-														</dt>
+														{roaming.v.band !== undefined && (
+															<>
+																<dt>Band</dt>
+																<dt data-test={`asset-roaming-info-${k}-band`}>
+																	{roaming.v.band}
+																</dt>
+															</>
+														)}
 														<dt>MCC/MNC</dt>
 														<dd data-test={`asset-roaming-info-${k}-mccmnc`}>
 															{roaming.v.mccmnc}
@@ -239,10 +243,14 @@ export const SingleAssetMap = ({ asset }: { asset: Asset }) => {
 														<dd data-test={`asset-roaming-info-${k}-cell`}>
 															{roaming.v.cell}
 														</dd>
-														<dt>IP</dt>
-														<dd data-test={`asset-roaming-info-${k}-ip`}>
-															{roaming.v.ip}
-														</dd>
+														{roaming.v.ip !== undefined && (
+															<>
+																<dt>IP</dt>
+																<dd data-test={`asset-roaming-info-${k}-ip`}>
+																	{roaming.v.ip}
+																</dd>
+															</>
+														)}
 														<dt>Time</dt>
 														<dd>
 															<time
@@ -267,7 +275,7 @@ export const SingleAssetMap = ({ asset }: { asset: Asset }) => {
 					<button
 						type="button"
 						onClick={() => {
-							map?.flyTo(center.position)
+							map?.flyTo(center.location.position)
 						}}
 						title="Center map on asset"
 					>
@@ -279,13 +287,13 @@ export const SingleAssetMap = ({ asset }: { asset: Asset }) => {
 	)
 }
 
-const formatSource = (source: GeoLocationSource): string => {
+const formatSource = (source: AssetGeoLocationSource): string => {
 	switch (source) {
-		case GeoLocationSource.GNSS:
+		case AssetGeoLocationSource.GNSS:
 			return 'GNSS'
-		case GeoLocationSource.NeighboringCell:
+		case AssetGeoLocationSource.NeighboringCell:
 			return 'Neighboring cell geo location'
-		case GeoLocationSource.SingleCell:
+		case AssetGeoLocationSource.SingleCell:
 			return 'Single cell geo location'
 		default:
 			return source

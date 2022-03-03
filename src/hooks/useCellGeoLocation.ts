@@ -35,13 +35,13 @@ export const useCellGeoLocation = (): AssetGeoLocation | undefined => {
 			reportedAt: new Date(twin.reported.roam.ts),
 		})
 		promise
-			.then((position) => {
+			.then((location) => {
 				if (!isMounted) return
 				setLocation(
-					position === undefined
+					location === undefined
 						? undefined
 						: {
-								location: position,
+								...location,
 								roaming: twin.reported.roam,
 						  },
 				)

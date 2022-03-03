@@ -6,8 +6,8 @@ import {
 import { toRecord } from '@nordicsemiconductor/timestream-helpers'
 import { SensorProperties } from '../../src/asset/asset.js'
 import { ulid } from '../../src/utils/ulid.js'
-import { state } from '../asset-reported-state.js'
 import { AssetType } from '../authenticated/lib.js'
+import { state } from './asset-reported-state.js'
 
 function* dataGenerator({
 	min,

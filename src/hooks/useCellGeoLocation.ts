@@ -5,9 +5,10 @@ import type { AssetGeoLocation } from 'hooks/useMapData'
 import { useMapSettings } from 'hooks/useMapSettings'
 import { useCallback, useEffect, useState } from 'react'
 
-export const useCellGeoLocation = (): {
-	location?: AssetGeoLocation
-} => {
+/**
+ * Provides the cell geo location based on the asset's current roaming information.
+ */
+export const useCellGeoLocation = (): AssetGeoLocation | undefined => {
 	const { twin } = useAsset()
 	const [location, setLocation] = useState<AssetGeoLocation>()
 	const { geolocationApiEndpoint } = useAppConfig()
@@ -55,7 +56,5 @@ export const useCellGeoLocation = (): {
 		}
 	}, [twin, enabled, locate])
 
-	return {
-		location,
-	}
+	return location
 }

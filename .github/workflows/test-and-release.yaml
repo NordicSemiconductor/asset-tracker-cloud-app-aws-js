@@ -68,7 +68,8 @@ jobs:
       - name: Cleanup test artifacts
         if: ${{ failure() }}
         run: |
-          aws iot delete-thing --thing-name `cat test-session/asset.json| jq -r '.thingName'`
+          aws iot delete-thing --thing-name `cat test-session/asset.json | jq -r '.thingName'`
+          aws iot delete-thing --thing-name `cat test-session/asset-no-gnss.json | jq -r '.thingName'`
 
       - uses: actions/upload-artifact@v3
         if: always()

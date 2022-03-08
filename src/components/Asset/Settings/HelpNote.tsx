@@ -1,3 +1,4 @@
+import { Type } from '@sinclair/typebox'
 import { HelpIcon, IconWithText } from 'components/FeatherIcon'
 import introJs from 'intro.js'
 import { useState } from 'react'
@@ -5,7 +6,8 @@ import { withLocalStorage } from 'utils/withLocalStorage'
 
 const intro = introJs()
 
-const storedHidden = withLocalStorage<boolean>({
+const storedHidden = withLocalStorage({
+	schema: Type.Boolean(),
 	key: 'settings:helpNoteHidden',
 	defaultValue: false,
 })

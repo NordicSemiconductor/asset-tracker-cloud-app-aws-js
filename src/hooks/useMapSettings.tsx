@@ -1,3 +1,4 @@
+import { Type } from '@sinclair/typebox'
 import equal from 'fast-deep-equal'
 import { createContext, FunctionComponent, useContext, useState } from 'react'
 import { withLocalStorage } from 'utils/withLocalStorage'
@@ -20,6 +21,33 @@ export type Settings = {
 	zoom: number
 }
 
+const SettingsType = Type.Object(
+	{
+		follow: Type.Boolean(),
+		enabledLayers: Type.Object(
+			{
+				headings: Type.Boolean(),
+				singleCellGeoLocations: Type.Boolean(),
+				neighboringCellGeoLocations: Type.Boolean(),
+			},
+			{ additionalProperties: false },
+		),
+		history: Type.Object(
+			{
+				gnss: Type.Boolean(),
+				maxGnssEntries: Type.Integer({ minimum: 1 }),
+				singleCell: Type.Boolean(),
+				maxSingleCellGeoLocationEntries: Type.Integer({ minimum: 1 }),
+				neighboringCell: Type.Boolean(),
+				maxNeighboringCellGeoLocationEntries: Type.Integer({ minimum: 1 }),
+			},
+			{ additionalProperties: false },
+		),
+		zoom: Type.Integer({ minimum: 1 }),
+	},
+	{ additionalProperties: false },
+)
+
 const defaultSettings: Settings = {
 	follow: true,
 	enabledLayers: {
@@ -38,7 +66,8 @@ const defaultSettings: Settings = {
 	zoom: 13,
 }
 
-const userSettings = withLocalStorage<Settings>({
+const userSettings = withLocalStorage({
+	schema: SettingsType,
 	key: 'map:settings',
 	defaultValue: defaultSettings,
 })

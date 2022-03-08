@@ -1,3 +1,4 @@
+import { Type } from '@sinclair/typebox'
 import { useState } from 'react'
 import { withLocalStorage } from 'utils/withLocalStorage'
 
@@ -7,7 +8,8 @@ export const useCollapsed = (
 	collapsed: boolean
 	toggle: () => void
 } => {
-	const storedCollapsed = withLocalStorage<boolean>({
+	const storedCollapsed = withLocalStorage({
+		schema: Type.Boolean(),
 		key: id,
 		defaultValue: true,
 	})

@@ -1,45 +1,44 @@
-type Freezer<T> = {
-	freeze: (unfrozen: T) => string
-	unfreeze: (frozen: string) => T
-}
+import type { Static, TSchema } from '@sinclair/typebox'
+import { validPassthrough } from 'utils/validPassthrough'
 
 type WithLocalStorage = {
-	<T>(_: { key: string; freezer?: Freezer<T> }): {
+	<T>(_: { schema: TSchema; key: string }): {
 		set: (_: T) => void
 		get: () => T | undefined
 		destroy: () => void
 	}
-	<T>(_: { key: string; defaultValue: T; freezer?: Freezer<T> }): {
+	<T>(_: { schema: TSchema; key: string; defaultValue: T }): {
 		set: (_: T) => void
 		get: () => T
 		destroy: () => void
 	}
 }
 
-export const withLocalStorage: WithLocalStorage = <T>({
+export const withLocalStorage: WithLocalStorage = <Schema extends TSchema>({
+	schema,
 	key,
 	defaultValue,
-	freezer,
 }: {
+	schema: Schema
 	key: string
-	defaultValue?: T
-	freezer?: Freezer<T>
+	defaultValue?: Static<Schema>
 }): {
-	set: (_?: T) => void
-	get: () => T | undefined
+	set: (_?: Static<Schema>) => void
+	get: () => Static<Schema> | undefined
 	destroy: () => void
 } => {
 	const destroy = () => localStorage.removeItem(key)
+	const valid = validPassthrough(schema)
 	return {
 		set: (v) => {
 			if (v === undefined) destroy()
-			localStorage.setItem(key, (freezer?.freeze ?? JSON.stringify)(v))
+			localStorage.setItem(key, JSON.stringify(v))
 		},
 		get: () => {
 			const stored = localStorage.getItem(key)
 			if (stored === null) return defaultValue
 			try {
-				return (freezer?.unfreeze ?? JSON.parse)(stored) as T
+				return valid(JSON.parse(stored)) ?? defaultValue
 			} catch {
 				console.error(
 					`[withLocalStorage] Failed to load stored entry for ${key} from ${stored}!`,
@@ -49,9 +48,4 @@ export const withLocalStorage: WithLocalStorage = <T>({
 		},
 		destroy,
 	}
-}
-
-export const dateFreezer: Freezer<Date> = {
-	freeze: (d) => d.toISOString(),
-	unfreeze: (s) => new Date(s),
 }

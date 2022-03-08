@@ -77,7 +77,15 @@ export const MapDataProvider: FunctionComponent = ({ children }) => {
 
 	// If history is disabled, use current position (if available)
 	if (!settings.history.gnss && twin?.reported?.gnss !== undefined)
-		locations.push(toLocation(twin.reported.gnss, twin.reported.roam))
+		locations.push(
+			toLocation(
+				twin.reported.gnss,
+				twin.reported.roam !== undefined &&
+					twin.reported.roam.ts < twin.reported.gnss.ts
+					? twin.reported.roam
+					: undefined,
+			),
+		)
 
 	// If history is enabled, fetch positions according to selected date range
 	if (settings.history.gnss) {

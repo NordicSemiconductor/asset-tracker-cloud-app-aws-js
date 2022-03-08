@@ -4,6 +4,7 @@ import {
 	IoTDataPlaneClient,
 	UpdateThingShadowCommand,
 } from '@aws-sdk/client-iot-data-plane'
+import { TimestreamWriteClient } from '@aws-sdk/client-timestream-write'
 import { marshall } from '@aws-sdk/util-dynamodb'
 import { fromUtf8 } from '@aws-sdk/util-utf8-browser'
 import {
@@ -14,10 +15,14 @@ import { fromEnv } from '@nordicsemiconductor/from-env'
 import { randomWords } from '@nordicsemiconductor/random-words'
 import { promises as fs } from 'fs'
 import * as path from 'path'
+import { SensorProperties } from '../../src/asset/asset.js'
 import { AssetType } from '../authenticated/lib.js'
 import { state } from './asset-reported-state.js'
 import { neighboringCellLocations } from './neighboringCellLocations.js'
-import { timestreamDataGenerator } from './sensorDataGenerator.js'
+import {
+	storeSensorUpdate,
+	timestreamDataGenerator,
+} from './sensorDataGenerator.js'
 
 const {
 	mqttEndpoint,
@@ -126,6 +131,19 @@ const globalSetup = async (type: AssetType) => {
 
 	// Historical sensor data
 	const [DatabaseName, TableName] = historicaldataTableInfo.split('|')
+	console.log(`Storing shadow in Timestream ...`)
+	const s = storeSensorUpdate({
+		DatabaseName,
+		TableName,
+		client: new TimestreamWriteClient({}),
+		thingName,
+		type,
+	})
+	await s({ ...state.roam, sensor: SensorProperties.Roaming })
+	await s({ ...state.gnss, sensor: SensorProperties.GNSS })
+	await s({ ...state.env, sensor: SensorProperties.Environment })
+	await s({ ...state.dev, sensor: SensorProperties.Asset })
+
 	console.log(`Generating sensor readings ...`)
 	await timestreamDataGenerator({
 		thingName,

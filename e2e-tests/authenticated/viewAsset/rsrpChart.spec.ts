@@ -13,9 +13,9 @@ test.beforeEach(selectCurrentAsset())
 
 test('RSRP history', async ({ page }) => {
 	await page.click('header[role="button"]:has-text("RSRP")')
-	await expect(
-		page.locator('.historical-data-chart.rsrp-history'),
-	).toBeVisible()
+	await expect(page.locator('.historical-data-chart.rsrp-history')).toBeVisible(
+		{ timeout: 30000 },
+	)
 	await page.screenshot({
 		fullPage: true,
 		path: `./test-session/rsrp-chart.png`,

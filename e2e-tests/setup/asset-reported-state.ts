@@ -28,7 +28,7 @@ export const state: Required<ReportedState> = {
 			spd: 0.579327,
 			hdg: 176.12,
 		},
-		ts: now - 30 * 1000,
+		ts: now,
 	},
 	cfg: defaultConfig,
 	dev: {
@@ -51,6 +51,6 @@ export const state: Required<ReportedState> = {
 			cell: 30976,
 			ip: '10.96.67.53',
 		},
-		ts: now - 11 * 60 * 1000,
+		ts: now,
 	},
 }

@@ -89,12 +89,12 @@ test('Map with historical single cell asset location should be visible', async (
 		page,
 		1,
 	)({
-		// rsrp: '(-97 dBm)',
-		// nw: 'LTE-M',
-		// band: '20',
-		// mccmnc: '24201',
+		rsrp: '(-97 dBm)',
+		nw: 'LTE-M',
+		band: '20',
+		mccmnc: '24201',
 		area: '31801',
-		// cell: '18933760',
-		// ip: '10.96.67.53',
+		cell: '18933760',
+		ip: '10.96.67.53',
 	})
 })

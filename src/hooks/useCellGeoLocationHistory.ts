@@ -56,18 +56,21 @@ export const useCellGeoLocationHistory = (): AssetGeoLocation[] => {
 		})
 			// Build list of unique cells
 			.then((data) =>
-				data.reduce((cellMap, roam) => {
-					const id = cellId({
-						...roam.v,
-						nw: roam.v.nw.includes('NB-IoT')
-							? NetworkMode.NBIoT
-							: NetworkMode.LTEm,
-					})
-					if (cellMap[id] === undefined) {
-						cellMap[id] = roam
-					}
-					return cellMap
-				}, {} as Record<string, Static<typeof Roaming>>),
+				data
+					// Remove old (the first roaming data we've built will be older than the start, so remove that)
+					.filter(({ ts }) => ts > start.getTime())
+					.reduce((cellMap, roam) => {
+						const id = cellId({
+							...roam.v,
+							nw: roam.v.nw.includes('NB-IoT')
+								? NetworkMode.NBIoT
+								: NetworkMode.LTEm,
+						})
+						if (cellMap[id] === undefined) {
+							cellMap[id] = roam
+						}
+						return cellMap
+					}, {} as Record<string, Static<typeof Roaming>>),
 			)
 			// Resolve
 			.then(async (cellMap) =>

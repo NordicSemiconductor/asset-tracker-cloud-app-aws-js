@@ -80,14 +80,14 @@ export const fetchRoamingData = async ({
 			`array_agg(measure_value::double) AS objectValuesDouble,`,
 			`array_agg(measure_value::varchar) AS objectValuesVarchar,`,
 			`array_agg(measure_name) AS objectKeys,`,
-			`time as date`,
+			`date_trunc('second', time) as date`,
 			`FROM ${table}`,
 			`WHERE deviceId='${asset.id}'`,
 			`AND substr(measure_name, 1, ${SensorProperties.Roaming.length + 1}) = '${
 				SensorProperties.Roaming
 			}.'`,
 			// Get the roaming updates *before* the first position
-			`AND time < '${timeStreamFormatDate(start)}'`,
+			`AND date_trunc('second', time) <= '${timeStreamFormatDate(start)}'`,
 			`GROUP BY measureGroup, time`,
 			// Sort descending so we can build the roaming object back starting with the latest update
 			`ORDER BY time DESC`,
@@ -97,27 +97,75 @@ export const fetchRoamingData = async ({
 		].join('\n'),
 	)
 
+	// In case there is no roaming data older than the first entry to start from,
+	// fetch data from the selected date range to build the first full roaming
+	// object
+	if (olderRoamingData.length === 0) {
+		console.debug(
+			'[fetchRoamingData]',
+			`No previous roaming information found. Fetching data between start and end.`,
+		)
+	}
+	const betweenRoamingData =
+		olderRoamingData.length === 0
+			? await timestream.query<{
+					objectValuesDouble: number[]
+					objectValuesVarchar: string[]
+					objectKeys: string[]
+					date: Date
+			  }>((table) =>
+					[
+						`SELECT`,
+						`array_agg(measure_value::double) AS objectValuesDouble,`,
+						`array_agg(measure_value::varchar) AS objectValuesVarchar,`,
+						`array_agg(measure_name) AS objectKeys,`,
+						`date_trunc('second', time) as date`,
+						`FROM ${table}`,
+						`WHERE deviceId='${asset.id}'`,
+						`AND substr(measure_name, 1, ${
+							SensorProperties.Roaming.length + 1
+						}) = '${SensorProperties.Roaming}.'`,
+						// Get the roaming updates *before* the first position
+						`AND date_trunc('second', time) >= '${timeStreamFormatDate(
+							start,
+						)}'`,
+						`AND date_trunc('second', time) <= '${timeStreamFormatDate(end)}'`,
+						`GROUP BY measureGroup, time`,
+						// Sort descending so we can build the roaming object back starting with the latest update
+						`ORDER BY time ASC`,
+					].join('\n'),
+			  )
+			: []
+
 	// Build up the roaming reading by adding properties from updates to the object, until it is valid
-	const firstRoam = olderRoamingData.reduce((roaming, data) => {
-		if (!('errors' in validateRoamingReading(roaming))) return roaming
-		const update = toRoam(data)
-		const roamingWithUpdate = {
-			ts: roaming.ts ?? update.ts,
-			v: {
-				// Older values will not overwrite newer values
-				...update.v,
-				...roaming.v,
+	let firstRoam: Static<typeof Roaming> | undefined = undefined
+
+	if (olderRoamingData.length > 0 || betweenRoamingData.length > 0)
+		firstRoam = [...olderRoamingData, ...betweenRoamingData].reduce(
+			(roaming, data) => {
+				if (!('errors' in validateRoamingReading(roaming))) return roaming
+				const update = toRoam(data)
+				const roamingWithUpdate = {
+					ts: roaming.ts ?? update.ts,
+					v: {
+						// Older values will not overwrite newer values
+						...update.v,
+						...roaming.v,
+					},
+				}
+				return roamingWithUpdate
 			},
-		}
-		return roamingWithUpdate
-	}, {} as Static<typeof Roaming>)
+			{} as Static<typeof Roaming>,
+		)
 
 	if (firstRoam === undefined) {
 		console.debug(
-			'[useAssetLocationHistory]',
-			`No valid roaming information found.`,
+			'[fetchRoamingData]',
+			`Could not determine first full roaming object.`,
 		)
+		return []
 	}
+
 	// Add newer (partial) roaming information, by fetch (partial)
 	// roaming updates which are newer than the first one and
 	// older than the last one.
@@ -132,14 +180,16 @@ export const fetchRoamingData = async ({
 			`array_agg(measure_value::double) AS objectValuesDouble,`,
 			`array_agg(measure_value::varchar) AS objectValuesVarchar,`,
 			`array_agg(measure_name) AS objectKeys,`,
-			`time as date`,
+			`date_trunc('second', time) as date`,
 			`FROM ${table}`,
 			`WHERE deviceId='${asset.id}'`,
 			`AND substr(measure_name, 1, ${SensorProperties.Roaming.length + 1}) = '${
 				SensorProperties.Roaming
 			}.'`,
-			`AND time >= '${timeStreamFormatDate(start)}'`,
-			`AND time <= '${timeStreamFormatDate(end)}'`,
+			`AND date_trunc('second', time) >= '${timeStreamFormatDate(
+				new Date((firstRoam as Static<typeof Roaming>).ts),
+			)}'`,
+			`AND date_trunc('second', time) <= '${timeStreamFormatDate(end)}'`,
 			`GROUP BY measureGroup, time`,
 			`ORDER BY time DESC`,
 		].join('\n'),
@@ -160,8 +210,6 @@ export const fetchRoamingData = async ({
 		roaming
 			// Remove invalid
 			.filter(validRoamingReadingFilter)
-			// Remove old (the first roaming data we've built will be older than the start, so remove that)
-			.filter(({ ts }) => ts > start.getTime())
 			// Sort by descending time
 			.sort(({ ts: t1 }, { ts: t2 }) => t2 - t1)
 	)

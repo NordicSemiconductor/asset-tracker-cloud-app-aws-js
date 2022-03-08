@@ -10,13 +10,13 @@ export const useAssetButtonPressesHistory = () =>
 		query: useCallback(
 			({ asset, table, startDate, endDate }) => `
 		SELECT
-        time as date,
+        date_trunc('second', time) as date,
         measure_value::double AS value
 		FROM ${table}
 		WHERE deviceId='${asset.id}' 
 		AND measure_name='${SensorProperties.Button}' 
-		AND time >= '${startDate}'
-		AND time <= '${endDate}'
+		AND date_trunc('second', time) >= '${startDate}'
+		AND date_trunc('second', time) <= '${endDate}'
 		ORDER BY time DESC
 	`,
 			[],

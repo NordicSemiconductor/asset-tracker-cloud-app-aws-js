@@ -20,7 +20,7 @@ function* dataGenerator({
 	intervalSeconds?: number
 	step: number
 }): Generator<{ ts: number; v: number }> {
-	let i = 0
+	let i = 1
 	let v = min
 	while (true) {
 		yield {
@@ -71,7 +71,7 @@ const writeHistoricalDataForAsset = async ({
 	)
 }
 
-const storeSensorUpdate =
+export const storeSensorUpdate =
 	({
 		type,
 		client,
@@ -95,10 +95,10 @@ const storeSensorUpdate =
 		batch?: boolean
 		ts: number
 		sensor: SensorProperties
-	}) => {
+	}): Promise<void> => {
 		if (sensor === SensorProperties.GNSS && type === AssetType.NoGNSS) return
 		const measureGroup = ulid()
-		return client.send(
+		await client.send(
 			new WriteRecordsCommand({
 				DatabaseName,
 				TableName,
@@ -166,36 +166,7 @@ export const timestreamDataGenerator = async ({
 		})
 	}
 
-	const store = storeSensorUpdate({
-		client,
-		thingName,
-		DatabaseName,
-		TableName,
-		type,
-	})
-
 	await Promise.all([
-		// Reported shadow update
-		store({
-			v: state.roam.v,
-			sensor: SensorProperties.Roaming,
-			ts: state.roam.ts,
-		}),
-		store({
-			v: state.env.v,
-			sensor: SensorProperties.Environment,
-			ts: state.env.ts,
-		}),
-		store({
-			v: state.gnss.v,
-			sensor: SensorProperties.GNSS,
-			ts: state.gnss.ts,
-		}),
-		store({
-			v: state.dev.v,
-			sensor: SensorProperties.Asset,
-			ts: state.dev.ts,
-		}),
 		// Battery
 		generateReadings({
 			min: 3000,

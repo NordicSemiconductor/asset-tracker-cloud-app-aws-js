@@ -15,8 +15,8 @@ export const useAssetTemperatureHistory = () =>
     FROM ${table}
     WHERE deviceId='${asset.id}' 
     AND measure_name='${SensorProperties.Environment}.temp' 
-    AND time >= '${startDate}'
-    AND time <= '${endDate}'
+    AND date_trunc('second', time) >= '${startDate}'
+    AND date_trunc('second', time) <= '${endDate}'
     GROUP BY bin(time, ${binInterval})
     ORDER BY bin(time, ${binInterval}) DESC
 `,

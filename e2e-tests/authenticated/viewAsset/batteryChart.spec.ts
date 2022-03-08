@@ -15,7 +15,7 @@ test('Battery history', async ({ page }) => {
 	await page.click('header[role="button"]:has-text("Battery")')
 	await expect(
 		page.locator('.historical-data-chart.battery-history'),
-	).toBeVisible()
+	).toBeVisible({ timeout: 30000 })
 	await page.screenshot({
 		fullPage: true,
 		path: `./test-session/battery-chart.png`,

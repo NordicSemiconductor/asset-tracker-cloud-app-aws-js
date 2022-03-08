@@ -81,7 +81,7 @@ export const MapDataProvider: FunctionComponent = ({ children }) => {
 			toLocation(
 				twin.reported.gnss,
 				twin.reported.roam !== undefined &&
-					twin.reported.roam.ts < twin.reported.gnss.ts
+					twin.reported.roam.ts <= twin.reported.gnss.ts
 					? twin.reported.roam
 					: undefined,
 			),

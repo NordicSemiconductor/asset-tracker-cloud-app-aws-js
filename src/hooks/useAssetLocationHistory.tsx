@@ -47,7 +47,7 @@ export const AssetLocationHistoryProvider: FunctionComponent = ({
 				array_agg(measure_value::double) AS objectValues,
 				array_agg(measure_name) AS objectKeys,
 				array_agg(source) AS objectSource,
-				time AS date
+				date_trunc('second', time) as date
 				FROM ${table}
 				WHERE deviceId='${asset.id}' 
 				AND measureGroup IN (
@@ -64,8 +64,8 @@ export const AssetLocationHistoryProvider: FunctionComponent = ({
 				AND substr(measure_name, 1, ${SensorProperties.GNSS.length + 1}) = '${
 				SensorProperties.GNSS
 			}.'
-				AND time >= '${timeStreamFormatDate(startDate)}'
-				AND time <= '${timeStreamFormatDate(endDate)}'
+				AND date_trunc('second', time) >= '${timeStreamFormatDate(startDate)}'
+				AND date_trunc('second', time) <= '${timeStreamFormatDate(endDate)}'
 				GROUP BY measureGroup, time
 				ORDER BY time DESC
 				LIMIT ${limit}

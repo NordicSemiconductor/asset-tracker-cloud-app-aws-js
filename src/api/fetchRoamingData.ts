@@ -1,8 +1,8 @@
 import type { Static } from '@sinclair/typebox'
+import { timeStreamFormatDate, TimestreamService } from 'api/timestream'
 import { Asset, Roaming, SensorProperties } from 'asset/asset'
 import { validateWithJSONSchema } from 'utils/validateWithJSONSchema'
 import { validFilter } from 'utils/validFilter'
-import { timeStreamFormatDate, TimestreamService } from './timestream'
 
 const validateRoamingReading = validateWithJSONSchema(Roaming)
 const validRoamingReadingFilter = validFilter(Roaming)
@@ -160,6 +160,8 @@ export const fetchRoamingData = async ({
 		roaming
 			// Remove invalid
 			.filter(validRoamingReadingFilter)
+			// Remove old (the first roaming data we've built will be older than the start, so remove that)
+			.filter(({ ts }) => ts > start.getTime())
 			// Sort by descending time
 			.sort(({ ts: t1 }, { ts: t2 }) => t2 - t1)
 	)

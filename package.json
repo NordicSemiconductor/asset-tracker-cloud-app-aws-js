@@ -58,7 +58,7 @@
     "react-dom": "17.0.2",
     "react-leaflet": "3.2.5",
     "react-router-dom": "6.3.0",
-    "semver": "7.3.6"
+    "semver": "7.3.7"
   },
   "devDependencies": {
     "@aws-sdk/client-cloudformation": "3.67.0",

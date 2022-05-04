@@ -63,7 +63,7 @@
   "devDependencies": {
     "@aws-sdk/client-cloudformation": "3.82.0",
     "@aws-sdk/client-cognito-identity-provider": "3.82.0",
-    "@aws-sdk/client-ssm": "3.82.0",
+    "@aws-sdk/client-ssm": "3.84.0",
     "@aws-sdk/client-timestream-write": "3.82.0",
     "@nordicsemiconductor/asset-tracker-cloud-code-style": "11.0.61",
     "@nordicsemiconductor/object-to-env": "4.1.1",

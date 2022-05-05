@@ -4,7 +4,7 @@ import { Asset, GNSS, SensorProperties } from 'asset/asset'
 import type { DateRange } from 'hooks/useChartDateRange'
 import { AssetGeoLocation, AssetGeoLocationSource } from 'hooks/useMapData'
 import { useServices } from 'hooks/useServices'
-import { createContext, FunctionComponent, useContext } from 'react'
+import { createContext, FunctionComponent, ReactNode, useContext } from 'react'
 import { validFilter } from 'utils/validFilter'
 
 const validGNSSReadingFilter = validFilter(GNSS)
@@ -22,9 +22,9 @@ export const AssetLocationHistoryContext = createContext<{
 export const useAssetLocationHistory = () =>
 	useContext(AssetLocationHistoryContext)
 
-export const AssetLocationHistoryProvider: FunctionComponent = ({
-	children,
-}) => {
+export const AssetLocationHistoryProvider: FunctionComponent<{
+	children: ReactNode
+}> = ({ children }) => {
 	const { timestream } = useServices()
 
 	const history = async ({

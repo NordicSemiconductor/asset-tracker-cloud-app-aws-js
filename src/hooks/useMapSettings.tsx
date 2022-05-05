@@ -1,6 +1,12 @@
 import { Type } from '@sinclair/typebox'
 import equal from 'fast-deep-equal'
-import { createContext, FunctionComponent, useContext, useState } from 'react'
+import {
+	createContext,
+	FunctionComponent,
+	ReactNode,
+	useContext,
+	useState,
+} from 'react'
 import { withLocalStorage } from 'utils/withLocalStorage'
 
 export type Settings = {
@@ -82,7 +88,9 @@ export const MapSettingsContext = createContext<{
 
 export const useMapSettings = () => useContext(MapSettingsContext)
 
-export const MapSettingsProvider: FunctionComponent = ({ children }) => {
+export const MapSettingsProvider: FunctionComponent<{
+	children: ReactNode
+}> = ({ children }) => {
 	const [settings, update] = useState<Settings>(userSettings.get())
 
 	return (

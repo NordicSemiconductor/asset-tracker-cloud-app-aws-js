@@ -1,3 +1,4 @@
+import type { ParsedNCellMeasReport } from 'api/fetchNeighboringCellMeasurementReports'
 import { geolocateNeighboringCellMeasurementReport } from 'api/geolocateNeighboringCellMeasurementReport'
 import { useAppConfig } from 'hooks/useAppConfig'
 import type { AssetGeoLocation } from 'hooks/useMapData'
@@ -18,10 +19,10 @@ export const useNeighboringCellMeasurementReportGeoLocation = ():
 	const enabled = settings.enabledLayers.neighboringCellGeoLocations
 
 	const geolocateReport = useCallback(
-		(args) =>
+		(report: ParsedNCellMeasReport, retryCount = 0, maxTries = 10) =>
 			geolocateNeighboringCellMeasurementReport(
 				nCellMeasCellGeolocationApiEndpoint,
-			)(args),
+			)(report, retryCount, maxTries),
 		[nCellMeasCellGeolocationApiEndpoint],
 	)
 

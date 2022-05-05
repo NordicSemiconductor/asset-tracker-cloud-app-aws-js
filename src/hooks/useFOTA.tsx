@@ -5,6 +5,7 @@ import { useServices } from 'hooks/useServices'
 import {
 	createContext,
 	FunctionComponent,
+	ReactNode,
 	useContext,
 	useEffect,
 	useState,
@@ -27,7 +28,9 @@ export const FOTAContext = createContext<{
 
 export const useFOTA = () => useContext(FOTAContext)
 
-export const FOTAProvider: FunctionComponent = ({ children }) => {
+export const FOTAProvider: FunctionComponent<{ children: ReactNode }> = ({
+	children,
+}) => {
 	const { iot } = useServices()
 	const [jobs, setJobs] = useState<DeviceUpgradeFirmwareJob[]>([])
 	const { asset } = useAsset()

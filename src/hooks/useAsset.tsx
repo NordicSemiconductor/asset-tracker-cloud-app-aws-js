@@ -7,6 +7,7 @@ import { useServices } from 'hooks/useServices'
 import {
 	createContext,
 	FunctionComponent,
+	ReactNode,
 	useContext,
 	useEffect,
 	useState,
@@ -31,7 +32,9 @@ export const AssetContext = createContext<{
 
 export const useAsset = () => useContext(AssetContext)
 
-export const AssetProvider: FunctionComponent = ({ children }) => {
+export const AssetProvider: FunctionComponent<{ children: ReactNode }> = ({
+	children,
+}) => {
 	const { iot } = useServices()
 	const [assetId, setAssetId] = useState<string>()
 	const [currentAsset, setCurrentAsset] = useState<AssetWithTwin>()

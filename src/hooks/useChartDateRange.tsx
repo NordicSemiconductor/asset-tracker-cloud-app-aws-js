@@ -1,6 +1,12 @@
 import { Type } from '@sinclair/typebox'
 import { sub } from 'date-fns'
-import { createContext, FunctionComponent, useContext, useState } from 'react'
+import {
+	createContext,
+	FunctionComponent,
+	ReactNode,
+	useContext,
+	useState,
+} from 'react'
 import { withLocalStorage } from 'utils/withLocalStorage'
 
 const defaultStart = sub(new Date(), { months: 1 })
@@ -90,9 +96,9 @@ export const CurrentChartDateRangeContext = createContext<{
 
 export const useChartDateRange = () => useContext(CurrentChartDateRangeContext)
 
-export const CurrentChartDateRangeProvider: FunctionComponent = ({
-	children,
-}) => {
+export const CurrentChartDateRangeProvider: FunctionComponent<{
+	children: ReactNode
+}> = ({ children }) => {
 	const [range, setDateRange] = useState<DateRange>(
 		(({ start, end }) => ({
 			start: new Date(start),

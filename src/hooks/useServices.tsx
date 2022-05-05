@@ -8,7 +8,13 @@ import { iotService } from 'api/iot'
 import type { TimestreamService } from 'api/timestream'
 import { timestreamService } from 'api/timestream'
 import { useAppConfig } from 'hooks/useAppConfig'
-import { createContext, FunctionComponent, useContext, useEffect } from 'react'
+import {
+	createContext,
+	FunctionComponent,
+	ReactNode,
+	useContext,
+	useEffect,
+} from 'react'
 
 export const ServicesContext = createContext<{
 	iot: IoTService
@@ -24,6 +30,7 @@ export const useServices = () => useContext(ServicesContext)
 
 export const ServicesProvider: FunctionComponent<{
 	credentials: ICredentials
+	children: ReactNode
 }> = ({ children, credentials }) => {
 	const {
 		region,

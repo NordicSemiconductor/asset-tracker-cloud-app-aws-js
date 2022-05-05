@@ -7,7 +7,7 @@ import { useGNSSLocationHistory } from 'hooks/useGNSSHistory'
 import { useMapSettings } from 'hooks/useMapSettings'
 import { useNeighboringCellGeoLocationHistory } from 'hooks/useNeighboringCellGeoLocationHistory'
 import { useNeighboringCellMeasurementReportGeoLocation } from 'hooks/useNeighboringCellMeasurementReportGeoLocation'
-import { createContext, FunctionComponent, useContext } from 'react'
+import { createContext, FunctionComponent, ReactNode, useContext } from 'react'
 
 export type Position = { lat: number; lng: number; accuracy: number }
 
@@ -63,7 +63,9 @@ export const MapDataContext = createContext<{
 
 export const useMapData = () => useContext(MapDataContext)
 
-export const MapDataProvider: FunctionComponent = ({ children }) => {
+export const MapDataProvider: FunctionComponent<{ children: ReactNode }> = ({
+	children,
+}) => {
 	const { settings } = useMapSettings()
 	const { twin } = useAsset()
 	const neighboringCellGeoLocation =

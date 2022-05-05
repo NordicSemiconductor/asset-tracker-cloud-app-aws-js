@@ -1,5 +1,9 @@
-import { fetchNeighboringCellMeasurementReports } from 'api/fetchNeighboringCellMeasurementReports'
+import {
+	fetchNeighboringCellMeasurementReports,
+	ParsedNCellMeasReport,
+} from 'api/fetchNeighboringCellMeasurementReports'
 import { geolocateNeighboringCellMeasurementReport } from 'api/geolocateNeighboringCellMeasurementReport'
+import type { Asset } from 'asset/asset'
 import { useAppConfig } from 'hooks/useAppConfig'
 import { useAsset } from 'hooks/useAsset'
 import { useChartDateRange } from 'hooks/useChartDateRange'
@@ -28,15 +32,22 @@ export const useNeighboringCellGeoLocationHistory = (): AssetGeoLocation[] => {
 		useAppConfig()
 
 	const geolocateReport = useCallback(
-		(args) =>
+		(report: ParsedNCellMeasReport, retryCount = 0, maxTries = 10) =>
 			geolocateNeighboringCellMeasurementReport(
 				nCellMeasCellGeolocationApiEndpoint,
-			)(args),
+			)(report, retryCount, maxTries),
 		[nCellMeasCellGeolocationApiEndpoint],
 	)
 
 	const fetchReport = useCallback(
-		async (args) =>
+		async (args: {
+			asset: Asset
+			Limit: number
+			range?: {
+				start: Date
+				end: Date
+			}
+		}) =>
 			fetchNeighboringCellMeasurementReports({
 				dynamoDB,
 				nCellMeasReportTableName,

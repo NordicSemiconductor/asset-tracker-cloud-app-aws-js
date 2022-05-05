@@ -7,11 +7,10 @@ import { markerIcon } from 'components/Map/MarkerIcon'
 import { NoMap } from 'components/Map/NoMap'
 import styles from 'components/Map/SingleAssetMap.module.css'
 import { formatDistanceToNow } from 'date-fns'
-import { AssetGeoLocationSource, useMapData } from 'hooks/useMapData'
+import { AssetGeoLocationSource, Position, useMapData } from 'hooks/useMapData'
 import { useMapSettings } from 'hooks/useMapSettings'
-import type { Map as LeafletMap } from 'leaflet'
 import { nanoid } from 'nanoid'
-import React, { useEffect, useState } from 'react'
+import React from 'react'
 import {
 	Circle,
 	MapContainer,
@@ -20,6 +19,7 @@ import {
 	Polyline,
 	Popup,
 	TileLayer,
+	useMap,
 } from 'react-leaflet'
 import { nullOrUndefined } from 'utils/nullOrUndefined'
 import { toFixed } from 'utils/toFixed'
@@ -39,26 +39,6 @@ const zIndexBySource = {
 export const SingleAssetMap = ({ asset }: { asset: Asset }) => {
 	const { settings, update: updateSettings } = useMapSettings()
 	const { center, locations } = useMapData()
-	const [map, setmap] = useState<LeafletMap>()
-
-	// Zoom to center
-	const { follow } = settings
-	const centerPosition = center?.location.position
-	useEffect(() => {
-		if (map === undefined) return
-		if (centerPosition === undefined) return
-		if (!follow) return
-
-		// Wait a little before moving the map, otherwise Leaflet will act
-		// up while it's trying to zoom/center and markers are being re-rendered.
-		const centerTimeout = setTimeout(() => {
-			map.flyTo(centerPosition)
-		}, 500)
-
-		return () => {
-			clearTimeout(centerTimeout)
-		}
-	}, [map, centerPosition, follow])
 
 	if (center === undefined) return <NoMap /> // No location data at all to display
 
@@ -67,7 +47,6 @@ export const SingleAssetMap = ({ asset }: { asset: Asset }) => {
 			<MapContainer
 				center={center.location.position}
 				zoom={settings.zoom}
-				whenCreated={setmap}
 				className={styles.mapContainer}
 			>
 				<EventHandler
@@ -289,17 +268,7 @@ export const SingleAssetMap = ({ asset }: { asset: Asset }) => {
 							)
 						},
 					)}
-				<div className={styles.centerControl}>
-					<button
-						type="button"
-						onClick={() => {
-							map?.flyTo(center.location.position)
-						}}
-						title="Center map on asset"
-					>
-						<CenterIcon />
-					</button>
-				</div>
+				<CenterButton center={center.location.position} />
 			</MapContainer>
 		</div>
 	)
@@ -316,4 +285,22 @@ const formatSource = (source: AssetGeoLocationSource): string => {
 		default:
 			return source
 	}
+}
+
+const CenterButton = ({ center }: { center: Position }) => {
+	const map = useMap()
+
+	return (
+		<div className={styles.centerControl}>
+			<button
+				type="button"
+				onClick={() => {
+					map?.flyTo(center)
+				}}
+				title="Center map on asset"
+			>
+				<CenterIcon />
+			</button>
+		</div>
+	)
 }

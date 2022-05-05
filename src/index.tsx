@@ -11,33 +11,38 @@ import { FOTAProvider } from 'hooks/useFOTA'
 import { MapDataProvider } from 'hooks/useMapData'
 import { MapSettingsProvider } from 'hooks/useMapSettings'
 import { ServicesProvider } from 'hooks/useServices'
-import * as ReactDOM from 'react-dom'
+import { createRoot } from 'react-dom/client'
 
-ReactDOM.render(
+const container = document.getElementById('root') as HTMLElement
+const root = createRoot(container)
+root.render(
 	<Auth>
-		{(authProps) => (
-			<AuthProvider {...authProps} loadingScreen={<Loading />}>
-				{({ credentials }) => (
-					<ServicesProvider credentials={credentials}>
-						<AssetsProvider>
-							<AssetProvider>
-								<FOTAProvider>
-									<MapSettingsProvider>
-										<CurrentChartDateRangeProvider>
-											<AssetLocationHistoryProvider>
-												<MapDataProvider>
-													<App />
-												</MapDataProvider>
-											</AssetLocationHistoryProvider>
-										</CurrentChartDateRangeProvider>
-									</MapSettingsProvider>
-								</FOTAProvider>
-							</AssetProvider>
-						</AssetsProvider>
-					</ServicesProvider>
-				)}
-			</AuthProvider>
-		)}
+		{(authProps) => {
+			const { signOut, user } = authProps ?? {}
+			if (signOut === undefined || user === undefined) return null
+			return (
+				<AuthProvider signOut={signOut} user={user} loadingScreen={<Loading />}>
+					{({ credentials }) => (
+						<ServicesProvider credentials={credentials}>
+							<AssetsProvider>
+								<AssetProvider>
+									<FOTAProvider>
+										<MapSettingsProvider>
+											<CurrentChartDateRangeProvider>
+												<AssetLocationHistoryProvider>
+													<MapDataProvider>
+														<App />
+													</MapDataProvider>
+												</AssetLocationHistoryProvider>
+											</CurrentChartDateRangeProvider>
+										</MapSettingsProvider>
+									</FOTAProvider>
+								</AssetProvider>
+							</AssetsProvider>
+						</ServicesProvider>
+					)}
+				</AuthProvider>
+			)
+		}}
 	</Auth>,
-	document.getElementById('root'),
 )

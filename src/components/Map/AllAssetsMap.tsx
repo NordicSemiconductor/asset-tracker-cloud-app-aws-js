@@ -5,13 +5,11 @@ import { RelativeTime } from 'components/RelativeTime'
 import { useAssetLocations } from 'hooks/useAssetLocations'
 import { useChartDateRange } from 'hooks/useChartDateRange'
 import type { Position } from 'hooks/useMapData'
-import type { Map as LeafletMap } from 'leaflet'
-import { useEffect, useMemo, useState } from 'react'
+import { useMemo } from 'react'
 import { MapContainer, Marker, Popup, TileLayer } from 'react-leaflet'
 import { Link } from 'react-router-dom'
 
 export const AllAssetsMap = () => {
-	const [map, setmap] = useState<LeafletMap>()
 	const positions = useAssetLocations()
 	const {
 		range: { start: startDate, end: endDate },
@@ -28,11 +26,6 @@ export const AllAssetsMap = () => {
 
 	const zoom = 3
 
-	useEffect(() => {
-		if (map === undefined) return
-		map.flyTo(center)
-	}, [map, center])
-
 	const positionsWithRecentGNSS = positions.filter(
 		({ ts }) =>
 			ts.getTime() >= startDate.getTime() && ts.getTime() <= endDate.getTime(),
@@ -43,7 +36,6 @@ export const AllAssetsMap = () => {
 			<MapContainer
 				center={[center.lat, center.lng]}
 				zoom={zoom}
-				whenCreated={setmap}
 				className={styles.mapContainer}
 			>
 				<TileLayer

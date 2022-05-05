@@ -3,6 +3,7 @@ import { useServices } from 'hooks/useServices'
 import {
 	createContext,
 	FunctionComponent,
+	ReactNode,
 	useCallback,
 	useContext,
 	useEffect,
@@ -19,7 +20,9 @@ export const AssetsContext = createContext<{
 
 export const useAssets = () => useContext(AssetsContext)
 
-export const AssetsProvider: FunctionComponent = ({ children }) => {
+export const AssetsProvider: FunctionComponent<{ children: ReactNode }> = ({
+	children,
+}) => {
 	const { iot } = useServices()
 	const [assets, setAssets] = useState<Asset[]>()
 	const [fetching, setFetching] = useState<boolean>(false)

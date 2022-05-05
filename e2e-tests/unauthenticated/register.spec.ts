@@ -37,7 +37,7 @@ test('Register a new account', async ({ page }) => {
 	await page.fill('[placeholder="Email"]', email)
 	await page.fill('[placeholder="Password"]', password)
 	await page.fill('[placeholder="Confirm Password"]', password)
-	await page.click('button:has-text("Create Account")')
+	await page.click('form button:has-text("Create Account")')
 	await expect(page.locator('div#root')).toContainText('We Emailed You')
 	await page.screenshot({
 		fullPage: true,
@@ -54,7 +54,7 @@ test('Register a new account', async ({ page }) => {
 	await page.click('text=Sign In')
 	await page.fill('[placeholder="Email"]', email)
 	await page.fill('[placeholder="Password"]', password)
-	await page.click('button:has-text("Sign in")')
+	await page.click('form button:has-text("Sign in")')
 	await page.waitForNavigation({
 		url: 'http://localhost:8080/assets',
 	})

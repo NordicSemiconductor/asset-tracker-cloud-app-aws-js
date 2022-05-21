@@ -68,7 +68,7 @@
     "@nordicsemiconductor/asset-tracker-cloud-code-style": "11.0.69",
     "@nordicsemiconductor/object-to-env": "4.1.1",
     "@nordicsemiconductor/random-words": "6.0.0",
-    "@playwright/test": "1.22.1",
+    "@playwright/test": "1.22.2",
     "@swc/core": "1.2.187",
     "@swc/jest": "0.2.21",
     "@types/chance": "1.1.3",

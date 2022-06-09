@@ -36,7 +36,7 @@
     "@aws-sdk/client-dynamodb": "3.105.0",
     "@aws-sdk/client-iot": "3.105.0",
     "@aws-sdk/client-iot-data-plane": "3.105.0",
-    "@aws-sdk/client-s3": "3.105.0",
+    "@aws-sdk/client-s3": "3.107.0",
     "@aws-sdk/util-dynamodb": "3.105.0",
     "@nordicsemiconductor/cell-geolocation-helpers": "5.0.1",
     "@nordicsemiconductor/from-env": "1.0.1",
@@ -61,7 +61,7 @@
     "semver": "7.3.7"
   },
   "devDependencies": {
-    "@aws-sdk/client-cloudformation": "3.105.0",
+    "@aws-sdk/client-cloudformation": "3.107.0",
     "@aws-sdk/client-cognito-identity-provider": "3.105.0",
     "@aws-sdk/client-ssm": "3.105.0",
     "@aws-sdk/client-timestream-write": "3.105.0",

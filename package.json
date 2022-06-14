@@ -40,7 +40,7 @@
     "@aws-sdk/util-dynamodb": "3.110.0",
     "@nordicsemiconductor/cell-geolocation-helpers": "5.0.1",
     "@nordicsemiconductor/from-env": "1.0.1",
-    "@nordicsemiconductor/rsrp-bar": "5.0.3",
+    "@nordicsemiconductor/rsrp-bar": "5.0.4",
     "@nordicsemiconductor/timestream-helpers": "4.1.2",
     "@sinclair/typebox": "0.23.5",
     "ajv": "8.11.0",

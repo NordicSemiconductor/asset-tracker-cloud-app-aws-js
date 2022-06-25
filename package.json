@@ -65,7 +65,7 @@
     "@aws-sdk/client-cognito-identity-provider": "3.118.0",
     "@aws-sdk/client-ssm": "3.118.0",
     "@aws-sdk/client-timestream-write": "3.118.0",
-    "@nordicsemiconductor/asset-tracker-cloud-code-style": "11.0.92",
+    "@nordicsemiconductor/asset-tracker-cloud-code-style": "11.0.93",
     "@nordicsemiconductor/object-to-env": "4.1.1",
     "@nordicsemiconductor/random-words": "6.0.0",
     "@playwright/test": "1.22.2",

@@ -1,7 +1,6 @@
 import { ChartDateRange } from 'components/ChartDateRange/ChartDateRange'
 import { AMChart } from 'components/HistoricalData/AMChart'
 import { NoData } from 'components/NoData'
-import React from 'react'
 
 export const AssetHistoryChart = ({
 	history,

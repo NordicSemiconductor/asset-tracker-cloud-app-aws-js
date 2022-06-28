@@ -194,6 +194,7 @@ export const SingleAssetMap = ({ asset }: { asset: Asset }) => {
 														<a
 															href={`https://www.google.com/maps/search/?api=1&query=${lat},${lng}`}
 															target="_blank"
+															rel="noreferrer"
 														>
 															View location in Google Maps
 														</a>
@@ -202,6 +203,7 @@ export const SingleAssetMap = ({ asset }: { asset: Asset }) => {
 														<a
 															href={`https://www.openstreetmap.org/?mlat=${lat}&mlon=${lng}#map=9/${lat}/${lng}`}
 															target="_blank"
+															rel="noreferrer"
 														>
 															View location in OpenStreetMap
 														</a>

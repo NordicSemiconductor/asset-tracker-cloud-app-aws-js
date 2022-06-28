@@ -3,7 +3,7 @@ import { FilePicker } from 'components/FOTA/FilePicker'
 import { useAsset } from 'hooks/useAsset'
 import { useFOTA } from 'hooks/useFOTA'
 import { useServices } from 'hooks/useServices'
-import React, { useState } from 'react'
+import { useState } from 'react'
 import semver from 'semver'
 
 const getNextAppVersion = (version: string): string =>

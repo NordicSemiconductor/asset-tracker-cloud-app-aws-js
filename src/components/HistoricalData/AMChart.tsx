@@ -2,7 +2,7 @@ import * as am5 from '@amcharts/amcharts5'
 import * as am5xy from '@amcharts/amcharts5/xy'
 import { useChartDateRange } from 'hooks/useChartDateRange'
 import { nanoid } from 'nanoid'
-import React, { useLayoutEffect, useRef } from 'react'
+import { useLayoutEffect, useRef } from 'react'
 
 export const AMChart = ({
 	data,

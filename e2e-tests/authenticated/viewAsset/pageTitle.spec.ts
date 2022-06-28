@@ -13,6 +13,6 @@ test.afterEach(checkForConsoleErrors)
 test.beforeEach(selectCurrentAsset())
 
 test('Title should contain asset name', async ({ page }) => {
-const { name } = await loadSessionData(AssetType.Default)
+	const { name } = await loadSessionData(AssetType.Default)
 	await expect(page.locator('.navbar-brand')).toContainText(name)
 })

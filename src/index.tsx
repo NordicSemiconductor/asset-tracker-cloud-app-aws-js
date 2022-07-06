@@ -19,9 +19,15 @@ root.render(
 	<Auth>
 		{(authProps) => {
 			const { signOut, user } = authProps ?? {}
-			if (signOut === undefined || user === undefined) return null
+			if (signOut === undefined || user === undefined) return <></>
 			return (
-				<AuthProvider signOut={signOut} user={user} loadingScreen={<Loading />}>
+				<AuthProvider
+					signOut={() => {
+						signOut()
+					}}
+					user={user}
+					loadingScreen={<Loading />}
+				>
 					{({ credentials }) => (
 						<ServicesProvider credentials={credentials}>
 							<AssetsProvider>

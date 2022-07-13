@@ -32,7 +32,7 @@
   "license": "BSD-3-Clause",
   "dependencies": {
     "@amcharts/amcharts5": "5.2.10",
-    "@aws-amplify/ui-react": "3.0.4",
+    "@aws-amplify/ui-react": "3.1.0",
     "@aws-sdk/client-dynamodb": "3.127.0",
     "@aws-sdk/client-iot": "3.127.0",
     "@aws-sdk/client-iot-data-plane": "3.127.0",

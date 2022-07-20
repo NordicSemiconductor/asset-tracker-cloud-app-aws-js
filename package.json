@@ -66,7 +66,7 @@
     "@aws-sdk/client-ssm": "3.131.0",
     "@aws-sdk/client-timestream-write": "3.131.0",
     "@aws-sdk/types": "3.127.0",
-    "@nordicsemiconductor/asset-tracker-cloud-code-style": "11.0.101",
+    "@nordicsemiconductor/asset-tracker-cloud-code-style": "11.0.102",
     "@nordicsemiconductor/object-to-env": "4.1.1",
     "@nordicsemiconductor/random-words": "6.0.0",
     "@playwright/test": "1.23.4",

@@ -1,5 +1,6 @@
 import cx from 'classnames'
 import { useChartDateRange } from 'hooks/useChartDateRange'
+import { presetToRange } from 'hooks/useChartDateRangePreset'
 import { useState } from 'react'
 
 export const QuickDateRange = ({
@@ -62,10 +63,7 @@ export const QuickDateRange = ({
 									className="btn"
 									onClick={() => {
 										setDropDownVisible(false)
-										setRange({
-											start: new Date(Date.now() - days * 24 * 60 * 60 * 1000),
-											end: new Date(),
-										})
+										setRange(presetToRange({ days }))
 									}}
 								>
 									{label}

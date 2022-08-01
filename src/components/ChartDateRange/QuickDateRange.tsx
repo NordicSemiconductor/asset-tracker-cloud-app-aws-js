@@ -1,5 +1,6 @@
 import cx from 'classnames'
 import { useChartDateRange } from 'hooks/useChartDateRange'
+import { presets, useChartDateRangePreset } from 'hooks/useChartDateRangePreset'
 import { useState } from 'react'
 
 export const QuickDateRange = ({
@@ -10,16 +11,12 @@ export const QuickDateRange = ({
 	border?: boolean
 }) => {
 	const {
-		setRange,
 		range: { start: startDate, end: endDate },
 	} = useChartDateRange()
-	const [dropdownVisible, setDropDownVisible] = useState<boolean>(false)
 
-	const presets = [
-		{ label: 'Last 24 hours', days: 1 },
-		{ label: 'Last 7 days', days: 7 },
-		{ label: 'Last 30 days', days: 30 },
-	]
+	const { enableAutoUpdate } = useChartDateRangePreset()
+
+	const [dropdownVisible, setDropDownVisible] = useState<boolean>(false)
 
 	return (
 		<div
@@ -62,10 +59,7 @@ export const QuickDateRange = ({
 									className="btn"
 									onClick={() => {
 										setDropDownVisible(false)
-										setRange({
-											start: new Date(Date.now() - days * 24 * 60 * 60 * 1000),
-											end: new Date(),
-										})
+										enableAutoUpdate({ days, label })
 									}}
 								>
 									{label}

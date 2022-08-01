@@ -4,10 +4,11 @@ import {
 	createContext,
 	FunctionComponent,
 	ReactNode,
+	useCallback,
 	useContext,
 	useState,
 } from 'react'
-import { withLocalStorage } from 'utils/withLocalStorage'
+import { withLocalStorage } from 'utils/withLocalStorage.js'
 
 const defaultStart = sub(new Date(), { months: 1 })
 const defaultEnd = new Date()
@@ -99,42 +100,46 @@ export const useChartDateRange = () => useContext(CurrentChartDateRangeContext)
 export const CurrentChartDateRangeProvider: FunctionComponent<{
 	children: ReactNode
 }> = ({ children }) => {
-	const [range, setDateRange] = useState<DateRange>(
+	const [range, updateDateRange] = useState<DateRange>(
 		(({ start, end }) => ({
 			start: new Date(start),
 			end: new Date(end),
 		}))(storedDateRange.get()),
 	)
-	const [binInterval, setBinInterval] = useState<string>(
+	const [binInterval, updateBinInterval] = useState<string>(
 		storedBinInterval.get(),
 	)
+
+	const setRange = useCallback((range: DateRange): void => {
+		const { start: startDate, end: endDate } = range
+		if (startDate.getTime() > endDate.getTime()) return
+		if (endDate.getTime() < startDate.getTime()) return
+		updateDateRange(range)
+		storedDateRange.set({
+			start: startDate.toISOString(),
+			end: endDate.toISOString(),
+		})
+	}, [])
+
+	const setBinInterval = useCallback((binInterval: string): void => {
+		// See https://docs.aws.amazon.com/timestream/latest/developerguide/supported-data-types.html
+		if (!binIntevalPattern.test(binInterval)) {
+			console.error(
+				`binInterval ${binInterval} is not valid. Must follow pattern ${binIntevalPattern.toString()}`,
+			)
+			return
+		}
+		updateBinInterval(binInterval)
+		storedBinInterval.set(binInterval)
+	}, [])
 
 	return (
 		<CurrentChartDateRangeContext.Provider
 			value={{
 				range,
 				binInterval,
-				setRange: (range) => {
-					const { start: startDate, end: endDate } = range
-					if (startDate.getTime() > endDate.getTime()) return
-					if (endDate.getTime() < startDate.getTime()) return
-					setDateRange(range)
-					storedDateRange.set({
-						start: startDate.toISOString(),
-						end: endDate.toISOString(),
-					})
-				},
-				setBinInterval: (binInterval) => {
-					// See https://docs.aws.amazon.com/timestream/latest/developerguide/supported-data-types.html
-					if (!binIntevalPattern.test(binInterval)) {
-						console.error(
-							`binInterval ${binInterval} is not valid. Must follow pattern ${binIntevalPattern.toString()}`,
-						)
-						return
-					}
-					setBinInterval(binInterval)
-					storedBinInterval.set(binInterval)
-				},
+				setRange,
+				setBinInterval,
 				defaultStart,
 				defaultEnd,
 				defaultBinInterval,

@@ -87,7 +87,9 @@
     "eslint-plugin-no-restricted-imports": "0.0.0",
     "handlebars": "4.7.7",
     "id128": "1.6.6",
+    "isolate-react": "2.2.1",
     "jest": "28.1.3",
+    "jest-environment-jsdom": "28.1.3",
     "vite": "3.0.4"
   },
   "lint-staged": {
@@ -121,13 +123,14 @@
   },
   "prettier": "@nordicsemiconductor/asset-tracker-cloud-code-style/.prettierrc",
   "jest": {
-    "testRegex": ".+\\.spec\\.ts$",
+    "testRegex": ".+\\.spec\\.tsx?$",
     "testPathIgnorePatterns": [
       "/node_modules/",
       "/e2e-tests/"
     ],
     "moduleNameMapper": {
-      "^utils\\/(.*)\\.js$": "<rootDir>/src/utils/$1"
+      "^utils\\/(.*)\\.js$": "<rootDir>/src/utils/$1",
+      "^hooks\\/(.*)\\.js$": "<rootDir>/src/hooks/$1"
     },
     "transform": {
       "^.+\\.(t|j)sx?$": "@swc/jest"
@@ -136,10 +139,8 @@
       ".ts",
       ".tsx"
     ],
-    "globals": {
-      "ts-jest": {
-        "useESM": true
-      }
-    }
+    "setupFilesAfterEnv": [
+      "<rootDir>/setup-jest.js"
+    ]
   }
 }

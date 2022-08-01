@@ -1,6 +1,7 @@
 import cx from 'classnames'
 import { CloseIcon, IconWithText } from 'components/FeatherIcon'
 import { useChartDateRange } from 'hooks/useChartDateRange'
+import { useChartDateRangePreset } from 'hooks/useChartDateRangePreset'
 
 export const CustomDateRange = ({
 	onClose,
@@ -15,6 +16,8 @@ export const CustomDateRange = ({
 		setRange,
 		range: { start: startDate, end: endDate },
 	} = useChartDateRange()
+
+	const { disableAutoUpdate } = useChartDateRangePreset()
 
 	return (
 		<div
@@ -48,6 +51,7 @@ export const CustomDateRange = ({
 										: new Date(`${value}T00:00:00.000Z`),
 								end: endDate,
 							})
+							disableAutoUpdate()
 						} catch (error) {
 							console.error(error)
 						}
@@ -75,6 +79,7 @@ export const CustomDateRange = ({
 										? defaultEnd
 										: new Date(`${value}T23:59:59.999Z`),
 							})
+							disableAutoUpdate()
 						} catch (error) {
 							console.error(error)
 						}

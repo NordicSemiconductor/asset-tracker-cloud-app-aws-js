@@ -7,6 +7,7 @@ import { AssetLocationHistoryProvider } from 'hooks/useAssetLocationHistory'
 import { AssetsProvider } from 'hooks/useAssets'
 import { AuthProvider } from 'hooks/useAuth'
 import { CurrentChartDateRangeProvider } from 'hooks/useChartDateRange'
+import { ChartDateRangePresetProvider } from 'hooks/useChartDateRangePreset'
 import { FOTAProvider } from 'hooks/useFOTA'
 import { MapDataProvider } from 'hooks/useMapData'
 import { MapSettingsProvider } from 'hooks/useMapSettings'
@@ -35,11 +36,13 @@ root.render(
 									<FOTAProvider>
 										<MapSettingsProvider>
 											<CurrentChartDateRangeProvider>
-												<AssetLocationHistoryProvider>
-													<MapDataProvider>
-														<App />
-													</MapDataProvider>
-												</AssetLocationHistoryProvider>
+												<ChartDateRangePresetProvider>
+													<AssetLocationHistoryProvider>
+														<MapDataProvider>
+															<App />
+														</MapDataProvider>
+													</AssetLocationHistoryProvider>
+												</ChartDateRangePresetProvider>
 											</CurrentChartDateRangeProvider>
 										</MapSettingsProvider>
 									</FOTAProvider>

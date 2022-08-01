@@ -1,5 +1,5 @@
 import type { Static, TSchema } from '@sinclair/typebox'
-import { validPassthrough } from 'utils/validPassthrough'
+import { validPassthrough } from 'utils/validPassthrough.js'
 
 type WithLocalStorage = {
 	<Schema extends TSchema>(_: { schema: Schema; key: string }): {

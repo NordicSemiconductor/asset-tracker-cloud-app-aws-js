@@ -1,5 +1,5 @@
 import { Type } from '@sinclair/typebox'
-import { DateRange, useChartDateRange } from 'hooks/useChartDateRange'
+import { DateRange, useChartDateRange } from 'hooks/useChartDateRange.js'
 import {
 	createContext,
 	FunctionComponent,
@@ -10,7 +10,7 @@ import {
 	useRef,
 	useState,
 } from 'react'
-import { withLocalStorage } from 'utils/withLocalStorage'
+import { withLocalStorage } from 'utils/withLocalStorage.js'
 
 const storedDateRangePrefix = withLocalStorage({
 	schema: Type.Integer({ minimum: 1 }),
@@ -22,19 +22,23 @@ type Preset = {
 	days: number
 }
 
-const presets: Preset[] = [
+export const presets: Preset[] = [
 	{ label: 'Last 24 hours', days: 1 },
 	{ label: 'Last 7 days', days: 7 },
 	{ label: 'Last 30 days', days: 30 },
 ]
 
-export const presetToRange = ({ days }: Pick<Preset, 'days'>): DateRange => ({
-	start: new Date(Date.now() - days * 24 * 60 * 60 * 1000),
-	end: new Date(),
+export const presetToRange = ({
+	days,
+	now,
+}: Pick<Preset, 'days'> & { now?: Date }): DateRange => ({
+	start: new Date((now?.getTime() ?? Date.now()) - days * 24 * 60 * 60 * 1000),
+	end: now ?? new Date(),
 })
 
 export const ChartDateRangePresetContext = createContext<{
 	presets: Preset[]
+	activePreset?: number
 	enableAutoUpdate: (preset: Preset) => void
 	disableAutoUpdate: () => void
 }>({
@@ -43,72 +47,76 @@ export const ChartDateRangePresetContext = createContext<{
 	disableAutoUpdate: () => undefined,
 })
 
-export const useChartDateRangePrefix = () =>
+export const useChartDateRangePreset = () =>
 	useContext(ChartDateRangePresetContext)
 
-export const CurrentChartDateRangeProvider: FunctionComponent<{
+export const ChartDateRangePresetProvider: FunctionComponent<{
 	children: ReactNode
-}> = ({ children }) => {
-	const [storedPrefix, setStoredPrefix] = useState<number | undefined>(
+	useChartRangeInjected?: typeof useChartDateRange
+	now?: Date
+	updateInterval?: number
+}> = ({ children, useChartRangeInjected, now, updateInterval }) => {
+	const [activePreset, setActivePreset] = useState<number | undefined>(
 		storedDateRangePrefix.get(),
 	)
 
-	const updateInterval = useRef<NodeJS.Timeout>()
+	const interval = useRef<NodeJS.Timeout>()
 
 	const clear = () => {
-		if (updateInterval.current === undefined) return
+		if (interval.current === undefined) return
 		console.debug(`[useChartDateRangePreset]`, 'stopping auto-update')
-		clearInterval(updateInterval.current)
+		clearInterval(interval.current)
 	}
 
-	const { setRange } = useChartDateRange()
+	const { setRange } = (useChartRangeInjected ?? useChartDateRange)()
 
 	const update = useCallback(
 		(days: number) => {
 			console.debug(
 				`[useChartDateRangePreset]`,
-				'auto-updating chart range',
+				'auto-updating chart range:',
 				days,
 				'days',
 			)
-			setRange(presetToRange({ days }))
+			setRange(presetToRange({ days, now }))
 		},
-		[setRange],
+		[setRange, now],
 	)
 
 	// If a preset is selected by the user, update the chart date range to the start and end date of this preset every 5 minutes
 	useEffect(() => {
-		if (storedPrefix === undefined) {
+		if (activePreset === undefined) {
 			clear()
 		} else {
 			console.debug(`[useChartDateRangePreset]`, 'enabling auto-update')
-			updateInterval.current = setInterval(
-				() => update(storedPrefix),
-				5 * 60 * 1000,
+			interval.current = setInterval(
+				() => update(activePreset),
+				updateInterval ?? 5 * 60 * 1000,
 			)
 		}
 		return () => {
 			clear()
 		}
-	}, [storedPrefix, update])
+	}, [activePreset, update, updateInterval])
 
 	// Update once on start of app
 	useEffect(() => {
-		if (storedPrefix === undefined) return
-		update(storedPrefix)
-	}, [storedPrefix, update])
+		if (activePreset === undefined) return
+		update(activePreset)
+	}, [activePreset, update])
 
 	return (
 		<ChartDateRangePresetContext.Provider
 			value={{
 				presets,
+				activePreset,
 				enableAutoUpdate: (preset) => {
 					storedDateRangePrefix.set(preset.days)
-					setStoredPrefix(preset.days)
+					setActivePreset(preset.days)
 				},
 				disableAutoUpdate: () => {
 					storedDateRangePrefix.destroy()
-					setStoredPrefix(undefined)
+					setActivePreset(undefined)
 				},
 			}}
 		>

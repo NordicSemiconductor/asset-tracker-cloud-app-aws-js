@@ -7,7 +7,7 @@ import {
 	useContext,
 	useState,
 } from 'react'
-import { withLocalStorage } from 'utils/withLocalStorage'
+import { withLocalStorage } from 'utils/withLocalStorage.js'
 
 const defaultStart = sub(new Date(), { months: 1 })
 const defaultEnd = new Date()

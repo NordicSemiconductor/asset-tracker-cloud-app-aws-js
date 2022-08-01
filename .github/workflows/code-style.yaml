@@ -35,12 +35,12 @@ jobs:
 
       - name: Check source code with eslint
         run: |
-          npx eslint --fix --ext .js,.ts,.jsx,.tsx --ignore-pattern commitlint.config.js ./
+          npx eslint --fix --ext .js,.ts,.jsx,.tsx ./
 
       - name: Check source code with eslint (e2e-tests)
         working-directory: e2e-tests
         run: |
-          npx eslint --fix --ext .js,.ts,.jsx,.tsx --ignore-pattern commitlint.config.js ./
+          npx eslint --fix --ext .js,.ts,.jsx,.tsx ./
 
       - name: Format source code with prettier
         run: npx prettier --write ./

@@ -5,3 +5,4 @@ build/
 test-session/
 e2e-tests-out/
 .swc/
+setup-jest.js

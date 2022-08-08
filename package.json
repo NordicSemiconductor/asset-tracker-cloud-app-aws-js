@@ -33,9 +33,9 @@
   "dependencies": {
     "@amcharts/amcharts5": "5.2.15",
     "@aws-amplify/ui-react": "3.3.0",
-    "@aws-sdk/client-dynamodb": "3.142.0",
-    "@aws-sdk/client-iot": "3.144.0",
-    "@aws-sdk/client-iot-data-plane": "3.142.0",
+    "@aws-sdk/client-dynamodb": "3.145.0",
+    "@aws-sdk/client-iot": "3.145.0",
+    "@aws-sdk/client-iot-data-plane": "3.145.0",
     "@aws-sdk/client-s3": "3.142.0",
     "@aws-sdk/util-dynamodb": "3.142.0",
     "@nordicsemiconductor/cell-geolocation-helpers": "5.0.1",
@@ -61,8 +61,8 @@
     "semver": "7.3.7"
   },
   "devDependencies": {
-    "@aws-sdk/client-cloudformation": "3.142.0",
-    "@aws-sdk/client-cognito-identity-provider": "3.143.0",
+    "@aws-sdk/client-cloudformation": "3.145.0",
+    "@aws-sdk/client-cognito-identity-provider": "3.145.0",
     "@aws-sdk/client-ssm": "3.142.0",
     "@aws-sdk/client-timestream-write": "3.142.0",
     "@aws-sdk/types": "3.127.0",

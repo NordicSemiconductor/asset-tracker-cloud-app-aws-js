@@ -39,7 +39,7 @@
     "@aws-sdk/client-s3": "3.145.0",
     "@aws-sdk/util-dynamodb": "3.145.0",
     "@nordicsemiconductor/cell-geolocation-helpers": "5.0.1",
-    "@nordicsemiconductor/from-env": "1.0.1",
+    "@nordicsemiconductor/from-env": "1.0.2",
     "@nordicsemiconductor/rsrp-bar": "5.0.4",
     "@nordicsemiconductor/timestream-helpers": "4.1.2",
     "@sinclair/typebox": "0.24.27",

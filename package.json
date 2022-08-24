@@ -31,7 +31,7 @@
   "author": "Nordic Semiconductor ASA | nordicsemi.no",
   "license": "BSD-3-Clause",
   "dependencies": {
-    "@amcharts/amcharts5": "5.2.17",
+    "@amcharts/amcharts5": "5.2.18",
     "@aws-amplify/ui-react": "3.4.1",
     "@aws-sdk/client-dynamodb": "3.154.0",
     "@aws-sdk/client-iot": "3.154.0",

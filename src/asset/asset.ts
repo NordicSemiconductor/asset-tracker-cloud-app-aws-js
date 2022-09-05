@@ -445,4 +445,5 @@ export enum SensorProperties {
 	Roaming = 'roam',
 	Asset = 'dev',
 	Button = 'btn',
+	Impact = 'impact',
 }

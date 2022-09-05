@@ -462,6 +462,10 @@ export const CenterIcon = (options?: TypedIconOptions) => (
 	<FeatherIcon {...options} title="center" type="crosshair" />
 )
 
+export const ImpactsIcon = (options?: TypedIconOptions) => (
+	<FeatherIcon {...options} title="impacts" type="alert-triangle" />
+)
+
 export const QueuedAtIcon = CloudUploadIcon
 
 export const LoadingIcon = (options?: TypedIconOptions) => (

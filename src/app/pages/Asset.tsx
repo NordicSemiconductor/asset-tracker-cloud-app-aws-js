@@ -12,6 +12,7 @@ import {
 	DangerIcon,
 	FOTAIcon,
 	IconWithText,
+	ImpactsIcon,
 	InfoIcon,
 	NeighboringCellsIcon,
 	SettingsIcon,
@@ -20,6 +21,7 @@ import {
 import { FOTA } from 'components/FOTA/FOTA'
 import { BatteryChart } from 'components/HistoricalData/BatteryChart'
 import { ButtonPresses } from 'components/HistoricalData/ButtonPresses'
+import { ImpactsChart } from 'components/HistoricalData/ImpactsChart'
 import { RSRPChart } from 'components/HistoricalData/RSRPChart'
 import { TemperatureChart } from 'components/HistoricalData/TemperatureChart'
 import { Loading } from 'components/Loading'
@@ -180,6 +182,17 @@ export const Asset = () => {
 								data-intro="This shows a history chart of the temperature measured by the asset's environment sensor."
 							>
 								<TemperatureChart />
+							</Collapsable>
+							<Collapsable
+								id="asset:impacts"
+								title={
+									<IconWithText>
+										<ImpactsIcon size={22} /> Impacts
+									</IconWithText>
+								}
+								data-intro="This shows a history chart of the impacts the asset has reported."
+							>
+								<ImpactsChart />
 							</Collapsable>
 							<Collapsable
 								id="asset:button"

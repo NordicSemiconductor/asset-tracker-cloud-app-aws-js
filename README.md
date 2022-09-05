@@ -88,7 +88,7 @@ export WEBAPP_STACK_NAME=...
 
 You can then run the tests using
 
-    npx playwright test
+    npm run test:e2e
 
 ### Playwright Inspector
 
@@ -97,7 +97,7 @@ For developing tests it is helpful to run the
 
 You can enabled the inspector during the tests by running
 
-    PWDEBUG=1 npx playwright test
+    PWDEBUG=1 npm run test:e2e
 
 ### Running end-to-end tests using GitHub Actions
 

@@ -195,6 +195,14 @@ export const timestreamDataGenerator = async ({
 			step: 1,
 			sensor: SensorProperties.Button,
 		}),
+		// Impacts
+		// TODO: this should be randomized, instead of creating linear impacts
+		generateReadings({
+			min: 0,
+			max: 300,
+			step: 1,
+			sensor: SensorProperties.Impact,
+		}),
 		// Location data
 		(async () => {
 			const locationCommon = {

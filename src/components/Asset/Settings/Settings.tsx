@@ -152,10 +152,7 @@ const SettingsUI = ({
 					maximum={MAX_INT32}
 				/>
 			</fieldset>
-			<fieldset
-				data-intro={'This configures the <em>passive</em> mode.'}
-				style={{ gridRowEnd: 'span 2' }}
-			>
+			<fieldset data-intro={'This configures the <em>passive</em> mode.'}>
 				<legend>Passive Mode Settings</legend>
 				<div className={styles.SideBySide}>
 					<NumberConfigSetting
@@ -183,21 +180,6 @@ const SettingsUI = ({
 						maximum={MAX_INT32}
 					/>
 				</div>
-				<NumberConfigSetting
-					label={'Accelerometer threshold'}
-					intro={
-						'Minimal absolute value for an accelerometer reading to be considered movement. Range: 0 to 19.6133 m/s².'
-					}
-					id={'acct'}
-					example={0.1}
-					step={0.1}
-					minimum={0}
-					maximum={19.6133}
-					unit={'m/s²'}
-					desired={newDesiredConfig.acct}
-					reported={reportedConfig?.acct}
-					onChange={updateConfigProperty('acct', parseFloat)}
-				/>
 			</fieldset>
 			<fieldset data-intro={'This configures the <em>active</em> mode.'}>
 				<legend>Active Mode Settings</legend>
@@ -213,6 +195,54 @@ const SettingsUI = ({
 					minimum={1}
 					maximum={MAX_INT32}
 					example={60}
+				/>
+			</fieldset>
+			<fieldset data-intro={'This configures the <em>accelerometer</em>.'}>
+				<legend>Accelerometer Settings</legend>
+				<NumberConfigSetting
+					label={'Accelerometer activity threshold'}
+					intro={
+						'Minimal absolute value for an accelerometer reading to be considered movement. Range: 0 to 78.4532 m/s².'
+					}
+					id={'accath'}
+					example={10.5}
+					step={0.1}
+					minimum={0}
+					maximum={78.4532}
+					unit={'m/s²'}
+					desired={newDesiredConfig.accath}
+					reported={reportedConfig?.accath}
+					onChange={updateConfigProperty('accath', parseFloat)}
+				/>
+				<NumberConfigSetting
+					label={'Accelerometer inactivity threshold'}
+					intro={
+						'Maximum absolute value for an accelerometer reading to be considered stillness. Should be lower than the activity threshold. Range: 0 to 78.4532 m/s².'
+					}
+					id={'accith'}
+					example={5.7}
+					step={0.1}
+					minimum={0}
+					maximum={78.4532}
+					unit={'m/s²'}
+					desired={newDesiredConfig.accith}
+					reported={reportedConfig?.accith}
+					onChange={updateConfigProperty('accith', parseFloat)}
+				/>
+				<NumberConfigSetting
+					label={'Accelerometer inactivity timeout'}
+					intro={
+						'Accelerometer inactivity timeout in s: Hysteresis timeout for stillness detection. Range: 0.08 to 5242.88 m/s².'
+					}
+					id={'accito'}
+					example={1.2}
+					step={0.1}
+					minimum={0.08}
+					maximum={5242.88}
+					unit={'s'}
+					desired={newDesiredConfig.accito}
+					reported={reportedConfig?.accito}
+					onChange={updateConfigProperty('accito', parseFloat)}
 				/>
 			</fieldset>
 			<fieldset data-intro={'This sets which Data Modules to sample.'}>

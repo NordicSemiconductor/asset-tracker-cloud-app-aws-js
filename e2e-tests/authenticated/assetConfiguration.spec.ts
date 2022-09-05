@@ -54,13 +54,20 @@ test('Update asset configuration', async ({ page }) => {
 	const mvres = randInt(0, 3600)
 	const mvt = randInt(0, 3600)
 	const actwt = randInt(0, 3600)
-	const acct = randFloat(0.5, 10)
+	// Accelerometer activity threshold in m/s²: Minimal absolute value for an accelerometer reading to be considered movement.
+	const accath = randFloat(0, 78.4532)
+	// Accelerometer inactivity threshold in m/s²: Maximum absolute value for an accelerometer reading to be considered stillness. Should be lower than the activity threshold.
+	const accith = randFloat(0, 78.4532)
+	// Accelerometer inactivity timeout in s: Hysteresis timeout for stillness detection.
+	const accito = randFloat(0.08, 5242.88)
 
 	await page.click('#active-mode')
 	await page.fill('#gnsst', gnsst.toString())
 	await page.fill('#mvres', mvres.toString())
 	await page.fill('#mvt', mvt.toString())
-	await page.fill('#acct', acct.toString())
+	await page.fill('#accath', accath.toString())
+	await page.fill('#accith', accith.toString())
+	await page.fill('#accito', accito.toString())
 	await page.fill('#actwt', actwt.toString())
 	await page.click('#gnss-disable')
 	await page.click('#ncellmeas-disable')
@@ -80,13 +87,16 @@ test('Update asset configuration', async ({ page }) => {
 	)
 	expect(payload).not.toBeUndefined()
 	const shadow = JSON.parse(toUtf8(payload as Uint8Array))
-	expect(shadow.state.desired.cfg).toEqual({
+
+	expect(shadow.state.desired.cfg).toMatchObject({
 		act: true,
 		actwt,
 		mvres,
 		mvt,
 		gnsst,
-		acct,
+		accath,
+		accith,
+		accito,
 		nod: [DataModules.GNSS, DataModules.NeigboringCellMeasurements],
 	})
 })

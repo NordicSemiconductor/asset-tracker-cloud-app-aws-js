@@ -48,7 +48,7 @@ test('Create firmware update from file', async ({ page }) => {
 	const jobHeader = page.locator(
 		'div[data-test="firmware-upgrade-jobs"] div[role="button"]:has-text("3.0.14 (QUEUED)")',
 	)
-	await expect(jobHeader).toBeVisible({ timeout: 60000 })
+	await expect(jobHeader).toBeVisible({ timeout: 2 * 60 * 1000 })
 
 	// Show details
 	await jobHeader.click()

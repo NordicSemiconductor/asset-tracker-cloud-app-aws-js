@@ -23,7 +23,7 @@ export const AssetConfig = Type.Object(
 				'In active mode: Wait this amount of seconds until sending the next update. The actual interval will be this time plus the time it takes to get a GNSS fix.',
 			minimum: 1,
 			maximum: 2147483647,
-			examples: [60],
+			examples: [300],
 		}),
 		mvres: Type.Integer({
 			description:
@@ -50,21 +50,21 @@ export const AssetConfig = Type.Object(
 				'Accelerometer activity threshold in m/s²: Minimal absolute value for an accelerometer reading to be considered movement.',
 			minimum: 0,
 			maximum: 78.4532,
-			examples: [10.5],
+			examples: [10],
 		}),
 		accith: Type.Number({
 			description:
 				'Accelerometer inactivity threshold in m/s²: Maximum absolute value for an accelerometer reading to be considered stillness. Should be lower than the activity threshold.',
 			minimum: 0,
 			maximum: 78.4532,
-			examples: [5.7],
+			examples: [5],
 		}),
 		accito: Type.Number({
 			description:
 				'Accelerometer inactivity timeout in s: Hysteresis timeout for stillness detection.',
 			minimum: 0.08,
 			maximum: 5242.88,
-			examples: [1.2],
+			examples: [60],
 		}),
 		nod: Type.Array(Type.Enum(DataModules), {
 			minItems: 0,

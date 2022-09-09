@@ -56,7 +56,7 @@ test('Update asset configuration', async ({ page }) => {
 	// Accelerometer inactivity timeout in s: Hysteresis timeout for stillness detection.
 	const accito = 1.7
 	const actwt = randInt(0, 3600)
-	// Accelerometer activity threshold in m/s²: Minimal absolute value for an accelerometer reading to be considered movement.
+	// Accelerometer Activity Threshold in m/s²: Minimal absolute value for an accelerometer reading to be considered movement.
 	const accath = 10.5
 	// Accelerometer inactivity threshold in m/s²: Maximum absolute value for an accelerometer reading to be considered stillness. Should be lower than the activity threshold.
 	const accith = 5
@@ -221,7 +221,7 @@ test("'Movement resolution' must be higher than 'Accelerometer inactivity timeou
 	})
 })
 
-test("'Accelerometer activity threshold' must be higher than 'Accelerometer inactivity threshold' in order to submit configuration", async ({
+test("'Accelerometer Activity Threshold' must be higher than 'Accelerometer inactivity threshold' in order to submit configuration", async ({
 	page,
 }) => {
 	await page.click('header[role="button"]:has-text("Settings")')
@@ -231,7 +231,7 @@ test("'Accelerometer activity threshold' must be higher than 'Accelerometer inac
 	const mvres = 300
 	const accito = 1.7
 	const actwt = randInt(0, 3600)
-	const accath = 4.5 // Accelerometer activity threshold
+	const accath = 4.5 // Accelerometer Activity Threshold
 	const accith = 5 // Accelerometer inactivity threshold
 
 	await page.click('#active-mode')
@@ -255,7 +255,7 @@ test("'Accelerometer activity threshold' must be higher than 'Accelerometer inac
 		`Value must be higher than Accelerometer inactivity threshold value: ${accith}`,
 	)
 	await expect(page.locator('#asset-settings-form')).toContainText(
-		`Value must be lower than Accelerometer activity threshold value: ${accath}`,
+		`Value must be lower than Accelerometer Activity Threshold value: ${accath}`,
 	)
 
 	// update accath
@@ -267,7 +267,7 @@ test("'Accelerometer activity threshold' must be higher than 'Accelerometer inac
 		`Value must be higher than Accelerometer inactivity threshold value: ${accith}`,
 	)
 	await expect(page.locator('#asset-settings-form')).not.toContainText(
-		`Value must be lower than Accelerometer activity threshold value: ${updatedAccath}`,
+		`Value must be lower than Accelerometer Activity Threshold value: ${updatedAccath}`,
 	)
 
 	// expect 'update' button to be enable

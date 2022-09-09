@@ -47,7 +47,7 @@ export const AssetConfig = Type.Object(
 		}),
 		accath: Type.Number({
 			description:
-				'Accelerometer activity threshold in m/s²: Minimal absolute value for an accelerometer reading to be considered movement.',
+				'Accelerometer Activity Threshold in m/s²: Minimal absolute value for an accelerometer reading to be considered movement.',
 			minimum: 0,
 			maximum: 78.4532,
 			examples: [10],

@@ -49,14 +49,14 @@ describe('configConstraints()', () => {
 		expect(formErrors['accito']).toEqual(undefined)
 	})
 
-	it("Should detect an error when 'Accelerometer activity threshold' is higher than 'Accelerometer inactivity threshold'", () => {
+	it("Should detect an error when 'Accelerometer Activity Threshold' is higher than 'Accelerometer inactivity threshold'", () => {
 		const config: Static<typeof AssetConfig> = {
 			act: true,
 			actwt: 60,
 			mvres: 300,
 			mvt: 3600,
 			gnsst: 60,
-			accath: 1.5, // Accelerometer activity threshold
+			accath: 1.5, // Accelerometer Activity Threshold
 			accith: 5.7, // Accelerometer inactivity threshold
 			accito: 1.2,
 			nod: [],
@@ -69,18 +69,18 @@ describe('configConstraints()', () => {
 			`Value must be higher than Accelerometer inactivity threshold value: ${config.accith}`,
 		)
 		expect(formValidationErrors['accith']).toContain(
-			`Value must be lower than Accelerometer activity threshold value: ${config.accath}`,
+			`Value must be lower than Accelerometer Activity Threshold value: ${config.accath}`,
 		)
 	})
 
-	it("Should not detect an error when 'Accelerometer activity threshold' is lower than 'Accelerometer inactivity threshold'", () => {
+	it("Should not detect an error when 'Accelerometer Activity Threshold' is lower than 'Accelerometer inactivity threshold'", () => {
 		const config: Static<typeof AssetConfig> = {
 			act: true,
 			actwt: 60,
 			mvres: 300,
 			mvt: 3600,
 			gnsst: 60,
-			accath: 10.5, // Accelerometer activity threshold
+			accath: 10.5, // Accelerometer Activity Threshold
 			accith: 5.7, // Accelerometer inactivity threshold
 			accito: 1.2,
 			nod: [],

@@ -209,7 +209,7 @@ const SettingsUI = ({
 			<fieldset data-intro={'This configures the <em>accelerometer</em>.'}>
 				<legend>Accelerometer Settings</legend>
 				<NumberConfigSetting
-					label={'Accelerometer activity threshold'}
+					label={'Accelerometer Activity Threshold'}
 					intro={
 						'Minimal absolute value for an accelerometer reading to be considered movement. Range: 0 to 78.4532 m/s².'
 					}

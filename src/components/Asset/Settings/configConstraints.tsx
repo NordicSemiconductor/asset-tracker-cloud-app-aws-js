@@ -12,10 +12,10 @@ export const configConstraints = (
 		formValidationErrors.accito = `Value must be lower than Movement Resolution value: ${config.mvres}`
 	}
 
-	// Accelerometer activity threshold must be higher than Accelerometer inactivity threshold
+	// Accelerometer Activity Threshold must be higher than Accelerometer inactivity threshold
 	if (config.accath <= config.accith) {
 		formValidationErrors.accath = `Value must be higher than Accelerometer inactivity threshold value: ${config.accith}`
-		formValidationErrors.accith = `Value must be lower than Accelerometer activity threshold value: ${config.accath}`
+		formValidationErrors.accith = `Value must be lower than Accelerometer Activity Threshold value: ${config.accath}`
 	}
 	return formValidationErrors
 }

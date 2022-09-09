@@ -7,6 +7,7 @@ import { fromEnv } from '@nordicsemiconductor/from-env'
 import { expect, test } from '@playwright/test'
 import * as path from 'path'
 import { DataModules } from '../../src/asset/asset.js'
+// import { presetConfigs } from '../../src/components/Asset/Settings/presetConfigs.tsx' // components/Asset/Settings/presetConfigs
 import { checkForConsoleErrors } from '../lib/checkForConsoleErrors.js'
 import { loadSessionData } from '../lib/loadSessionData.js'
 import { AssetType, selectCurrentAsset } from './lib.js'
@@ -304,4 +305,40 @@ test("'Accelerometer Activity Threshold' must be higher than 'Accelerometer inac
 		accito,
 		nod: [DataModules.GNSS, DataModules.NeigboringCellMeasurements],
 	})
+})
+
+test("should charge preset values for 'Parcel' configuration", async ({
+	page,
+}) => {
+	await page.click('header[role="button"]:has-text("Settings")')
+
+	// click on preset
+	await page.locator('text=Parcel Config').click()
+	// await page.click('#parcel-preset-config >> button')
+
+	// expect values
+
+	// Verify
+	const { thingName } = await loadSessionData(AssetType.Default)
+	const { payload } = await new IoTDataPlaneClient({
+		endpoint: `https://${mqttEndpoint}`,
+	}).send(
+		new GetThingShadowCommand({
+			thingName,
+		}),
+	)
+	expect(payload).not.toBeUndefined()
+	const shadow = JSON.parse(toUtf8(payload as Uint8Array))
+
+	expect(shadow.state.desired.cfg).toMatchObject({
+		act: false, // passive mode
+		mvres: 3600, // movement resolution
+		accath: 10, // Accelerometer activity threshold
+		accith: 5, // Accelerometer inactivity threshold
+		accito: 1200, // Accelerometer inactivity timeout
+		mvt: 21600, // Movement Timeout
+		actwt: 10,
+		gnsst: 10,
+		nod: [],
+	}) // presetConfigs.parcel
 })

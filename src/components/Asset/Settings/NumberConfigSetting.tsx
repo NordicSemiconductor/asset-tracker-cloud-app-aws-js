@@ -1,6 +1,6 @@
 import { OutDatedWarning } from 'components/Asset/Settings/OutDatedWarning'
 import { OutdatedConfigValueIcon, UnknownIcon } from 'components/FeatherIcon'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 
 export const NumberConfigSetting = ({
 	label,
@@ -32,6 +32,11 @@ export const NumberConfigSetting = ({
 	const [input, updateInput] = useState(`${desired ?? reported}`)
 	const minValue = minimum ?? 0
 	const maxValue = maximum ?? Number.MAX_SAFE_INTEGER
+
+	useEffect(() => {
+		updateInput(`${desired ?? reported}`)
+	}, [desired, reported, updateInput])
+
 	return (
 		<div className="input-group mb-2" data-intro={intro}>
 			{label !== undefined && (
@@ -77,7 +82,7 @@ export const NumberConfigSetting = ({
 					step={step}
 					min={minValue}
 					max={maxValue}
-					value={input}
+					value={input} // desired
 					onChange={({ target: { value } }) => {
 						if (parseInt(value) < minValue) value = `${minValue}`
 						if (parseInt(value) > maxValue) value = `${maxValue}`

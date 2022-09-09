@@ -130,7 +130,8 @@
     ],
     "moduleNameMapper": {
       "^utils\\/(.*)\\.js$": "<rootDir>/src/utils/$1",
-      "^hooks\\/(.*)\\.js$": "<rootDir>/src/hooks/$1"
+      "^hooks\\/(.*)\\.js$": "<rootDir>/src/hooks/$1",
+      "^components\\/(.*)\\.js$": "<rootDir>/src/components/$1"
     },
     "transform": {
       "^.+\\.(t|j)sx?$": "@swc/jest"

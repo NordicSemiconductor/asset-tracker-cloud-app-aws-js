@@ -2,6 +2,7 @@ import type { Static } from '@sinclair/typebox'
 import { AssetConfig, DataModules } from 'asset/asset'
 import { defaultConfig } from 'asset/defaultConfig'
 import cx from 'classnames'
+import { configConstraints } from 'components/Asset/Settings/configConstraints'
 import { NumberConfigSetting } from 'components/Asset/Settings/NumberConfigSetting'
 import { OutDatedWarning } from 'components/Asset/Settings/OutDatedWarning'
 import styles from 'components/Asset/Settings/Settings.module.css'
@@ -78,6 +79,9 @@ const SettingsUI = ({
 	const isNewDesiredConfigValid = !(
 		'errors' in validateWithJSONSchema(AssetConfig)(newDesiredConfig)
 	)
+	const formValidationErrors: Record<string, string> =
+		configConstraints(newDesiredConfig)
+	const areFormValuesValid = Object.keys(formValidationErrors).length === 0
 
 	return (
 		<form className={styles.SettingsForm} id="asset-settings-form">
@@ -171,6 +175,7 @@ const SettingsUI = ({
 						minimum={1}
 						maximum={MAX_INT32}
 						example={300}
+						errorMessage={formValidationErrors['mvres']}
 					/>
 					<NumberConfigSetting
 						label={'Movement Timeout'}
@@ -217,6 +222,7 @@ const SettingsUI = ({
 					desired={newDesiredConfig.accath}
 					reported={reportedConfig?.accath}
 					onChange={updateConfigProperty('accath', parseFloat)}
+					errorMessage={formValidationErrors['accath']}
 				/>
 				<NumberConfigSetting
 					label={'Accelerometer inactivity threshold'}
@@ -232,6 +238,7 @@ const SettingsUI = ({
 					desired={newDesiredConfig.accith}
 					reported={reportedConfig?.accith}
 					onChange={updateConfigProperty('accith', parseFloat)}
+					errorMessage={formValidationErrors['accith']}
 				/>
 				<NumberConfigSetting
 					label={'Accelerometer inactivity timeout'}
@@ -247,6 +254,7 @@ const SettingsUI = ({
 					desired={newDesiredConfig.accito}
 					reported={reportedConfig?.accito}
 					onChange={updateConfigProperty('accito', parseFloat)}
+					errorMessage={formValidationErrors['accito']}
 				/>
 			</fieldset>
 			<fieldset data-intro={'This sets which Data Modules to sample.'}>
@@ -438,7 +446,7 @@ const SettingsUI = ({
 				<button
 					type="button"
 					className={'btn btn-primary'}
-					disabled={!hasChanges || !isNewDesiredConfigValid}
+					disabled={!hasChanges || !areFormValuesValid|| !isNewDesiredConfigValid}
 					onClick={() => {
 						update({
 							cfg: newDesiredConfig,

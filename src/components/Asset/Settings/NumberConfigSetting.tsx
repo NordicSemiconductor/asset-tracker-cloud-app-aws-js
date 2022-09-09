@@ -14,6 +14,7 @@ export const NumberConfigSetting = ({
 	reported,
 	minimum,
 	maximum,
+	errorMessage,
 }: {
 	label?: string
 	intro?: string
@@ -26,6 +27,7 @@ export const NumberConfigSetting = ({
 	reported?: number
 	minimum?: number
 	maximum?: number
+	errorMessage?: string
 }) => {
 	const [input, updateInput] = useState(`${desired ?? reported}`)
 	const minValue = minimum ?? 0
@@ -65,7 +67,9 @@ export const NumberConfigSetting = ({
 					)}
 				/>
 				<input
-					className="form-control"
+					className={`form-control ${
+						errorMessage !== undefined ? 'text-danger is-invalid' : ' is-valid'
+					}`}
 					type="number"
 					name={id}
 					id={id}
@@ -82,6 +86,7 @@ export const NumberConfigSetting = ({
 					}}
 				/>
 				<span className="input-group-text">{unit ?? 's'}</span>
+				<div className="invalid-feedback">{errorMessage}</div>
 			</div>
 		</div>
 	)

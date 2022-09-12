@@ -4,7 +4,7 @@
 
 import type { Static } from '@sinclair/typebox'
 import type { AssetConfig } from 'asset/asset'
-import { configConstraints } from 'components/Asset/Settings/configConstraints.js'
+import { validateConfig } from 'asset/validateConfig'
 
 describe('configConstraints()', () => {
 	it("Should detect an error when 'Movement resolution' is higher than 'Accelerometer inactivity timeout'", () => {
@@ -20,7 +20,7 @@ describe('configConstraints()', () => {
 			nod: [],
 		}
 
-		const formErrors: Record<string, string> = configConstraints(config)
+		const formErrors: Record<string, string> = validateConfig(config)
 
 		expect(formErrors['mvres']).toContain(
 			`Value must be higher than accelerometer inactivity timeout value: ${config.accito}`,
@@ -43,7 +43,7 @@ describe('configConstraints()', () => {
 			nod: [],
 		}
 
-		const formErrors: Record<string, string> = configConstraints(config)
+		const formErrors: Record<string, string> = validateConfig(config)
 
 		expect(formErrors['mvres']).toEqual(undefined)
 		expect(formErrors['accito']).toEqual(undefined)
@@ -62,8 +62,7 @@ describe('configConstraints()', () => {
 			nod: [],
 		}
 
-		const formValidationErrors: Record<string, string> =
-			configConstraints(config)
+		const formValidationErrors: Record<string, string> = validateConfig(config)
 
 		expect(formValidationErrors['accath']).toContain(
 			`Value must be higher than Accelerometer inactivity threshold value: ${config.accith}`,
@@ -86,7 +85,7 @@ describe('configConstraints()', () => {
 			nod: [],
 		}
 
-		const formErrors: Record<string, string> = configConstraints(config)
+		const formErrors: Record<string, string> = validateConfig(config)
 
 		expect(formErrors['accath']).toEqual(undefined)
 		expect(formErrors['accith']).toEqual(undefined)

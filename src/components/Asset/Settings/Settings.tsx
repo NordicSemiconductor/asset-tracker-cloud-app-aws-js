@@ -1,8 +1,8 @@
 import type { Static } from '@sinclair/typebox'
 import { AssetConfig, DataModules } from 'asset/asset'
 import { defaultConfig } from 'asset/defaultConfig'
+import { validateConfig } from 'asset/validateConfig'
 import cx from 'classnames'
-import { configConstraints } from 'components/Asset/Settings/configConstraints'
 import { NumberConfigSetting } from 'components/Asset/Settings/NumberConfigSetting'
 import { OutDatedWarning } from 'components/Asset/Settings/OutDatedWarning'
 import { presetConfigs } from 'components/Asset/Settings/presetConfigs'
@@ -81,7 +81,7 @@ const SettingsUI = ({
 		'errors' in validateWithJSONSchema(AssetConfig)(newDesiredConfig)
 	)
 	const formValidationErrors: Record<string, string> =
-		configConstraints(newDesiredConfig)
+		validateConfig(newDesiredConfig)
 	const areFormValuesValid = Object.keys(formValidationErrors).length === 0
 
 	const presetConfig = (id: string) => {

@@ -1,11 +1,11 @@
 import type { Static } from '@sinclair/typebox'
 import { AssetConfig, DataModules } from 'asset/asset'
-import { defaultConfig } from 'asset/defaultConfig'
+import { defaultConfig } from 'asset/config'
 import { validateConfig } from 'asset/validateConfig'
 import cx from 'classnames'
 import { NumberConfigSetting } from 'components/Asset/Settings/NumberConfigSetting'
 import { OutDatedWarning } from 'components/Asset/Settings/OutDatedWarning'
-import { presetConfigs } from 'components/Asset/Settings/presetConfigs'
+import { Presets } from 'components/Asset/Settings/Presets'
 import styles from 'components/Asset/Settings/Settings.module.css'
 import { OutdatedConfigValueIcon, UnknownIcon } from 'components/FeatherIcon'
 import { NoData } from 'components/NoData'
@@ -84,28 +84,12 @@ const SettingsUI = ({
 		validateConfig(newDesiredConfig)
 	const areFormValuesValid = Object.keys(formValidationErrors).length === 0
 
-	const presetConfig = (id: string) => {
-		const config = presetConfigs[`${id}`] ?? currentDesiredConfig
-		setNewDesiredConfig(config)
-	}
-
 	return (
 		<>
-			<h4>Pre-set configurations</h4>
-			<button
-				type="button"
-				id="parcel-preset-config"
-				onClick={() => presetConfig('parcel')}
-			>
-				Parcel Config
-			</button>
-			<button
-				type="button"
-				id="walking-preset-config"
-				onClick={() => presetConfig('walking')}
-			>
-				Walking Config
-			</button>
+			<Presets
+				setDesiredConfig={setNewDesiredConfig}
+				currentDesiredConfig={currentDesiredConfig}
+			/>
 			<form className={styles.SettingsForm} id="asset-settings-form">
 				<div className="col">
 					<fieldset data-intro={'This sets the operation mode of the asset.'}>

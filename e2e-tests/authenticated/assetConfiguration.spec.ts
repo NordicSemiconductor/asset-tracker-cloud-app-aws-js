@@ -7,7 +7,7 @@ import { fromEnv } from '@nordicsemiconductor/from-env'
 import { expect, test } from '@playwright/test'
 import * as path from 'path'
 import { DataModules } from '../../src/asset/asset.js'
-// import { presetConfigs } from '../../src/components/Asset/Settings/presetConfigs.tsx' // components/Asset/Settings/presetConfigs
+// import { presetConfigs } from '../../src/components/Asset/Settings/presetConfigs' # TODO: use it
 import { checkForConsoleErrors } from '../lib/checkForConsoleErrors.js'
 import { loadSessionData } from '../lib/loadSessionData.js'
 import { AssetType, selectCurrentAsset } from './lib.js'
@@ -312,11 +312,13 @@ test("should charge preset values for 'Parcel' configuration", async ({
 }) => {
 	await page.click('header[role="button"]:has-text("Settings")')
 
-	// click on preset
+	// select preset config
 	await page.locator('text=Parcel Config').click()
-	// await page.click('#parcel-preset-config >> button')
 
-	// expect values
+	// TODO: check input fields to be updated
+
+	// update config
+	await page.click('#asset-settings-form >> footer >> button')
 
 	// Verify
 	const { thingName } = await loadSessionData(AssetType.Default)
@@ -330,6 +332,7 @@ test("should charge preset values for 'Parcel' configuration", async ({
 	expect(payload).not.toBeUndefined()
 	const shadow = JSON.parse(toUtf8(payload as Uint8Array))
 
+	// TODO: use presetConfigs as object to match
 	expect(shadow.state.desired.cfg).toMatchObject({
 		act: false, // passive mode
 		mvres: 3600, // movement resolution
@@ -340,5 +343,44 @@ test("should charge preset values for 'Parcel' configuration", async ({
 		actwt: 10,
 		gnsst: 10,
 		nod: [],
-	}) // presetConfigs.parcel
+	})
+})
+
+test("should charge preset values for 'walking' configuration", async ({
+	page,
+}) => {
+	await page.click('header[role="button"]:has-text("Settings")')
+
+	// select preset config
+	await page.locator('text=Walking Config').click()
+
+	// TODO: check input fields to be updated
+
+	// update config
+	await page.click('#asset-settings-form >> footer >> button')
+
+	// Verify
+	const { thingName } = await loadSessionData(AssetType.Default)
+	const { payload } = await new IoTDataPlaneClient({
+		endpoint: `https://${mqttEndpoint}`,
+	}).send(
+		new GetThingShadowCommand({
+			thingName,
+		}),
+	)
+	expect(payload).not.toBeUndefined()
+	const shadow = JSON.parse(toUtf8(payload as Uint8Array))
+
+	// TODO: use presetConfigs as object to match
+	expect(shadow.state.desired.cfg).toMatchObject({
+		act: false, // passive mode
+		mvres: 300, // movement resolution
+		accath: 10, // Accelerometer activity threshold
+		accith: 5, // Accelerometer inactivity threshold
+		accito: 60, // Accelerometer inactivity timeout
+		mvt: 3600, // Movement Timeout
+		actwt: 10,
+		gnsst: 10,
+		nod: [],
+	})
 })

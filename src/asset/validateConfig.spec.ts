@@ -4,7 +4,49 @@
 
 import type { Static } from '@sinclair/typebox'
 import type { AssetConfig } from 'asset/asset'
+//import { presetConfigs } from 'asset/config'
 import { validateConfig } from 'asset/validateConfig.js'
+
+// TODO: use import { presetConfigs } from 'asset/config'
+const presetConfigs: Record<
+	string,
+	{
+		config: Static<typeof AssetConfig>
+		label: string
+		description: string
+	}
+> = {
+	parcel: {
+		config: {
+			act: false, // passive mode
+			mvres: 3600, // movement resolution
+			accath: 10, // Accelerometer activity threshold
+			accith: 5, // Accelerometer inactivity threshold
+			accito: 1200, // Accelerometer inactivity timeout
+			mvt: 21600, // Movement Timeout
+			actwt: 10,
+			gnsst: 10,
+			nod: [],
+		},
+		label: 'Parcel Config',
+		description: 'Used for tracking parcels.',
+	},
+	walking: {
+		config: {
+			act: false, // passive mode
+			mvres: 300, // movement resolution
+			accath: 10, // Accelerometer activity threshold
+			accith: 5, // Accelerometer inactivity threshold
+			accito: 60, // Accelerometer inactivity timeout
+			mvt: 3600, // Movement Timeout
+			actwt: 10,
+			gnsst: 10,
+			nod: [],
+		},
+		label: 'Walking Config',
+		description: 'When you want to track your hiking.',
+	},
+}
 
 describe('configConstraints()', () => {
 	it("Should detect an error when 'Movement resolution' is higher than 'Accelerometer inactivity timeout'", () => {
@@ -89,5 +131,18 @@ describe('configConstraints()', () => {
 
 		expect(formErrors['accath']).toEqual(undefined)
 		expect(formErrors['accith']).toEqual(undefined)
+	})
+
+	it('Should check preset configs do not create conflict with configuration constraints', () => {
+		const errors = Object.keys(presetConfigs).map((element) =>
+			validateConfig(presetConfigs[`${element}`].config),
+		)
+		const checkErros = errors.reduce((accumulator: any, currentValue) => {
+			const error: any = Object.keys(currentValue)
+			return (accumulator =
+				error.length === 0 ? accumulator : [...accumulator, ...error])
+		}, [])
+
+		expect(checkErros.length).toEqual(0)
 	})
 })

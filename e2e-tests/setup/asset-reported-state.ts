@@ -1,5 +1,5 @@
 import { ReportedState } from 'asset/asset.js'
-import { defaultConfig } from '../../src/asset/defaultConfig.js'
+import { defaultConfig } from '../../src/asset/config.js'
 
 const now = Date.now()
 

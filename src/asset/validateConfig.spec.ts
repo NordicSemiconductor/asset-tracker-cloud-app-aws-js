@@ -4,7 +4,7 @@
 
 import type { Static } from '@sinclair/typebox'
 import type { AssetConfig } from 'asset/asset'
-import { validateConfig } from 'asset/validateConfig'
+import { validateConfig } from 'asset/validateConfig.js'
 
 describe('configConstraints()', () => {
 	it("Should detect an error when 'Movement resolution' is higher than 'Accelerometer inactivity timeout'", () => {

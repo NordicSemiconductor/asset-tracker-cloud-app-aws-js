@@ -7,6 +7,7 @@ import { NumberConfigSetting } from 'components/Asset/Settings/NumberConfigSetti
 import { OutDatedWarning } from 'components/Asset/Settings/OutDatedWarning'
 import { Presets } from 'components/Asset/Settings/Presets'
 import styles from 'components/Asset/Settings/Settings.module.css'
+import { SettingsExplainer } from 'components/Asset/Settings/SettingsExplainer'
 import { OutdatedConfigValueIcon, UnknownIcon } from 'components/FeatherIcon'
 import { NoData } from 'components/NoData'
 import equal from 'fast-deep-equal'
@@ -453,6 +454,7 @@ const SettingsUI = ({
 						</div>
 					</fieldset>
 				</div>
+				<SettingsExplainer settings={newDesiredConfig} />
 
 			<footer className={styles.FooterWithFullWidthButton}>
 				<button

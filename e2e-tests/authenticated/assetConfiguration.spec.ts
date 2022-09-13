@@ -7,7 +7,7 @@ import { fromEnv } from '@nordicsemiconductor/from-env'
 import { expect, test } from '@playwright/test'
 import * as path from 'path'
 import { DataModules } from '../../src/asset/asset.js'
-// import { presetConfigs } from '../../src/components/Asset/Settings/presetConfigs' # TODO: use it
+import { presetConfigs } from '../../src/asset/config.js'
 import { checkForConsoleErrors } from '../lib/checkForConsoleErrors.js'
 import { loadSessionData } from '../lib/loadSessionData.js'
 import { AssetType, selectCurrentAsset } from './lib.js'
@@ -333,17 +333,7 @@ test("should charge preset values for 'Parcel' configuration", async ({
 	const shadow = JSON.parse(toUtf8(payload as Uint8Array))
 
 	// TODO: use presetConfigs as object to match
-	expect(shadow.state.desired.cfg).toMatchObject({
-		act: false, // passive mode
-		mvres: 3600, // movement resolution
-		accath: 10, // Accelerometer activity threshold
-		accith: 5, // Accelerometer inactivity threshold
-		accito: 1200, // Accelerometer inactivity timeout
-		mvt: 21600, // Movement Timeout
-		actwt: 10,
-		gnsst: 10,
-		nod: [],
-	})
+	expect(shadow.state.desired.cfg).toMatchObject(presetConfigs.parcel.config)
 })
 
 test("should charge preset values for 'walking' configuration", async ({
@@ -372,15 +362,37 @@ test("should charge preset values for 'walking' configuration", async ({
 	const shadow = JSON.parse(toUtf8(payload as Uint8Array))
 
 	// TODO: use presetConfigs as object to match
-	expect(shadow.state.desired.cfg).toMatchObject({
-		act: false, // passive mode
-		mvres: 300, // movement resolution
-		accath: 10, // Accelerometer activity threshold
-		accith: 5, // Accelerometer inactivity threshold
-		accito: 60, // Accelerometer inactivity timeout
-		mvt: 3600, // Movement Timeout
-		actwt: 10,
-		gnsst: 10,
-		nod: [],
-	})
+	expect(shadow.state.desired.cfg).toMatchObject(presetConfigs.walking.config)
+})
+
+test('Should update the explainer configuration text in order of the field changes', async ({
+	page,
+}) => {
+	await page.click('header[role="button"]:has-text("Settings")')
+
+	// select preset config
+	await page.locator('text=Walking Config').click()
+
+	// check config explainer
+	await expect(page.locator('p[data-test="config-explainer"]')).toContainText(
+		'When in motion the tracker will send an update to the cloud every 5 minutes (300 s). When motion stops for more than 1 minute (60 s), an update will be sent to the cloud. If not in motion an update will be sent to the cloud every 1 hour (3600 s).',
+	)
+
+	// select preset config
+	await page.locator('text=Parcel Config').click()
+
+	// check config explainer
+	await expect(page.locator('p[data-test="config-explainer"]')).toContainText(
+		'When in motion the tracker will send an update to the cloud every 1 hour (3600 s). When motion stops for more than 20 minutes (1200 s), an update will be sent to the cloud. If not in motion an update will be sent to the cloud every 6 hours (21600 s).',
+	)
+
+	// fill with other info
+	await page.fill('#mvres', (1000).toString())
+	await page.fill('#accito', (120).toString())
+	await page.fill('#mvt', (450).toString())
+
+	// check config explainer
+	await expect(page.locator('p[data-test="config-explainer"]')).toContainText(
+		'When in motion the tracker will send an update to the cloud every 16 minutes 40 seconds (1000 s). When motion stops for more than 2 minutes (120 s), an update will be sent to the cloud. If not in motion an update will be sent to the cloud every 7 minutes 30 seconds (450 s).',
+	)
 })

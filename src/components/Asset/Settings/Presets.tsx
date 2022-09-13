@@ -1,52 +1,16 @@
 import type { Static } from '@sinclair/typebox'
 import type { AssetConfig } from 'asset/asset'
+import { presetConfigs } from 'asset/config.js'
 
-export const presetConfigs: Record<
-	string,
-	{
-		config: Static<typeof AssetConfig>
-		label: string
-		description: string
-	}
-> = {
-	parcel: {
-		config: {
-			act: false, // passive mode
-			mvres: 3600, // movement resolution
-			accath: 10, // Accelerometer activity threshold
-			accith: 5, // Accelerometer inactivity threshold
-			accito: 1200, // Accelerometer inactivity timeout
-			mvt: 21600, // Movement Timeout
-			actwt: 10,
-			gnsst: 10,
-			nod: [],
-		},
-		label: 'Parcel Config',
-		description: 'Used for tracking parcels.',
-	},
-	walking: {
-		config: {
-			act: false, // passive mode
-			mvres: 300, // movement resolution
-			accath: 10, // Accelerometer activity threshold
-			accith: 5, // Accelerometer inactivity threshold
-			accito: 60, // Accelerometer inactivity timeout
-			mvt: 3600, // Movement Timeout
-			actwt: 10,
-			gnsst: 10,
-			nod: [],
-		},
-		label: 'Walking Config',
-		description: 'When you want to track your hiking.',
-	},
-}
-
+// TODO: rename component because everything in the context is called 'Settings' instead of 'presets config'
 export const Presets = ({
 	setDesiredConfig,
 	currentDesiredConfig,
 }: {
-	setDesiredConfig: any
-	currentDesiredConfig: any
+	setDesiredConfig: React.Dispatch<
+		React.SetStateAction<Static<typeof AssetConfig>>
+	>
+	currentDesiredConfig: Static<typeof AssetConfig>
 }) => {
 	const presetConfig = (id: string) => {
 		const config =

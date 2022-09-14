@@ -12,6 +12,7 @@ import { OutdatedConfigValueIcon, UnknownIcon } from 'components/FeatherIcon'
 import { NoData } from 'components/NoData'
 import equal from 'fast-deep-equal'
 import { useAsset } from 'hooks/useAsset'
+import { useFocus } from 'hooks/useFocus'
 import { useEffect, useState } from 'react'
 import { validateWithJSONSchema } from 'utils/validateWithJSONSchema'
 
@@ -49,6 +50,25 @@ const SettingsUI = ({
 	currentDesiredConfig: Static<typeof AssetConfig>
 }) => {
 	const { update, twin } = useAsset()
+
+	const [mvresRef, setMvresRef] = useFocus()
+	const [accitoRef, setAccitoRef] = useFocus()
+	const [mvtRef, setMvtRef] = useFocus()
+
+	const inputReferences = {
+		mvres: {
+			value: mvresRef, //useFocus()[0],
+			setter: setMvresRef, // useFocus()[1]
+		},
+		accito: {
+			value: accitoRef,
+			setter: setAccitoRef,
+		},
+		mvt: {
+			value: mvtRef,
+			setter: setMvtRef,
+		},
+	}
 
 	const {
 		reported: { cfg: reportedConfig },
@@ -200,6 +220,7 @@ const SettingsUI = ({
 								maximum={MAX_INT32}
 								example={300}
 								errorMessage={formValidationErrors['mvres']}
+								focus={inputReferences.mvres.value}
 							/>
 							<NumberConfigSetting
 								label={'Movement Timeout'}
@@ -211,6 +232,7 @@ const SettingsUI = ({
 								onChange={updateConfigProperty('mvt')}
 								minimum={1}
 								maximum={MAX_INT32}
+								focus={inputReferences.mvt.value}
 							/>
 						</div>
 					</fieldset>
@@ -266,6 +288,7 @@ const SettingsUI = ({
 							reported={reportedConfig?.accito}
 							onChange={updateConfigProperty('accito', parseFloat)}
 							errorMessage={formValidationErrors['accito']}
+							focus={inputReferences.accito.value}
 						/>
 					</fieldset>
 					<fieldset data-intro={'This sets which Data Modules to sample.'}>
@@ -454,7 +477,10 @@ const SettingsUI = ({
 						</div>
 					</fieldset>
 				</div>
-				<SettingsExplainer settings={newDesiredConfig} />
+				<SettingsExplainer
+					settings={newDesiredConfig}
+					references={inputReferences}
+				/>
 
 			<footer className={styles.FooterWithFullWidthButton}>
 				<button

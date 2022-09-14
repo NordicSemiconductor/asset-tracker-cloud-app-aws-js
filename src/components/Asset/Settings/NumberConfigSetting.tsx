@@ -15,6 +15,7 @@ export const NumberConfigSetting = ({
 	minimum,
 	maximum,
 	errorMessage,
+	focus,
 }: {
 	label?: string
 	intro?: string
@@ -28,6 +29,7 @@ export const NumberConfigSetting = ({
 	minimum?: number
 	maximum?: number
 	errorMessage?: string
+	focus?: React.LegacyRef<HTMLInputElement>
 }) => {
 	const [input, updateInput] = useState(`${desired ?? reported}`)
 	const minValue = minimum ?? 0
@@ -82,7 +84,8 @@ export const NumberConfigSetting = ({
 					step={step}
 					min={minValue}
 					max={maxValue}
-					value={input} // desired
+					value={input}
+					ref={focus}
 					onChange={({ target: { value } }) => {
 						if (parseInt(value) < minValue) value = `${minValue}`
 						if (parseInt(value) > maxValue) value = `${maxValue}`

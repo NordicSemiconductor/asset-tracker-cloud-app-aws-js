@@ -374,16 +374,40 @@ test('Should update the explainer configuration text in order of the field chang
 	await page.locator('text=Walking Config').click()
 
 	// check config explainer
-	await expect(page.locator('p[data-test="config-explainer"]')).toContainText(
-		'When in motion the tracker will send an update to the cloud every 5 minutes (300 s). When motion stops for more than 1 minute (60 s), an update will be sent to the cloud. If not in motion an update will be sent to the cloud every 1 hour (3600 s).',
+	await expect(
+		page.locator('p[data-test="mvres-config-explainer"]'),
+	).toContainText(
+		'When in motion the tracker will send an update to the cloud every 5 minutes (300 seconds)',
+	)
+	await expect(
+		page.locator('p[data-test="accito-config-explainer"]'),
+	).toContainText(
+		'When motion stops for more than 1 minute (60 seconds), an update will be sent to the cloud.',
+	)
+	await expect(
+		page.locator('p[data-test="mvt-config-explainer"]'),
+	).toContainText(
+		'If not in motion an update will be sent to the cloud every 1 hour (3600 seconds)',
 	)
 
 	// select preset config
 	await page.locator('text=Parcel Config').click()
 
 	// check config explainer
-	await expect(page.locator('p[data-test="config-explainer"]')).toContainText(
-		'When in motion the tracker will send an update to the cloud every 1 hour (3600 s). When motion stops for more than 20 minutes (1200 s), an update will be sent to the cloud. If not in motion an update will be sent to the cloud every 6 hours (21600 s).',
+	await expect(
+		page.locator('p[data-test="mvres-config-explainer"]'),
+	).toContainText(
+		'When in motion the tracker will send an update to the cloud every 1 hour (3600 seconds)',
+	)
+	await expect(
+		page.locator('p[data-test="accito-config-explainer"]'),
+	).toContainText(
+		'When motion stops for more than 20 minutes (1200 seconds), an update will be sent to the cloud.',
+	)
+	await expect(
+		page.locator('p[data-test="mvt-config-explainer"]'),
+	).toContainText(
+		'If not in motion an update will be sent to the cloud every 6 hours (21600 seconds)',
 	)
 
 	// fill with other info
@@ -392,7 +416,19 @@ test('Should update the explainer configuration text in order of the field chang
 	await page.fill('#mvt', (450).toString())
 
 	// check config explainer
-	await expect(page.locator('p[data-test="config-explainer"]')).toContainText(
-		'When in motion the tracker will send an update to the cloud every 16 minutes 40 seconds (1000 s). When motion stops for more than 2 minutes (120 s), an update will be sent to the cloud. If not in motion an update will be sent to the cloud every 7 minutes 30 seconds (450 s).',
+	await expect(
+		page.locator('p[data-test="mvres-config-explainer"]'),
+	).toContainText(
+		'When in motion the tracker will send an update to the cloud every 16 minutes 40 seconds (1000 seconds)',
+	)
+	await expect(
+		page.locator('p[data-test="accito-config-explainer"]'),
+	).toContainText(
+		'When motion stops for more than 2 minutes (120 seconds), an update will be sent to the cloud.',
+	)
+	await expect(
+		page.locator('p[data-test="mvt-config-explainer"]'),
+	).toContainText(
+		'If not in motion an update will be sent to the cloud every 7 minutes 30 seconds (450 seconds)',
 	)
 })

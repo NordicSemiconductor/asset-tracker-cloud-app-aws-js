@@ -1,6 +1,5 @@
 import type { Static } from '@sinclair/typebox'
-import type { AssetConfig } from 'asset/asset'
-import { DataModules } from 'asset/asset'
+import { AssetConfig, DataModules } from 'asset/asset'
 import { defaultConfig } from 'asset/defaultConfig'
 import cx from 'classnames'
 import { NumberConfigSetting } from 'components/Asset/Settings/NumberConfigSetting'
@@ -11,6 +10,7 @@ import { NoData } from 'components/NoData'
 import equal from 'fast-deep-equal'
 import { useAsset } from 'hooks/useAsset'
 import { useEffect, useState } from 'react'
+import { validateWithJSONSchema } from 'utils/validateWithJSONSchema'
 
 const MAX_INT32 = 2147483647
 
@@ -74,6 +74,10 @@ const SettingsUI = ({
 		newDesiredConfig.act !== undefined
 			? newDesiredConfig.act === true
 			: reportedConfig?.act === true
+
+	const isNewDesiredConfigValid = !(
+		'errors' in validateWithJSONSchema(AssetConfig)(newDesiredConfig)
+	)
 
 	return (
 		<form className={styles.SettingsForm} id="asset-settings-form">
@@ -434,7 +438,7 @@ const SettingsUI = ({
 				<button
 					type="button"
 					className={'btn btn-primary'}
-					disabled={!hasChanges}
+					disabled={!hasChanges || !isNewDesiredConfigValid}
 					onClick={() => {
 						update({
 							cfg: newDesiredConfig,

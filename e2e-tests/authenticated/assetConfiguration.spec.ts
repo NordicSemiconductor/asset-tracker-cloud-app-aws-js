@@ -100,3 +100,38 @@ test('Update asset configuration', async ({ page }) => {
 		nod: [DataModules.GNSS, DataModules.NeigboringCellMeasurements],
 	})
 })
+
+test("Should check 'update' button to be disabled when form is fill with null values", async ({
+	page,
+}) => {
+	await page.click('header[role="button"]:has-text("Settings")')
+
+	// expect 'update' button to be disable be default
+	await expect(
+		page.locator('#asset-settings-form >> footer >> button'),
+	).toBeDisabled()
+
+	// update Active Wait Time with value
+	await page.fill('#actwt', (400).toString())
+
+	// expect 'update' button to be enable
+	await expect(
+		page.locator('#asset-settings-form >> footer >> button'),
+	).not.toBeDisabled()
+
+	// update Active Wait Time with wrong value
+	await page.fill('#actwt', '')
+
+	// expect update button to be disabled
+	await expect(
+		page.locator('#asset-settings-form >> footer >> button'),
+	).toBeDisabled()
+
+	// update Active Wait Time with correct value
+	await page.fill('#actwt', (400).toString())
+
+	// expect update to be enable
+	await expect(
+		page.locator('#asset-settings-form >> footer >> button'),
+	).not.toBeDisabled()
+})

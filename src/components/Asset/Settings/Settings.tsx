@@ -12,8 +12,7 @@ import { OutdatedConfigValueIcon, UnknownIcon } from 'components/FeatherIcon'
 import { NoData } from 'components/NoData'
 import equal from 'fast-deep-equal'
 import { useAsset } from 'hooks/useAsset'
-import { useFocus } from 'hooks/useFocus'
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { validateWithJSONSchema } from 'utils/validateWithJSONSchema'
 
 const MAX_INT32 = 2147483647
@@ -51,24 +50,9 @@ const SettingsUI = ({
 }) => {
 	const { update, twin } = useAsset()
 
-	const [mvresRef, setMvresRef] = useFocus()
-	const [accitoRef, setAccitoRef] = useFocus()
-	const [mvtRef, setMvtRef] = useFocus()
-
-	const inputReferences = {
-		mvres: {
-			value: mvresRef, //useFocus()[0],
-			setter: setMvresRef, // useFocus()[1]
-		},
-		accito: {
-			value: accitoRef,
-			setter: setAccitoRef,
-		},
-		mvt: {
-			value: mvtRef,
-			setter: setMvtRef,
-		},
-	}
+	const mvresRef = useRef<HTMLInputElement>(null)
+	const accitoRef = useRef<HTMLInputElement>(null)
+	const mvtRef = useRef<HTMLInputElement>(null)
 
 	const {
 		reported: { cfg: reportedConfig },
@@ -220,7 +204,7 @@ const SettingsUI = ({
 								maximum={MAX_INT32}
 								example={300}
 								errorMessage={formValidationErrors['mvres']}
-								focus={inputReferences.mvres.value}
+								ref={mvresRef}
 							/>
 							<NumberConfigSetting
 								label={'Movement Timeout'}
@@ -232,7 +216,7 @@ const SettingsUI = ({
 								onChange={updateConfigProperty('mvt')}
 								minimum={1}
 								maximum={MAX_INT32}
-								focus={inputReferences.mvt.value}
+								ref={mvtRef}
 							/>
 						</div>
 					</fieldset>
@@ -288,7 +272,7 @@ const SettingsUI = ({
 							reported={reportedConfig?.accito}
 							onChange={updateConfigProperty('accito', parseFloat)}
 							errorMessage={formValidationErrors['accito']}
-							focus={inputReferences.accito.value}
+							ref={accitoRef}
 						/>
 					</fieldset>
 					<fieldset data-intro={'This sets which Data Modules to sample.'}>
@@ -479,24 +463,28 @@ const SettingsUI = ({
 				</div>
 				<SettingsExplainer
 					settings={newDesiredConfig}
-					references={inputReferences}
+					mvresRef={mvresRef}
+					accitoRef={accitoRef}
+					mvtRef={mvtRef}
 				/>
 
-			<footer className={styles.FooterWithFullWidthButton}>
-				<button
-					type="button"
-					className={'btn btn-primary'}
-					disabled={!hasChanges || !areFormValuesValid|| !isNewDesiredConfigValid}
-					onClick={() => {
-						update({
-							cfg: newDesiredConfig,
-						}).catch(console.error)
-					}}
-				>
-					Update
-				</button>
-			</footer>
-		</form>
+				<footer className={styles.FooterWithFullWidthButton}>
+					<button
+						type="button"
+						className={'btn btn-primary'}
+						disabled={
+							!hasChanges || !areFormValuesValid || !isNewDesiredConfigValid
+						}
+						onClick={() => {
+							update({
+								cfg: newDesiredConfig,
+							}).catch(console.error)
+						}}
+					>
+						Update
+					</button>
+				</footer>
+			</form>
 		</>
 	)
 }

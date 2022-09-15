@@ -1,15 +1,19 @@
 import type { Static } from '@sinclair/typebox'
 import type { AssetConfig } from 'asset/asset'
-import { TextAsButton } from 'components/Asset/Settings/textAsButton'
+import { TextAsButton } from 'components/Asset/Settings/textAsButton.js'
 import formatDuration from 'date-fns/formatDuration'
 import intervalToDuration from 'date-fns/intervalToDuration'
 
 export const SettingsExplainer = ({
 	settings,
-	references,
+	mvresRef,
+	accitoRef,
+	mvtRef,
 }: {
 	settings: Static<typeof AssetConfig>
-	references: any // TODO: set proper type </typeof>
+	mvresRef: React.RefObject<HTMLInputElement>
+	accitoRef: React.RefObject<HTMLInputElement>
+	mvtRef: React.RefObject<HTMLInputElement>
 }) => {
 	const getTime = (value: number) => {
 		if (isNaN(value)) return '... click here to fill input'
@@ -22,38 +26,38 @@ export const SettingsExplainer = ({
 		<aside>
 			<h4>Configuration explainer</h4>
 			<div>
-				<p data-test="mvres-config-explainer">
+				<p id="mvres-config-explainer" data-test="mvres-config-explainer">
 					When in motion the tracker will send an update to the cloud every
 					<TextAsButton
 						role="button"
 						tabIndex={0}
-						onClick={references.mvres.setter}
-						onKeyPress={references.mvres.setter}
+						onClick={() => mvresRef.current?.focus()}
+						onKeyPress={() => mvresRef.current?.focus()}
 					>
 						{getTime(settings.mvres)}
 					</TextAsButton>
 				</p>
 
-				<p data-test="accito-config-explainer">
+				<p id="accito-config-explainer" data-test="accito-config-explainer">
 					When motion stops for more than
 					<TextAsButton
 						role="button"
 						tabIndex={0}
-						onClick={references.accito.setter}
-						onKeyPress={references.accito.setter}
+						onClick={() => accitoRef.current?.focus()}
+						onKeyPress={() => accitoRef.current?.focus()}
 					>
 						{getTime(settings.accito)}
 					</TextAsButton>
 					, an update will be sent to the cloud.
 				</p>
 
-				<p data-test="mvt-config-explainer">
+				<p id="mvt-config-explainer" data-test="mvt-config-explainer">
 					If not in motion an update will be sent to the cloud every
 					<TextAsButton
 						role="button"
 						tabIndex={0}
-						onClick={references.mvt.setter}
-						onKeyPress={references.mvt.setter}
+						onClick={() => mvtRef.current?.focus()}
+						onKeyPress={() => mvtRef.current?.focus()}
 					>
 						{getTime(settings.mvt)}
 					</TextAsButton>

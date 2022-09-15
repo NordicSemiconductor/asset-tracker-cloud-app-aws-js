@@ -204,7 +204,7 @@ const SettingsUI = ({
 								maximum={MAX_INT32}
 								example={300}
 								errorMessage={formValidationErrors['mvres']}
-								ref={mvresRef}
+								reference={mvresRef}
 							/>
 							<NumberConfigSetting
 								label={'Movement Timeout'}
@@ -216,7 +216,7 @@ const SettingsUI = ({
 								onChange={updateConfigProperty('mvt')}
 								minimum={1}
 								maximum={MAX_INT32}
-								ref={mvtRef}
+								reference={mvtRef}
 							/>
 						</div>
 					</fieldset>
@@ -272,7 +272,7 @@ const SettingsUI = ({
 							reported={reportedConfig?.accito}
 							onChange={updateConfigProperty('accito', parseFloat)}
 							errorMessage={formValidationErrors['accito']}
-							ref={accitoRef}
+							reference={accitoRef}
 						/>
 					</fieldset>
 					<fieldset data-intro={'This sets which Data Modules to sample.'}>

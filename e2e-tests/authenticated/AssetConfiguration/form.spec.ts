@@ -6,10 +6,10 @@ import { toUtf8 } from '@aws-sdk/util-utf8-browser'
 import { fromEnv } from '@nordicsemiconductor/from-env'
 import { expect, test } from '@playwright/test'
 import * as path from 'path'
-import { DataModules } from '../../src/asset/asset.js'
-import { checkForConsoleErrors } from '../lib/checkForConsoleErrors.js'
-import { loadSessionData } from '../lib/loadSessionData.js'
-import { AssetType, selectCurrentAsset } from './lib.js'
+import { DataModules } from '../../../src/asset/asset.js'
+import { checkForConsoleErrors } from '../../lib/checkForConsoleErrors.js'
+import { loadSessionData } from '../../lib/loadSessionData.js'
+import { AssetType, selectCurrentAsset } from '../lib.js'
 
 const { mqttEndpoint } = fromEnv({
 	mqttEndpoint: 'PUBLIC_MQTT_ENDPOINT',

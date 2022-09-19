@@ -1,16 +1,14 @@
-.text p:last-child  {
-    margin-bottom: 0;
-   
+.text p:last-child {
+  margin-bottom: 0;
 }
 
 .text p {
-    text-align: justify;
-
+  text-align: justify;
 }
 
 .link {
-    color: #0d6efd;
+  color: #0d6efd;
 }
 .link:hover {
-    color: #0a58ca;
+  color: #0a58ca;
 }

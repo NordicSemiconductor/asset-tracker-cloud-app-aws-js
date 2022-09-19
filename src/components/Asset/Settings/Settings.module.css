@@ -65,8 +65,29 @@
   padding: 0 0.25rem;
 }
 
-.FooterWithFullWidthButton {
+.FullWidth {
   grid-column: auto / span 2;
   display: flex;
   flex-direction: column;
+}
+
+.collap {
+  /*border: 1px solid #cccccc;*/
+  margin-top: 0.5rem;
+  margin-bottom: 1rem;
+  padding: 1rem;
+  background-color: #e9ecef;
+  background-color: #f5f5f5;
+  border-radius: 5px;
+}
+
+.presets{
+  border: 1px solid #cccccc;
+  padding: 1rem;
+  border-radius: 5px;
+  margin-top: 1rem;
+}
+
+.presetTittle{
+  font-size: 95%;
 }

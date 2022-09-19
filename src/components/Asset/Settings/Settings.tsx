@@ -8,7 +8,13 @@ import { OutDatedWarning } from 'components/Asset/Settings/OutDatedWarning'
 import { Presets } from 'components/Asset/Settings/Presets'
 import styles from 'components/Asset/Settings/Settings.module.css'
 import { SettingsExplainer } from 'components/Asset/Settings/SettingsExplainer'
-import { OutdatedConfigValueIcon, UnknownIcon } from 'components/FeatherIcon'
+import { Collapsable } from 'components/Collapsable'
+import {
+	IconWithText,
+	InfoIcon,
+	OutdatedConfigValueIcon,
+	UnknownIcon,
+} from 'components/FeatherIcon'
 import { NoData } from 'components/NoData'
 import equal from 'fast-deep-equal'
 import { useAsset } from 'hooks/useAsset'
@@ -458,14 +464,27 @@ const SettingsUI = ({
 					</div>
 				</fieldset>
 
-				<SettingsExplainer
-					settings={newDesiredConfig}
-					mvresRef={mvresRef}
-					accitoRef={accitoRef}
-					mvtRef={mvtRef}
-				/>
+				<div className={`${styles.FullWidth} ${styles.collap}`}>
+					<Collapsable
+						title={
+							<IconWithText>
+								<InfoIcon size={22} />
+								Configuration explainer
+							</IconWithText>
+						}
+						id="cat:information"
+						data-intro="This shows hard- and software, and connection information about the asset. Click to reveal the information."
+					>
+						<SettingsExplainer
+							settings={newDesiredConfig}
+							mvresRef={mvresRef}
+							accitoRef={accitoRef}
+							mvtRef={mvtRef}
+						/>
+					</Collapsable>
+				</div>
 
-				<footer className={styles.FooterWithFullWidthButton}>
+				<footer className={styles.FullWidth}>
 					<button
 						type="button"
 						className={'btn btn-primary'}

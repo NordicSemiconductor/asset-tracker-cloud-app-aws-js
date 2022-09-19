@@ -97,10 +97,18 @@ const SettingsUI = ({
 
 	return (
 		<>
-			<Presets
-				setDesiredConfig={setNewDesiredConfig}
-				currentDesiredConfig={currentDesiredConfig}
-			/>
+			{/*<legend>Pre-set configurations</legend>*/}
+			<div className={styles.presets}>
+				<h5 className={styles.presetTittle}>Pre-set configurations</h5>
+				<p>
+					sdjfhjksd sdfhj sdf sdfsldfsdfsdfs sdfsdfj sdf sdfhsdf dfgopdfgnsdf
+					sdfhgsdf sdfgndsfjsd sdfk
+				</p>
+				<Presets
+					setDesiredConfig={setNewDesiredConfig}
+					currentDesiredConfig={currentDesiredConfig}
+				/>
+			</div>
 			<form className={styles.SettingsForm} id="asset-settings-form">
 				<fieldset data-intro={'This sets the operation mode of the asset.'}>
 					<legend>Mode</legend>

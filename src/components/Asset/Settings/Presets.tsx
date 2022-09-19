@@ -1,6 +1,9 @@
 import type { Static } from '@sinclair/typebox'
 import type { AssetConfig } from 'asset/asset'
 import { presetConfigs } from 'asset/config.js'
+import styles from 'components/Asset/Settings/Presets.module.css'
+import { Collapsable } from 'components/Collapsable'
+import { IconWithText } from 'components/FeatherIcon'
 
 // TODO: rename component because everything in the context is called 'Settings' instead of 'presets config'
 export const Presets = ({
@@ -21,23 +24,39 @@ export const Presets = ({
 	}
 
 	return (
-		<>
-			<h4>Pre-set configurations</h4>
+		<div>
 			{
 				// TODO: test information is rendering properly
 				Object.keys(presetConfigs).map((element) => (
-					<button
-						key={`${element}-preset-config`}
-						id={`${element}-preset-config`}
-						data-test={`${element}-preset-config`}
-						type="button"
-						className={'btn btn-secondary'}
-						onClick={() => presetConfig(element)} // TODO: test the onClick
+					<Collapsable
+						title={
+							<IconWithText>
+								<h4>{presetConfigs[`${element}`].label}</h4>
+							</IconWithText>
+						}
+						id="cat:information"
+						data-intro="This shows hard- and software, and connection information about the asset. Click to reveal the information."
 					>
-						{presetConfigs[`${element}`].label}
-					</button>
+						<p className={styles.explanation}>
+							sdafhkasdfj hasdasdfhas dfnasdjkfhas dfnasdhjkfgh asdfjhasdfasdf
+							asdkfhas dfjasd fasdhgfasdf asdfhbasdfygsadfas dfhasdfasdfasdfh
+							xcahgsdf
+						</p>
+						<div className={styles.alignToRight}>
+							<button
+								key={`${element}-preset-config`}
+								id={`${element}-preset-config`}
+								data-test={`${element}-preset-config`}
+								type="button"
+								className="btn btn-primary"
+								onClick={() => presetConfig(element)} // TODO: test the onClick
+							>
+								Apply
+							</button>
+						</div>
+					</Collapsable>
 				))
 			}
-		</>
+		</div>
 	)
 }

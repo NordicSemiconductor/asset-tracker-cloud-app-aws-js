@@ -4,12 +4,14 @@ export const TextAsButton = ({
 	onClick,
 	onKeyPress,
 	children,
+	className,
 }: {
 	role: string
 	tabIndex: number
 	onClick: () => any
 	onKeyPress: () => any
 	children: React.ReactNode
+	className?: string
 }) => {
 	return (
 		<u
@@ -17,6 +19,7 @@ export const TextAsButton = ({
 			tabIndex={tabIndex}
 			onClick={() => onClick()}
 			onKeyPress={() => onKeyPress()}
+			className={className}
 		>
 			{children}
 		</u>

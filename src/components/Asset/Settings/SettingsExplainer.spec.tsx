@@ -38,7 +38,6 @@ describe('SettingsExplainer()', () => {
 			/>,
 		)
 
-		console.log(settingsExplainer)
 		const mvres = settingsExplainer.findOne('#mvres-config-explainer')
 		const mvresRefLink = mvres.findOne('TextAsButton')
 		const mvresText = `${mvres.children[0].type}${mvresRefLink.content()}`

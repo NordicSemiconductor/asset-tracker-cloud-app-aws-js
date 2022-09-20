@@ -25,7 +25,7 @@ export const Presets = ({
 
 	return (
 		<div className={styles.presets}>
-			<h5 className={styles.presetTittle}>Pre-set configurations</h5>
+			<h5 className={styles.title}>Pre-set configurations</h5>
 			<p>
 				sdjfhjksd sdfhj sdf sdfsldfsdfsdfs sdfsdfj sdf sdfhsdf dfgopdfgnsdf
 				sdfhgsdf sdfgndsfjsd sdfk

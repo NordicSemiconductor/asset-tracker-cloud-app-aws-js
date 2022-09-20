@@ -79,14 +79,14 @@
   border-radius: 5px;
 }
 
-#rowOne{
+#rowOne {
   grid-row: 1;
 }
 
-#rowTwo{
+#rowTwo {
   grid-row: 2;
 }
 
-#rowThree{
+#rowThree {
   grid-row: 3;
 }

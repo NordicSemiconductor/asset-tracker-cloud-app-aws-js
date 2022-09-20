@@ -33,6 +33,7 @@ test("should charge preset values for 'Parcel' configuration", async ({
 	await page.locator('[data-test="parcel-preset-config"]').click()
 
 	// TODO: check input fields to be updated
+	//await expect(page.locator('#mvres')).toHaveValue(`${defaultConfig.mvres}`)
 
 	// update config
 	await page.click('#asset-settings-form >> footer >> button')

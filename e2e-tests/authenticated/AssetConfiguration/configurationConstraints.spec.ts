@@ -6,7 +6,7 @@ import { toUtf8 } from '@aws-sdk/util-utf8-browser'
 import { fromEnv } from '@nordicsemiconductor/from-env'
 import { expect, test } from '@playwright/test'
 import * as path from 'path'
-import { DataModules } from '../../../src/asset/asset.js'
+import { defaultConfig } from '../../../src/asset/config.js'
 import { checkForConsoleErrors } from '../../lib/checkForConsoleErrors.js'
 import { loadSessionData } from '../../lib/loadSessionData.js'
 import { AssetType, selectCurrentAsset } from '../lib.js'
@@ -19,11 +19,6 @@ test.use({
 	storageState: path.join(process.cwd(), 'test-session', 'authenticated.json'),
 })
 
-const randFloat = (min: number, max: number) =>
-	min + (max - min) * Math.random()
-
-const randInt = (min: number, max: number) => Math.floor(randFloat(min, max))
-
 test.afterEach(checkForConsoleErrors)
 
 test.beforeEach(selectCurrentAsset())
@@ -33,24 +28,8 @@ test("'Movement resolution' must be higher than 'Accelerometer inactivity timeou
 }) => {
 	await page.click('header[role="button"]:has-text("Settings")')
 
-	const gnsst = randInt(0, 3600)
-	const mvt = randInt(0, 3600)
-	const mvres = 1 // Movement resolution
-	const accito = 1.2 // Accelerometer inactivity timeout
-	const actwt = randInt(0, 3600)
-	const accath = 10.5
-	const accith = 5
-
-	await page.click('#active-mode')
-	await page.fill('#gnsst', gnsst.toString())
+	const mvres = 1 // 'Movement resolution' lower than default 'Accelerometer inactivity timeout' value
 	await page.fill('#mvres', mvres.toString())
-	await page.fill('#mvt', mvt.toString())
-	await page.fill('#accath', accath.toString())
-	await page.fill('#accith', accith.toString())
-	await page.fill('#accito', accito.toString())
-	await page.fill('#actwt', actwt.toString())
-	await page.click('#gnss-disable')
-	await page.click('#ncellmeas-disable')
 
 	// expect 'update' button to be disable
 	await expect(
@@ -59,7 +38,7 @@ test("'Movement resolution' must be higher than 'Accelerometer inactivity timeou
 
 	// expect error messages
 	await expect(page.locator('#asset-settings-form')).toContainText(
-		`Value must be higher than accelerometer inactivity timeout value: ${accito}`,
+		`Value must be higher than accelerometer inactivity timeout value: ${defaultConfig.accito}`,
 	)
 	await expect(page.locator('#asset-settings-form')).toContainText(
 		`Value must be lower than Movement Resolution value: ${mvres}`,
@@ -71,7 +50,7 @@ test("'Movement resolution' must be higher than 'Accelerometer inactivity timeou
 
 	// expect error messages dissapear
 	await expect(page.locator('#asset-settings-form')).not.toContainText(
-		`Value must be higher than accelerometer inactivity timeout value: ${accito}`,
+		`Value must be higher than accelerometer inactivity timeout value: ${defaultConfig.accito}`,
 	)
 	await expect(page.locator('#asset-settings-form')).not.toContainText(
 		`Value must be lower than Movement Resolution value: ${updatedMvres}`,
@@ -101,15 +80,8 @@ test("'Movement resolution' must be higher than 'Accelerometer inactivity timeou
 	const shadow = JSON.parse(toUtf8(payload as Uint8Array))
 
 	expect(shadow.state.desired.cfg).toMatchObject({
-		act: true,
-		actwt,
+		...defaultConfig,
 		mvres: updatedMvres,
-		mvt,
-		gnsst,
-		accath,
-		accith,
-		accito,
-		nod: [DataModules.GNSS, DataModules.NeigboringCellMeasurements],
 	})
 })
 
@@ -118,24 +90,8 @@ test("'Accelerometer Activity Threshold' must be higher than 'Accelerometer inac
 }) => {
 	await page.click('header[role="button"]:has-text("Settings")')
 
-	const gnsst = randInt(0, 3600)
-	const mvt = randInt(0, 3600)
-	const mvres = 300
-	const accito = 1.7
-	const actwt = randInt(0, 3600)
-	const accath = 4.5 // Accelerometer Activity Threshold
-	const accith = 5 // Accelerometer inactivity threshold
-
-	await page.click('#active-mode')
-	await page.fill('#gnsst', gnsst.toString())
-	await page.fill('#mvres', mvres.toString())
-	await page.fill('#mvt', mvt.toString())
+	const accath = 4.5 // Accelerometer Activity Threshold lower than "Accelerometer inactivity threshold" default value
 	await page.fill('#accath', accath.toString())
-	await page.fill('#accith', accith.toString())
-	await page.fill('#accito', accito.toString())
-	await page.fill('#actwt', actwt.toString())
-	await page.click('#gnss-disable')
-	await page.click('#ncellmeas-disable')
 
 	// expect 'update' button to be disable
 	await expect(
@@ -144,7 +100,7 @@ test("'Accelerometer Activity Threshold' must be higher than 'Accelerometer inac
 
 	// expect error messages
 	await expect(page.locator('#asset-settings-form')).toContainText(
-		`Value must be higher than Accelerometer inactivity threshold value: ${accith}`,
+		`Value must be higher than Accelerometer inactivity threshold value: ${defaultConfig.accith}`,
 	)
 	await expect(page.locator('#asset-settings-form')).toContainText(
 		`Value must be lower than Accelerometer Activity Threshold value: ${accath}`,
@@ -156,7 +112,7 @@ test("'Accelerometer Activity Threshold' must be higher than 'Accelerometer inac
 
 	// expect error messages dissapear
 	await expect(page.locator('#asset-settings-form')).not.toContainText(
-		`Value must be higher than Accelerometer inactivity threshold value: ${accith}`,
+		`Value must be higher than Accelerometer inactivity threshold value: ${defaultConfig.accith}`,
 	)
 	await expect(page.locator('#asset-settings-form')).not.toContainText(
 		`Value must be lower than Accelerometer Activity Threshold value: ${updatedAccath}`,
@@ -186,14 +142,8 @@ test("'Accelerometer Activity Threshold' must be higher than 'Accelerometer inac
 	const shadow = JSON.parse(toUtf8(payload as Uint8Array))
 
 	expect(shadow.state.desired.cfg).toMatchObject({
-		act: true,
-		actwt,
-		mvres,
-		mvt,
-		gnsst,
+		...defaultConfig,
 		accath: updatedAccath,
-		accith,
-		accito,
-		nod: [DataModules.GNSS, DataModules.NeigboringCellMeasurements],
+		mvres: 100, // value updated from "'Movement resolution' must be higher than 'Accelerometer inactivity timeout' in order to submit configuration" test
 	})
 })

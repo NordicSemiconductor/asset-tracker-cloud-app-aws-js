@@ -89,3 +89,15 @@
 .presetTittle {
   font-size: 95%;
 }
+
+#rowOne{
+  grid-row: 1;
+}
+
+#rowTwo{
+  grid-row: 2;
+}
+
+#rowThree{
+  grid-row: 3;
+}

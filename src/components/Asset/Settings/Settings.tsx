@@ -97,18 +97,10 @@ const SettingsUI = ({
 
 	return (
 		<>
-			{/*<legend>Pre-set configurations</legend>*/}
-			<div className={styles.presets}>
-				<h5 className={styles.presetTittle}>Pre-set configurations</h5>
-				<p>
-					sdjfhjksd sdfhj sdf sdfsldfsdfsdfs sdfsdfj sdf sdfhsdf dfgopdfgnsdf
-					sdfhgsdf sdfgndsfjsd sdfk
-				</p>
-				<Presets
-					setDesiredConfig={setNewDesiredConfig}
-					currentDesiredConfig={currentDesiredConfig}
-				/>
-			</div>
+			<Presets
+				setDesiredConfig={setNewDesiredConfig}
+				currentDesiredConfig={currentDesiredConfig}
+			/>
 			<form className={styles.SettingsForm} id="asset-settings-form">
 				{/*Mode*/}
 				<fieldset

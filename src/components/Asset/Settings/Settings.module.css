@@ -79,17 +79,6 @@
   border-radius: 5px;
 }
 
-.presets {
-  border: 1px solid #cccccc;
-  padding: 1rem;
-  border-radius: 5px;
-  margin-top: 1rem;
-}
-
-.presetTittle {
-  font-size: 95%;
-}
-
 #rowOne{
   grid-row: 1;
 }

@@ -12,19 +12,19 @@ test.afterEach(checkForConsoleErrors)
 test.beforeEach(selectCurrentAsset())
 
 // Check the "movement resolution" explanation sentence
-const checkMvresExplainerSentence = (page: Page, value: string) =>
+const checkMvresExplainerSentence = async (page: Page, value: string) =>
 	expect(page.locator('p[data-test="mvres-config-explainer"]')).toContainText(
 		`When in motion the tracker will send an update to the cloud every ${value}`,
 	)
 
 // Check the "Accelerometer inactivity timeout" explanation sentence
-const checkAccitoExplainerSentence = (page: Page, value: string) =>
+const checkAccitoExplainerSentence = async (page: Page, value: string) =>
 	expect(page.locator('p[data-test="accito-config-explainer"]')).toContainText(
 		`When motion stops for more than ${value}, an update will be sent to the cloud.`,
 	)
 
 // Check the "movement timeout" explanation sentence
-const checkMvtExplainerSentence = (page: Page, value: string) =>
+const checkMvtExplainerSentence = async (page: Page, value: string) =>
 	expect(page.locator('p[data-test="mvt-config-explainer"]')).toContainText(
 		`If not in motion an update will be sent to the cloud every ${value}`,
 	)

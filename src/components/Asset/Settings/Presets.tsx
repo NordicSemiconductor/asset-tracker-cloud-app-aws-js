@@ -4,7 +4,6 @@ import { presetConfigs } from 'asset/config.js'
 import styles from 'components/Asset/Settings/Presets.module.css'
 import { Collapsable } from 'components/Collapsable.js'
 
-// TODO: rename component because everything in the context is called 'Settings' instead of 'presets config'
 export const Presets = ({
 	setDesiredConfig,
 	currentDesiredConfig,

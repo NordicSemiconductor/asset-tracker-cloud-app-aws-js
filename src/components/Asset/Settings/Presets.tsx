@@ -34,9 +34,7 @@ export const Presets = ({
 						data-intro="This shows hard- and software, and connection information about the asset. Click to reveal the information."
 					>
 						<p className={styles.explanation}>
-							sdafhkasdfj hasdasdfhas dfnasdjkfhas dfnasdhjkfgh asdfjhasdfasdf
-							asdkfhas dfjasd fasdhgfasdf asdfhbasdfygsadfas dfhasdfasdfasdfh
-							xcahgsdf
+							{presetConfigs[`${element}`].description}
 						</p>
 						<div className={styles.alignToRight}>
 							<button

@@ -43,9 +43,7 @@ describe('Presets()', () => {
 		expect(title).toEqual('Parcel Config')
 
 		const description = collapsable.findOne('p')
-		expect(description.content()).toEqual(
-			'sdafhkasdfj hasdasdfhas dfnasdjkfhas dfnasdhjkfgh asdfjhasdfasdf asdkfhas dfjasd fasdhgfasdf asdfhbasdfygsadfas dfhasdfasdfasdfh xcahgsdf',
-		)
+		expect(description.content()).toEqual('Used for tracking parcels.')
 
 		const button = collapsable.findOne('button')
 		button.props.onClick()
@@ -69,9 +67,7 @@ describe('Presets()', () => {
 		expect(title).toEqual('Walking Config')
 
 		const description = collapsable.findOne('p')
-		expect(description.content()).toEqual(
-			'sdafhkasdfj hasdasdfhas dfnasdjkfhas dfnasdhjkfgh asdfjhasdfasdf asdkfhas dfjasd fasdhgfasdf asdfhbasdfygsadfas dfhasdfasdfasdfh xcahgsdf',
-		)
+		expect(description.content()).toEqual('When you want to track your hiking.')
 
 		const button = collapsable.findOne('button')
 		button.props.onClick()

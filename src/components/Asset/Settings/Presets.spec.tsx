@@ -16,11 +16,11 @@ describe('Presets()', () => {
 				currentDesiredConfig={currentDesiredConfig}
 			/>,
 		)
+		const collapsable = presets.findOne('Collapsable')
+		const title = collapsable.props.title.props.children
+		expect(title[1]).toEqual('Preset asset configuration')
 
-		const title = presets.findOne('h5')
-		expect(title.content()).toEqual('Preset asset configuration')
-
-		const description = presets.findOne('#description')
+		const description = presets.findOne('#about')
 		expect(description.content()).toEqual(
 			'Recommended setting values for common use cases',
 		)
@@ -37,15 +37,15 @@ describe('Presets()', () => {
 			/>,
 		)
 
-		const collapsable = presets.findOne('#parcel')
+		const parcel = presets.findOne('#parcel-info')
 
-		const title = collapsable.props.title.props.children
-		expect(title).toEqual('Parcel Config')
+		const title = parcel.findOne('h5')
+		expect(title.content()).toEqual('Parcel')
 
-		const description = collapsable.findOne('p')
+		const description = parcel.findOne('p')
 		expect(description.content()).toEqual('Used for tracking parcels.')
 
-		const button = collapsable.findOne('button')
+		const button = presets.findOne('#parcel-preset-config')
 		button.props.onClick()
 		expect(setNewDesiredConfig).toHaveBeenCalledWith(currentDesiredConfig)
 	})
@@ -61,15 +61,17 @@ describe('Presets()', () => {
 			/>,
 		)
 
-		const collapsable = presets.findOne('#walking')
+		const parcel = presets.findOne('#walking-info')
 
-		const title = collapsable.props.title.props.children
-		expect(title).toEqual('Walking Config')
+		const title = parcel.findOne('h5')
+		expect(title.content()).toEqual('Walking')
 
-		const description = collapsable.findOne('p')
-		expect(description.content()).toEqual('When you want to track your hiking.')
+		const description = parcel.findOne('p')
+		expect(description.content()).toEqual(
+			'Ideal to track walking activities as hiking for example.',
+		)
 
-		const button = collapsable.findOne('button')
+		const button = presets.findOne('#walking-preset-config')
 		button.props.onClick()
 		expect(setNewDesiredConfig).toHaveBeenCalledWith(currentDesiredConfig)
 	})

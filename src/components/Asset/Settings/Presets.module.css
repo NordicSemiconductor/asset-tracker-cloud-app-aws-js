@@ -1,18 +1,33 @@
-.alignToRight {
-  text-align: right;
-}
-
-.explanation {
-  text-align: justify;
-}
-
-.presets {
-  border: 1px solid #cccccc;
-  padding: 1rem;
-  border-radius: 5px;
-  margin-top: 1rem;
-}
-
 .title {
   font-size: 95%;
+}
+
+.information {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  cursor: pointer;
+  animation: spin 4s linear infinite;
+}
+
+
+.preset + .preset {
+  margin-top: 1rem;
+  padding-top: 1rem;
+  border-top: 1px solid rgba(0, 0, 0, 0.125);
+}
+
+.FullWidth {
+  grid-column: auto / span 2;
+  display: flex;
+  flex-direction: column;
+}
+
+.collap {
+  margin-bottom: 1rem;
+  padding: 1rem;
+  background-color: #e9ecef;
+  background-color: #f5f5f5;
+  border-radius: 5px;
 }

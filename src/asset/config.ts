@@ -33,7 +33,7 @@ export const presetConfigs: Record<
 			gnsst: 10,
 			nod: [],
 		},
-		label: 'Parcel Config',
+		label: 'Parcel',
 		description: 'Used for tracking parcels.',
 	},
 	walking: {
@@ -48,7 +48,7 @@ export const presetConfigs: Record<
 			gnsst: 10,
 			nod: [],
 		},
-		label: 'Walking Config',
-		description: 'When you want to track your hiking.',
+		label: 'Walking',
+		description: 'Ideal to track walking activities as hiking for example.',
 	},
 }

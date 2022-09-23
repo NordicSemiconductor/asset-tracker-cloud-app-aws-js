@@ -45,7 +45,11 @@ test('Should update the explainer configuration text in order of the field chang
 	await checkMvtExplainerSentence(page, '1 hour (3600 seconds)')
 
 	// select "Walking" preset config
-	await page.locator('text=Walking Config').click()
+	// Open collapsible with presets
+	await page
+		.locator('[data-test="presets-collapsible"] header[role="button"]')
+		.click()
+	// select Walking preset
 	await page.locator('[data-test="walking-preset-config"]').click()
 
 	// check config explainer with "Walking" preset config values
@@ -53,8 +57,8 @@ test('Should update the explainer configuration text in order of the field chang
 	await checkAccitoExplainerSentence(page, '1 minute (60 seconds)')
 	await checkMvtExplainerSentence(page, '1 hour (3600 seconds)')
 
-	// select "Parcel" preset config
-	await page.locator('text=Parcel Config').click()
+	// 'Presets' collapsible is already open
+	// select Parcel preset
 	await page.locator('[data-test="parcel-preset-config"]').click()
 
 	// check config explainer with "Parcel" preset config values

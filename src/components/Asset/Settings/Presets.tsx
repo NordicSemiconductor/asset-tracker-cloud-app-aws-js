@@ -7,21 +7,12 @@ import { IconWithText, InfoIcon } from 'components/FeatherIcon.js'
 
 export const Presets = ({
 	setDesiredConfig,
-	currentDesiredConfig,
 }: {
 	setDesiredConfig: React.Dispatch<
 		React.SetStateAction<Static<typeof AssetConfig>>
 	>
 	currentDesiredConfig: Static<typeof AssetConfig>
 }) => {
-	const presetConfig = (id: string) => {
-		const config =
-			presetConfigs[`${id}`] !== undefined
-				? presetConfigs[`${id}`].config
-				: currentDesiredConfig
-		setDesiredConfig(config)
-	}
-
 	return (
 		<div className={`${styles.FullWidth} ${styles.collapse}`}>
 			<Collapsable
@@ -52,7 +43,9 @@ export const Presets = ({
 										data-test={`${element}-preset-config`}
 										type="button"
 										className="btn btn-primary"
-										onClick={() => presetConfig(element)}
+										onClick={() =>
+											setDesiredConfig(presetConfigs[`${element}`].config)
+										}
 									>
 										Apply
 									</button>

@@ -14,7 +14,7 @@ export const Presets = ({
 	currentDesiredConfig: Static<typeof AssetConfig>
 }) => {
 	return (
-		<div className={`${styles.FullWidth} ${styles.collapse}`}>
+		<div className={styles.wrapper}>
 			<Collapsable
 				title={
 					<IconWithText>

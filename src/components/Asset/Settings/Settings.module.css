@@ -71,10 +71,10 @@
   flex-direction: column;
 }
 
-.collapse {
+.FullWidthGrayBox {
+  composes: FullWidth;
   margin-bottom: 1rem;
   padding: 1rem;
-  background-color: #e9ecef;
   background-color: #f5f5f5;
   border-radius: 5px;
 }

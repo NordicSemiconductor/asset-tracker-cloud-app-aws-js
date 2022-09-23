@@ -95,13 +95,25 @@ const SettingsUI = ({
 		validateConfig(newDesiredConfig)
 	const areFormValuesValid = Object.keys(formValidationErrors).length === 0
 
+	/**
+	 * Use this state to track wether a preset was applied and use it to reload the form.
+	 */
+	const [presetApplied, setPresetApplied] = useState<number>(0)
+
 	return (
 		<>
 			<Presets
-				setDesiredConfig={setNewDesiredConfig}
+				setDesiredConfig={(cfg) => {
+					setPresetApplied(presetApplied + 1)
+					setNewDesiredConfig(cfg)
+				}}
 				currentDesiredConfig={currentDesiredConfig}
 			/>
-			<form className={styles.SettingsForm} id="asset-settings-form">
+			<form
+				className={styles.SettingsForm}
+				id="asset-settings-form"
+				key={`${presetApplied}`}
+			>
 				{/*Mode*/}
 				<fieldset
 					id={`${styles.rowOne}`}

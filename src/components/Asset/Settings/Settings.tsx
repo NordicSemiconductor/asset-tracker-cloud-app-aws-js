@@ -115,10 +115,7 @@ const SettingsUI = ({
 				key={`${presetApplied}`}
 			>
 				{/*Mode*/}
-				<fieldset
-					id={`${styles.rowOne}`}
-					data-intro={'This sets the operation mode of the asset.'}
-				>
+				<fieldset data-intro={'This sets the operation mode of the asset.'}>
 					<legend>Mode</legend>
 					<div className="input-group mb-2">
 						<div className="btn-group" role="group">
@@ -199,10 +196,7 @@ const SettingsUI = ({
 					/>
 				</fieldset>
 				{/*Passive Mode*/}
-				<fieldset
-					data-intro={'This configures the <em>passive</em> mode.'}
-					id={`${styles.rowTwo}`}
-				>
+				<fieldset data-intro={'This configures the <em>passive</em> mode.'}>
 					<legend>Passive Mode Settings</legend>
 					<div className={styles.SideBySide}>
 						<NumberConfigSetting
@@ -288,10 +282,7 @@ const SettingsUI = ({
 					/>
 				</fieldset>
 				{/*GNSS*/}
-				<fieldset
-					id={`${styles.rowThree}`}
-					data-intro={'How long to try to acquire a GNSS fix.'}
-				>
+				<fieldset data-intro={'How long to try to acquire a GNSS fix.'}>
 					<legend>GNSS Timeout</legend>
 					<NumberConfigSetting
 						id={'gnsst'}

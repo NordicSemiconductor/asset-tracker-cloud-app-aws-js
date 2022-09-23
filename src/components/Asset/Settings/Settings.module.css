@@ -79,14 +79,14 @@
   border-radius: 5px;
 }
 
-#rowOne {
+fieldset:nth-child(1) {
   grid-row: 1;
 }
 
-#rowTwo {
+fieldset:nth-child(3) {
   grid-row: 2;
 }
 
-#rowThree {
+fieldset:nth-child(7) {
   grid-row: 3;
 }

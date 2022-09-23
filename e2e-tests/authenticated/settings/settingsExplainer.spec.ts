@@ -44,7 +44,6 @@ test('Should update the explainer configuration text in order of the field chang
 	await checkAccitoExplainerSentence(page, '1 minute (60 seconds)')
 	await checkMvtExplainerSentence(page, '1 hour (3600 seconds)')
 
-	// select "Walking" preset config
 	// Open collapsible with presets
 	await page
 		.locator('[data-test="presets-collapsible"] header[role="button"]')

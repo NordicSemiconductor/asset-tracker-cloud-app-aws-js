@@ -23,13 +23,16 @@ test.afterEach(checkForConsoleErrors)
 
 test.beforeEach(selectCurrentAsset())
 
-test("should charge preset values for 'Parcel' configuration", async ({
+test("should change preset values for 'Parcel' configuration", async ({
 	page,
 }) => {
 	await page.click('header[role="button"]:has-text("Settings")')
 
-	// select preset config
-	await page.locator('text=Parcel Config').click()
+	// Open collapsible with presets
+	await page
+		.locator('[data-test="presets-collapsible"] header[role="button"]')
+		.click()
+	// select Parcel preset
 	await page.locator('[data-test="parcel-preset-config"]').click()
 
 	// TODO: check input fields to be updated
@@ -53,13 +56,17 @@ test("should charge preset values for 'Parcel' configuration", async ({
 	expect(shadow.state.desired.cfg).toMatchObject(presetConfigs.parcel.config)
 })
 
-test("should charge preset values for 'walking' configuration", async ({
+test("should change preset values for 'walking' configuration", async ({
 	page,
 }) => {
 	await page.click('header[role="button"]:has-text("Settings")')
 
-	// select preset config
-	await page.locator('text=Walking Config').click()
+	// Open collapsible with presets
+	await page
+		.locator('[data-test="presets-collapsible"] header[role="button"]')
+		.click()
+
+	// select Walking preset
 	await page.locator('[data-test="walking-preset-config"]').click()
 
 	// TODO: check input fields to be updated

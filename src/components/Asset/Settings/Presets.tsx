@@ -24,6 +24,7 @@ export const Presets = ({
 				}
 				id="cat:presets"
 				data-intro="This shows recommended settings values for asset configuration. Click to reveal the information."
+				data-test="presets-collapsible"
 			>
 				<div>
 					<p id="about">Recommended setting values for common use cases</p>

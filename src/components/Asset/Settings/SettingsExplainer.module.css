@@ -8,6 +8,7 @@
 
 .link {
   color: #0d6efd;
+  padding: 0;
 }
 .link:hover {
   color: #0a58ca;

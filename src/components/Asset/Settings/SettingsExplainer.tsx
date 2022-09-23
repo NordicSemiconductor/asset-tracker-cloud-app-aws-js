@@ -2,7 +2,6 @@ import type { Static } from '@sinclair/typebox'
 import type { AssetConfig } from 'asset/asset'
 import { explainDuration } from 'components/Asset/Settings/explainDuration.js'
 import styles from 'components/Asset/Settings/SettingsExplainer.module.css'
-import { TextAsButton } from 'components/Asset/Settings/textAsButton.js'
 
 export const SettingsExplainer = ({
 	settings,
@@ -25,7 +24,6 @@ export const SettingsExplainer = ({
 						tabIndex={0}
 						onClick={() => mvresRef.current?.focus()}
 						onKeyPress={() => mvresRef.current?.focus()}
-						className={styles.link}
 					>
 						{explainDuration(settings.mvres)}
 					</TextAsButton>
@@ -37,7 +35,6 @@ export const SettingsExplainer = ({
 						tabIndex={0}
 						onClick={() => accitoRef.current?.focus()}
 						onKeyPress={() => accitoRef.current?.focus()}
-						className={styles.link}
 					>
 						{explainDuration(settings.accito)}
 					</TextAsButton>
@@ -50,12 +47,38 @@ export const SettingsExplainer = ({
 						tabIndex={0}
 						onClick={() => mvtRef.current?.focus()}
 						onKeyPress={() => mvtRef.current?.focus()}
-						className={styles.link}
 					>
 						{explainDuration(settings.mvt)}
 					</TextAsButton>
 				</p>
 			</div>
 		</aside>
+	)
+}
+
+const TextAsButton = ({
+	role,
+	tabIndex,
+	onClick,
+	onKeyPress,
+	children,
+}: {
+	role: string
+	tabIndex: number
+	onClick: () => any
+	onKeyPress: () => any
+	children: React.ReactNode
+}) => {
+	return (
+		<button
+			role={role}
+			tabIndex={tabIndex}
+			onClick={() => onClick()}
+			onKeyPress={() => onKeyPress()}
+			className={'btn btn-link p-0'}
+			style={{ marginTop: '-3px' }}
+		>
+			{children}
+		</button>
 	)
 }

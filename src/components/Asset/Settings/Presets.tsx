@@ -23,7 +23,7 @@ export const Presets = ({
 	}
 
 	return (
-		<div className={`${styles.FullWidth} ${styles.collap}`}>
+		<div className={`${styles.FullWidth} ${styles.collapse}`}>
 			<Collapsable
 				title={
 					<IconWithText>

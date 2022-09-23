@@ -479,7 +479,7 @@ const SettingsUI = ({
 				</fieldset>
 
 				{/*Configuration explainer*/}
-				<div className={`${styles.FullWidth} ${styles.collap}`}>
+				<div className={`${styles.FullWidth} ${styles.collapse}`}>
 					<Collapsable
 						title={
 							<IconWithText>

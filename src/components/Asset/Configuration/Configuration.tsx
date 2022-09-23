@@ -3,11 +3,11 @@ import { AssetConfig, DataModules } from 'asset/asset'
 import { defaultConfig } from 'asset/config'
 import { validateConfig } from 'asset/validateConfig'
 import cx from 'classnames'
-import { NumberConfigSetting } from 'components/Asset/Settings/NumberConfigSetting'
-import { OutDatedWarning } from 'components/Asset/Settings/OutDatedWarning'
-import { Presets } from 'components/Asset/Settings/Presets'
-import styles from 'components/Asset/Settings/Settings.module.css'
-import { SettingsExplainer } from 'components/Asset/Settings/SettingsExplainer'
+import styles from 'components/Asset/Configuration/Configuration.module.css'
+import { ConfigurationExplainer } from 'components/Asset/Configuration/ConfigurationExplainer'
+import { NumberConfigSetting } from 'components/Asset/Configuration/NumberConfigSetting'
+import { OutDatedWarning } from 'components/Asset/Configuration/OutDatedWarning'
+import { Presets } from 'components/Asset/Configuration/Presets'
 import { Collapsable } from 'components/Collapsable'
 import {
 	IconWithText,
@@ -32,7 +32,7 @@ const buttonClass = (
 		[`btn-outline-${color}`]: outline,
 	})
 
-export const Settings = () => {
+export const Configuration = () => {
 	const { twin } = useAsset()
 
 	const [currentDesiredConfig, setCurrentDesiredConfig] =
@@ -46,10 +46,10 @@ export const Settings = () => {
 		})
 	}, [setCurrentDesiredConfig, twin])
 	if (currentDesiredConfig === undefined) return <NoData />
-	return <SettingsUI currentDesiredConfig={currentDesiredConfig} />
+	return <ConfigurationUI currentDesiredConfig={currentDesiredConfig} />
 }
 
-const SettingsUI = ({
+const ConfigurationUI = ({
 	currentDesiredConfig,
 }: {
 	currentDesiredConfig: Static<typeof AssetConfig>
@@ -110,11 +110,10 @@ const SettingsUI = ({
 				currentDesiredConfig={currentDesiredConfig}
 			/>
 			<form
-				className={styles.SettingsForm}
-				id="asset-settings-form"
+				className={styles.ConfigurationForm}
+				id="asset-configuration-form"
 				key={`${presetApplied}`}
 			>
-				{/*Mode*/}
 				<fieldset data-intro={'This sets the operation mode of the asset.'}>
 					<legend>Mode</legend>
 					<div className="input-group mb-2">
@@ -178,7 +177,6 @@ const SettingsUI = ({
 						</div>
 					</div>
 				</fieldset>
-				{/*Active Mode*/}
 				<fieldset data-intro={'This configures the <em>active</em> mode.'}>
 					<legend>Active Mode Settings</legend>
 					<NumberConfigSetting
@@ -195,7 +193,6 @@ const SettingsUI = ({
 						example={60}
 					/>
 				</fieldset>
-				{/*Passive Mode*/}
 				<fieldset data-intro={'This configures the <em>passive</em> mode.'}>
 					<legend>Passive Mode Settings</legend>
 					<div className={styles.SideBySide}>
@@ -228,7 +225,6 @@ const SettingsUI = ({
 						/>
 					</div>
 				</fieldset>
-				{/*Accelerometer Settings*/}
 				<fieldset data-intro={'This configures the <em>accelerometer</em>.'}>
 					<legend>Accelerometer Settings</legend>
 					<NumberConfigSetting
@@ -248,7 +244,7 @@ const SettingsUI = ({
 						errorMessage={formValidationErrors['accath']}
 					/>
 					<NumberConfigSetting
-						label={'Accelerometer inactivity threshold'}
+						label={'Accelerometer Inactivity Threshold'}
 						intro={
 							'Maximum absolute value for an accelerometer reading to be considered stillness. Should be lower than the activity threshold. Range: 0 to 78.4532 m/s².'
 						}
@@ -264,9 +260,9 @@ const SettingsUI = ({
 						errorMessage={formValidationErrors['accith']}
 					/>
 					<NumberConfigSetting
-						label={'Accelerometer inactivity timeout'}
+						label={'Accelerometer Inactivity Timeout'}
 						intro={
-							'Accelerometer inactivity timeout in s: Hysteresis timeout for stillness detection. Range: 0.08 to 5242.88 m/s².'
+							'Accelerometer Inactivity Timeout in s: Hysteresis timeout for stillness detection. Range: 0.08 to 5242.88 m/s².'
 						}
 						id={'accito'}
 						example={1.2}
@@ -281,7 +277,6 @@ const SettingsUI = ({
 						reference={accitoRef}
 					/>
 				</fieldset>
-				{/*GNSS*/}
 				<fieldset data-intro={'How long to try to acquire a GNSS fix.'}>
 					<legend>GNSS Timeout</legend>
 					<NumberConfigSetting
@@ -294,7 +289,6 @@ const SettingsUI = ({
 						maximum={MAX_INT32}
 					/>
 				</fieldset>
-				{/*Data Sampling*/}
 				<fieldset data-intro={'This sets which Data Modules to sample.'}>
 					<legend>Data Sampling</legend>
 					<div className="input-group mb-2">
@@ -480,20 +474,18 @@ const SettingsUI = ({
 						</div>
 					</div>
 				</fieldset>
-
-				{/*Configuration explainer*/}
 				<div className={styles.FullWidthGrayBox}>
 					<Collapsable
 						title={
 							<IconWithText>
 								<InfoIcon size={22} />
-								Configuration explainer
+								Configuration Explainer
 							</IconWithText>
 						}
-						id="cat:information"
-						data-intro="This shows hard- and software, and connection information about the asset. Click to reveal the information."
+						id="cat:configuration-explainer"
+						data-intro="This explains how the current asset configuration will affect the behavior of the asset."
 					>
-						<SettingsExplainer
+						<ConfigurationExplainer
 							settings={newDesiredConfig}
 							mvresRef={mvresRef}
 							accitoRef={accitoRef}
@@ -501,8 +493,6 @@ const SettingsUI = ({
 						/>
 					</Collapsable>
 				</div>
-
-				{/*Update*/}
 				<footer className={styles.FullWidth}>
 					<button
 						type="button"

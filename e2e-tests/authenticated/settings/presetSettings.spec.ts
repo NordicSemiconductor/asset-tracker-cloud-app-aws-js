@@ -23,10 +23,10 @@ test.afterEach(checkForConsoleErrors)
 
 test.beforeEach(selectCurrentAsset())
 
-test("should change preset values for 'Parcel' configuration", async ({
+test("should change preset values for 'Parcel tracking' configuration", async ({
 	page,
 }) => {
-	await page.click('header[role="button"]:has-text("Settings")')
+	await page.click('header[role="button"]:has-text("Configuration")')
 
 	// Open collapsible with presets
 	await page
@@ -39,7 +39,7 @@ test("should change preset values for 'Parcel' configuration", async ({
 	//await expect(page.locator('#mvres')).toHaveValue(`${defaultConfig.mvres}`)
 
 	// update config
-	await page.click('#asset-settings-form >> footer >> button')
+	await page.click('#asset-configuration-form >> footer >> button')
 
 	// Verify
 	const { thingName } = await loadSessionData(AssetType.Default)
@@ -59,7 +59,7 @@ test("should change preset values for 'Parcel' configuration", async ({
 test("should change preset values for 'walking' configuration", async ({
 	page,
 }) => {
-	await page.click('header[role="button"]:has-text("Settings")')
+	await page.click('header[role="button"]:has-text("Configuration")')
 
 	// Open collapsible with presets
 	await page
@@ -72,7 +72,7 @@ test("should change preset values for 'walking' configuration", async ({
 	// TODO: check input fields to be updated
 
 	// update config
-	await page.click('#asset-settings-form >> footer >> button')
+	await page.click('#asset-configuration-form >> footer >> button')
 
 	// Verify
 	const { thingName } = await loadSessionData(AssetType.Default)

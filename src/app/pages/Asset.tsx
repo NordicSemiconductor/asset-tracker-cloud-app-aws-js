@@ -1,21 +1,21 @@
 import { AssetInformation } from 'components/Asset/AssetInformation'
+import { Configuration } from 'components/Asset/Configuration/Configuration'
+import { HelpNote } from 'components/Asset/Configuration/HelpNote'
 import { DeleteAsset } from 'components/Asset/DeleteAsset'
 import { InfoHeader } from 'components/Asset/InfoHeader'
 import { Personalization } from 'components/Asset/Personalization'
-import { HelpNote } from 'components/Asset/Settings/HelpNote'
-import { Settings } from 'components/Asset/Settings/Settings'
 import { Collapsable } from 'components/Collapsable'
 import {
 	BatteryIcon,
 	ButtonIcon,
 	CellularIcon,
+	ConfigurationIcon,
 	DangerIcon,
 	FOTAIcon,
 	IconWithText,
 	ImpactsIcon,
 	InfoIcon,
 	NeighboringCellsIcon,
-	SettingsIcon,
 	ThermometerIcon,
 } from 'components/FeatherIcon'
 import { FOTA } from 'components/FOTA/FOTA'
@@ -109,11 +109,11 @@ export const Asset = () => {
 							<Collapsable
 								title={
 									<IconWithText>
-										<SettingsIcon size={22} />
-										Settings
+										<ConfigurationIcon size={22} />
+										Configuration
 									</IconWithText>
 								}
-								id="cat:settings"
+								id="cat:configuration"
 								data-intro="This allows to change the run-time configuration of the asset."
 							>
 								<h4>Personalization</h4>
@@ -124,7 +124,9 @@ export const Asset = () => {
 								<div data-intro="This allows you change the run-time configuration of the asset.">
 									<h4 className="mt-4 ">Asset configuration</h4>
 									<HelpNote />
-									<Settings key={`asset-${asset.id}-${twin?.version ?? 0}`} />
+									<Configuration
+										key={`asset-${asset.id}-${twin?.version ?? 0}`}
+									/>
 								</div>
 							</Collapsable>
 							<Collapsable

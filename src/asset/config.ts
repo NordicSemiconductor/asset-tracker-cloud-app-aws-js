@@ -8,8 +8,8 @@ export const defaultConfig: Static<typeof AssetConfig> = {
 	mvt: 3600, // (movement timeout) In passive mode: Send update at least this often (in seconds)
 	gnsst: 60, // GNSS timeout (in seconds): timeout for GNSS fix
 	accath: 10, // Accelerometer activity threshold in m/s²: Minimal absolute value for an accelerometer reading to be considered movement.
-	accith: 5, // Accelerometer inactivity threshold in m/s²: Maximum absolute value for an accelerometer reading to be considered stillness. Should be lower than the activity threshold.
-	accito: 60, // Accelerometer inactivity timeout in s: Hysteresis timeout for stillness detection.
+	accith: 5, // Accelerometer Inactivity Threshold in m/s²: Maximum absolute value for an accelerometer reading to be considered stillness. Should be lower than the activity threshold.
+	accito: 60, // Accelerometer Inactivity Timeout in s: Hysteresis timeout for stillness detection.
 	nod: [] as DataModules[],
 } as const
 
@@ -23,32 +23,28 @@ export const presetConfigs: Record<
 > = {
 	parcel: {
 		config: {
-			act: false, // passive mode
-			mvres: 3600, // movement resolution
-			accath: 10, // Accelerometer activity threshold
-			accith: 5, // Accelerometer inactivity threshold
-			accito: 1200, // Accelerometer inactivity timeout
-			mvt: 21600, // Movement Timeout
-			actwt: 10,
-			gnsst: 10,
-			nod: [],
+			...defaultConfig,
+			mvres: 3600,
+			accito: 1200,
+			mvt: 21600,
+			accath: 10,
+			accith: 5,
 		},
-		label: 'Parcel',
-		description: 'Used for tracking parcels.',
+		label: 'Parcel tracking',
+		description:
+			'Use this if you want to track parcels. It records location every hour when not moving and every 20 minutes when on the move. The accelerometer is configured for motion in vehicles.',
 	},
 	walking: {
 		config: {
-			act: false, // passive mode
-			mvres: 300, // movement resolution
-			accath: 10, // Accelerometer activity threshold
-			accith: 5, // Accelerometer inactivity threshold
-			accito: 60, // Accelerometer inactivity timeout
-			mvt: 3600, // Movement Timeout
-			actwt: 10,
-			gnsst: 10,
-			nod: [],
+			...defaultConfig,
+			mvres: 300,
+			accito: 60,
+			mvt: 3600,
+			accath: 3,
+			accith: 1,
 		},
 		label: 'Walking',
-		description: 'Ideal to track walking activities as hiking for example.',
+		description:
+			'Use this to track people activities like walking. It records location every hour when not moving and every 5 minutes when on the move. The accelerometer is configured for light motion, like walking.',
 	},
 }

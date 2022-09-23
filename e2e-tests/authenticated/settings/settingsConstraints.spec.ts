@@ -22,26 +22,26 @@ test.afterEach(checkForConsoleErrors)
 
 test.beforeEach(selectCurrentAsset())
 
-test("'Movement resolution' must be higher than 'Accelerometer inactivity timeout' in order to submit configuration", async ({
+test("'Movement resolution' must be higher than 'Accelerometer Inactivity Timeout' in order to submit configuration", async ({
 	page,
 }) => {
-	await page.click('header[role="button"]:has-text("Settings")')
+	await page.click('header[role="button"]:has-text("Configuration")')
 
-	const mvres = 1 // 'Movement resolution' lower than default 'Accelerometer inactivity timeout' value
+	const mvres = 1 // 'Movement resolution' lower than default 'Accelerometer Inactivity Timeout' value
 	await page.fill('#mvres', mvres.toString())
 
 	// expect 'update' button to be disable
 	await expect(
-		page.locator('#asset-settings-form >> footer >> button'),
+		page.locator('#asset-configuration-form >> footer >> button'),
 	).toBeDisabled()
 
 	// expect error messages
 	const accitoValue = await page.locator('#accito').inputValue()
-	await expect(page.locator('#asset-settings-form')).toContainText(
+	await expect(page.locator('#asset-configuration-form')).toContainText(
 		`Value must be higher than accelerometer inactivity timeout value: ${accitoValue}`,
 		// Value must be higher than accelerometer inactivity timeout value: 1.7
 	)
-	await expect(page.locator('#asset-settings-form')).toContainText(
+	await expect(page.locator('#asset-configuration-form')).toContainText(
 		`Value must be lower than Movement Resolution value: ${mvres}`,
 	)
 
@@ -50,21 +50,21 @@ test("'Movement resolution' must be higher than 'Accelerometer inactivity timeou
 	await page.fill('#mvres', updatedMvres.toString())
 
 	// expect error messages dissapear
-	await expect(page.locator('#asset-settings-form')).not.toContainText(
+	await expect(page.locator('#asset-configuration-form')).not.toContainText(
 		`Value must be higher than accelerometer inactivity timeout value: ${await page
 			.locator('#accito')
 			.inputValue()}`,
 	)
-	await expect(page.locator('#asset-settings-form')).not.toContainText(
+	await expect(page.locator('#asset-configuration-form')).not.toContainText(
 		`Value must be lower than Movement Resolution value: ${updatedMvres}`,
 	)
 
 	// expect 'update' button to be enable
 	await expect(
-		page.locator('#asset-settings-form >> footer >> button'),
+		page.locator('#asset-configuration-form >> footer >> button'),
 	).not.toBeDisabled()
 
-	await page.click('#asset-settings-form >> footer >> button')
+	await page.click('#asset-configuration-form >> footer >> button')
 
 	await page.screenshot({
 		path: `./test-session/asset-settings.png`,
@@ -85,49 +85,50 @@ test("'Movement resolution' must be higher than 'Accelerometer inactivity timeou
 	expect(shadow.state.desired.cfg.mvres).toEqual(updatedMvres)
 })
 
-test("'Accelerometer Activity Threshold' must be higher than 'Accelerometer inactivity threshold' in order to submit configuration", async ({
+test("'Accelerometer Activity Threshold' must be higher than 'Accelerometer Inactivity Threshold' in order to submit configuration", async ({
 	page,
 }) => {
-	await page.click('header[role="button"]:has-text("Settings")')
+	await page.click('header[role="button"]:has-text("Configuration")')
 
-	const accath = 4.5 // Accelerometer Activity Threshold lower than "Accelerometer inactivity threshold" default value
+	const accith = parseInt(await page.locator('#accith').inputValue(), 10)
+	const accath = accith - 1 // Accelerometer Activity Threshold lower than "Accelerometer Inactivity Threshold" default value
 	await page.fill('#accath', accath.toString())
 
 	// expect 'update' button to be disable
 	await expect(
-		page.locator('#asset-settings-form >> footer >> button'),
+		page.locator('#asset-configuration-form >> footer >> button'),
 	).toBeDisabled()
 
 	// expect error messages
-	await expect(page.locator('#asset-settings-form')).toContainText(
-		`Value must be higher than Accelerometer inactivity threshold value: ${await page
+	await expect(page.locator('#asset-configuration-form')).toContainText(
+		`Value must be higher than Accelerometer Inactivity Threshold value: ${await page
 			.locator('#accith')
 			.inputValue()}`,
 	)
-	await expect(page.locator('#asset-settings-form')).toContainText(
+	await expect(page.locator('#asset-configuration-form')).toContainText(
 		`Value must be lower than Accelerometer Activity Threshold value: ${accath}`,
 	)
 
 	// update accath
-	const updatedAccath = 10.5
+	const updatedAccath = accith + 1
 	await page.fill('#accath', updatedAccath.toString())
 
 	// expect error messages dissapear
-	await expect(page.locator('#asset-settings-form')).not.toContainText(
-		`Value must be higher than Accelerometer inactivity threshold value: ${await page
+	await expect(page.locator('#asset-configuration-form')).not.toContainText(
+		`Value must be higher than Accelerometer Inactivity Threshold value: ${await page
 			.locator('#accith')
 			.inputValue()}`,
 	)
-	await expect(page.locator('#asset-settings-form')).not.toContainText(
+	await expect(page.locator('#asset-configuration-form')).not.toContainText(
 		`Value must be lower than Accelerometer Activity Threshold value: ${updatedAccath}`,
 	)
 
 	// expect 'update' button to be enable
 	await expect(
-		page.locator('#asset-settings-form >> footer >> button'),
+		page.locator('#asset-configuration-form >> footer >> button'),
 	).not.toBeDisabled()
 
-	await page.click('#asset-settings-form >> footer >> button')
+	await page.click('#asset-configuration-form >> footer >> button')
 
 	await page.screenshot({
 		path: `./test-session/asset-settings.png`,

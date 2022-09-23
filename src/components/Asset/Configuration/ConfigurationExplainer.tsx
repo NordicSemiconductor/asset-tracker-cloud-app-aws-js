@@ -1,9 +1,9 @@
 import type { Static } from '@sinclair/typebox'
 import type { AssetConfig } from 'asset/asset'
-import { explainDuration } from 'components/Asset/Settings/explainDuration.js'
-import styles from 'components/Asset/Settings/SettingsExplainer.module.css'
+import styles from 'components/Asset/Configuration/ConfigurationExplainer.module.css'
+import { explainDuration } from 'components/Asset/Configuration/explainDuration.js'
 
-export const SettingsExplainer = ({
+export const ConfigurationExplainer = ({
 	settings,
 	mvresRef,
 	accitoRef,
@@ -27,6 +27,7 @@ export const SettingsExplainer = ({
 					>
 						{explainDuration(settings.mvres)}
 					</TextAsButton>
+					.
 				</p>
 				<p id="accito-config-explainer" data-test="accito-config-explainer">
 					{`When motion stops for more than `}
@@ -50,6 +51,7 @@ export const SettingsExplainer = ({
 					>
 						{explainDuration(settings.mvt)}
 					</TextAsButton>
+					.
 				</p>
 			</div>
 		</aside>

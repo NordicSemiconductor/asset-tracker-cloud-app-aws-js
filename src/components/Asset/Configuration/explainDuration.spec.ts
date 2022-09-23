@@ -1,4 +1,4 @@
-import { explainDuration } from 'components/Asset/Settings/explainDuration.js'
+import { explainDuration } from 'components/Asset/Configuration/explainDuration.js'
 
 describe('explainDuration', () => {
 	it.each([[300, '5 minutes (300 seconds)']])(

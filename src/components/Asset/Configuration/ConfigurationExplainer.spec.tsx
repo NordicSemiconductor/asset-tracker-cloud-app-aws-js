@@ -2,17 +2,17 @@
  * @jest-environment jsdom
  */
 import { defaultConfig } from 'asset/config.js'
-import { SettingsExplainer } from 'components/Asset/Settings/SettingsExplainer.js'
+import { ConfigurationExplainer } from 'components/Asset/Configuration/ConfigurationExplainer.js'
 import { isolateComponent } from 'isolate-react'
 
-describe('SettingsExplainer()', () => {
+describe('ConfigurationExplainer()', () => {
 	it('should display an explanation in text related to the config meaning', () => {
 		const mvresMockFocus = jest.fn()
 		const accitoMockFocus = jest.fn()
 		const mvtMockFocus = jest.fn()
 
 		const settingsExplainer = isolateComponent(
-			<SettingsExplainer
+			<ConfigurationExplainer
 				settings={defaultConfig}
 				mvresRef={
 					{

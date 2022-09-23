@@ -1,7 +1,7 @@
 import type { Static } from '@sinclair/typebox'
 import type { AssetConfig } from 'asset/asset'
 import { presetConfigs } from 'asset/config.js'
-import styles from 'components/Asset/Settings/Presets.module.css'
+import styles from 'components/Asset/Configuration/Presets.module.css'
 import { Collapsable } from 'components/Collapsable.js'
 import { IconWithText, InfoIcon } from 'components/FeatherIcon.js'
 
@@ -19,15 +19,19 @@ export const Presets = ({
 				title={
 					<IconWithText>
 						<InfoIcon size={22} />
-						Preset asset configuration
+						Configuration Presets
 					</IconWithText>
 				}
 				id="cat:presets"
-				data-intro="This shows recommended settings values for asset configuration. Click to reveal the information."
+				data-intro="This provides sensible presets for different scenarios."
 				data-test="presets-collapsible"
 			>
 				<div>
-					<p id="about">Recommended setting values for common use cases</p>
+					<p id="about">
+						Below are configuration presets that provide sensible defaults for
+						typical application scenarios. Click 'Apply' to apply these settings
+						to the asset.
+					</p>
 					<div>
 						{Object.keys(presetConfigs).map((element) => (
 							<section className={styles.preset} id={element} key={element}>
@@ -43,7 +47,7 @@ export const Presets = ({
 										id={`${element}-preset-config`} // action
 										data-test={`${element}-preset-config`}
 										type="button"
-										className="btn btn-primary"
+										className="btn btn-primary ms-2"
 										onClick={() =>
 											setDesiredConfig(presetConfigs[`${element}`].config)
 										}

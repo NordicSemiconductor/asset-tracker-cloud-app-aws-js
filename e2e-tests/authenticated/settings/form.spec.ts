@@ -24,7 +24,7 @@ test.afterEach(checkForConsoleErrors)
 test.beforeEach(selectCurrentAsset())
 
 test('Change asset name', async ({ page }) => {
-	await page.click('header[role="button"]:has-text("Settings")')
+	await page.click('header[role="button"]:has-text("Configuration")')
 	const { name } = await loadSessionData(AssetType.Default)
 	await page.fill('input[id="asset-name"]', `${name}-renamed`)
 	await page.click('form[id="personalization-form"] button:has-text("Update")')
@@ -35,7 +35,7 @@ test('Change asset name', async ({ page }) => {
 })
 
 test('Configuration note should exist', async ({ page }) => {
-	await page.click('header[role="button"]:has-text("Settings")')
+	await page.click('header[role="button"]:has-text("Configuration")')
 	const note = page.locator('#asset-configuration-help-note')
 	await expect(note).toBeVisible()
 	await page.click('#asset-configuration-help-note button[aria-label="Close"]')
@@ -48,17 +48,17 @@ const randFloat = (min: number, max: number) =>
 const randInt = (min: number, max: number) => Math.floor(randFloat(min, max))
 
 test('Update asset configuration', async ({ page }) => {
-	await page.click('header[role="button"]:has-text("Settings")')
+	await page.click('header[role="button"]:has-text("Configuration")')
 
 	const gnsst = randInt(0, 3600)
 	const mvt = randInt(0, 3600)
 	const mvres = 300
-	// Accelerometer inactivity timeout in s: Hysteresis timeout for stillness detection.
+	// Accelerometer Inactivity Timeout in s: Hysteresis timeout for stillness detection.
 	const accito = 1.7
 	const actwt = randInt(0, 3600)
 	// Accelerometer Activity Threshold in m/s²: Minimal absolute value for an accelerometer reading to be considered movement.
 	const accath = 10.5
-	// Accelerometer inactivity threshold in m/s²: Maximum absolute value for an accelerometer reading to be considered stillness. Should be lower than the activity threshold.
+	// Accelerometer Inactivity Threshold in m/s²: Maximum absolute value for an accelerometer reading to be considered stillness. Should be lower than the activity threshold.
 	const accith = 5
 
 	await page.click('#active-mode')
@@ -71,7 +71,7 @@ test('Update asset configuration', async ({ page }) => {
 	await page.fill('#actwt', actwt.toString())
 	await page.click('#gnss-disable')
 	await page.click('#ncellmeas-disable')
-	await page.click('#asset-settings-form >> footer >> button')
+	await page.click('#asset-configuration-form >> footer >> button')
 	await page.screenshot({
 		path: `./test-session/asset-settings.png`,
 	})
@@ -104,11 +104,11 @@ test('Update asset configuration', async ({ page }) => {
 test("Should check 'update' button to be disabled when form is fill with null values", async ({
 	page,
 }) => {
-	await page.click('header[role="button"]:has-text("Settings")')
+	await page.click('header[role="button"]:has-text("Configuration")')
 
 	// expect 'update' button to be disable be default
 	await expect(
-		page.locator('#asset-settings-form >> footer >> button'),
+		page.locator('#asset-configuration-form >> footer >> button'),
 	).toBeDisabled()
 
 	// update Active Wait Time with value
@@ -116,7 +116,7 @@ test("Should check 'update' button to be disabled when form is fill with null va
 
 	// expect 'update' button to be enable
 	await expect(
-		page.locator('#asset-settings-form >> footer >> button'),
+		page.locator('#asset-configuration-form >> footer >> button'),
 	).not.toBeDisabled()
 
 	// update Active Wait Time with wrong value
@@ -124,7 +124,7 @@ test("Should check 'update' button to be disabled when form is fill with null va
 
 	// expect update button to be disabled
 	await expect(
-		page.locator('#asset-settings-form >> footer >> button'),
+		page.locator('#asset-configuration-form >> footer >> button'),
 	).toBeDisabled()
 
 	// update Active Wait Time with correct value
@@ -132,6 +132,6 @@ test("Should check 'update' button to be disabled when form is fill with null va
 
 	// expect update to be enable
 	await expect(
-		page.locator('#asset-settings-form >> footer >> button'),
+		page.locator('#asset-configuration-form >> footer >> button'),
 	).not.toBeDisabled()
 })

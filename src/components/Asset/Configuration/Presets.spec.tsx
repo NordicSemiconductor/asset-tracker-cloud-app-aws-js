@@ -2,7 +2,7 @@
  * @jest-environment jsdom
  */
 import { defaultConfig, presetConfigs } from 'asset/config.js'
-import { Presets } from 'components/Asset/Settings/Presets.js'
+import { Presets } from 'components/Asset/Configuration/Presets.js'
 import { isolateComponent } from 'isolate-react'
 
 describe('Presets()', () => {
@@ -18,11 +18,11 @@ describe('Presets()', () => {
 		)
 		const collapsable = presets.findOne('Collapsable')
 		const title = collapsable.props.title.props.children
-		expect(title[1]).toEqual('Preset asset configuration')
+		expect(title[1]).toEqual('Configuration Presets')
 
 		const description = presets.findOne('#about')
 		expect(description.content()).toEqual(
-			'Recommended setting values for common use cases',
+			"Below are configuration presets that provide sensible defaults for typical application scenarios. Click 'Apply' to apply these settings to the asset.",
 		)
 	})
 
@@ -40,10 +40,12 @@ describe('Presets()', () => {
 		const parcel = presets.findOne('#parcel-info')
 
 		const title = parcel.findOne('h5')
-		expect(title.content()).toEqual('Parcel')
+		expect(title.content()).toEqual('Parcel tracking')
 
 		const description = parcel.findOne('p')
-		expect(description.content()).toEqual('Used for tracking parcels.')
+		expect(description.content()).toEqual(
+			'Use this if you want to track parcels. It records location every hour when not moving and every 20 minutes when on the move. The accelerometer is configured for motion in vehicles.',
+		)
 
 		const button = presets.findOne('#parcel-preset-config')
 		button.props.onClick()
@@ -68,7 +70,7 @@ describe('Presets()', () => {
 
 		const description = parcel.findOne('p')
 		expect(description.content()).toEqual(
-			'Ideal to track walking activities as hiking for example.',
+			'Use this to track people activities like walking. It records location every hour when not moving and every 5 minutes when on the move. The accelerometer is configured for light motion, like walking.',
 		)
 
 		const button = presets.findOne('#walking-preset-config')

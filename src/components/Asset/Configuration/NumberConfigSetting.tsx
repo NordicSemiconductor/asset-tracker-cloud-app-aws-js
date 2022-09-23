@@ -1,5 +1,5 @@
 import cx from 'classnames'
-import { OutDatedWarning } from 'components/Asset/Settings/OutDatedWarning'
+import { OutDatedWarning } from 'components/Asset/Configuration/OutDatedWarning'
 import { OutdatedConfigValueIcon, UnknownIcon } from 'components/FeatherIcon'
 import { useState } from 'react'
 

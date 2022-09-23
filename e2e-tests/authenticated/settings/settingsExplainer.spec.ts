@@ -4,7 +4,7 @@ import * as path from 'path'
 import { checkForConsoleErrors } from '../../lib/checkForConsoleErrors.js'
 import { selectCurrentAsset } from '../lib.js'
 
-// Copy from src/components/Asset/Settings/explainDuration.ts
+// Copy from src/components/Asset/Configuration/explainDuration.ts
 // TODO: re-use code from application
 export const explainDuration = (value: number): string => {
 	if (isNaN(value)) return '... click here to fill input'
@@ -35,7 +35,7 @@ const checkMvresExplainerSentence = async (page: Page, value: string) =>
 		`When in motion the tracker will send an update to the cloud every ${value}`,
 	)
 
-// Check the "Accelerometer inactivity timeout" explanation sentence
+// Check the "Accelerometer Inactivity Timeout" explanation sentence
 const checkAccitoExplainerSentence = async (page: Page, value: string) =>
 	expectTestSelectorToContain(
 		page,
@@ -54,11 +54,11 @@ const checkMvtExplainerSentence = async (page: Page, value: string) =>
 test('Should update the explainer configuration text in order of the field changes', async ({
 	page,
 }) => {
-	await page.click('header[role="button"]:has-text("Settings")')
+	await page.click('header[role="button"]:has-text("Configuration")')
 
 	// open Collapsable component
 	await page
-		.locator('header[role="button"]:has-text("Configuration explainer")')
+		.locator('header[role="button"]:has-text("Configuration Explainer")')
 		.click()
 
 	const mvresValue = parseInt(await page.locator('#mvres').inputValue(), 10)

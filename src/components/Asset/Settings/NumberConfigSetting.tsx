@@ -92,7 +92,9 @@ export const NumberConfigSetting = ({
 					}}
 				/>
 				<span className="input-group-text">{unit ?? 's'}</span>
-				<div className="invalid-feedback">{errorMessage}</div>
+				{errorMessage != null ? (
+					<div className="invalid-feedback">{errorMessage}</div>
+				) : null}
 			</div>
 		</div>
 	)

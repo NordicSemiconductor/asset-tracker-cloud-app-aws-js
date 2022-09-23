@@ -18,7 +18,6 @@ export const SettingsExplainer = ({
 	return (
 		<aside>
 			<div className={styles.text}>
-				{' '}
 				<p id="mvres-config-explainer" data-test="mvres-config-explainer">
 					{`When in motion the tracker will send an update to the cloud every `}
 					<TextAsButton

@@ -1,3 +1,4 @@
+import cx from 'classnames'
 import { OutDatedWarning } from 'components/Asset/Settings/OutDatedWarning'
 import { OutdatedConfigValueIcon, UnknownIcon } from 'components/FeatherIcon'
 import { useState } from 'react'
@@ -70,9 +71,10 @@ export const NumberConfigSetting = ({
 					)}
 				/>
 				<input
-					className={`form-control ${
-						errorMessage !== undefined ? 'text-danger is-invalid' : ' is-valid'
-					}`}
+					className={cx(`form-control`, {
+						'text-danger is-invalid': errorMessage,
+						'is-valid': errorMessage == null,
+					})}
 					type="number"
 					name={id}
 					id={id}

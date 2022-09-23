@@ -26,6 +26,7 @@ export const Personalization = ({ asset }: { asset: Asset }) => {
 					style={{ width: '100%' }}
 				>
 					<div className="flex-grow-1">
+						{/** TODO: chango to 'classNames' for consisten */}
 						<input
 							className={`form-control ${
 								hasChange ? (valid ? 'is-valid' : 'is-invalid') : ''

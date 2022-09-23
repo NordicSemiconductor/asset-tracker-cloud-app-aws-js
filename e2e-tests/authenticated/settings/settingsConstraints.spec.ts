@@ -6,7 +6,6 @@ import { toUtf8 } from '@aws-sdk/util-utf8-browser'
 import { fromEnv } from '@nordicsemiconductor/from-env'
 import { expect, test } from '@playwright/test'
 import * as path from 'path'
-import { defaultConfig } from '../../../src/asset/config.js'
 import { checkForConsoleErrors } from '../../lib/checkForConsoleErrors.js'
 import { loadSessionData } from '../../lib/loadSessionData.js'
 import { AssetType, selectCurrentAsset } from '../lib.js'
@@ -37,20 +36,24 @@ test("'Movement resolution' must be higher than 'Accelerometer inactivity timeou
 	).toBeDisabled()
 
 	// expect error messages
+	const accitoValue = await page.locator('#accito').inputValue()
 	await expect(page.locator('#asset-settings-form')).toContainText(
-		`Value must be higher than accelerometer inactivity timeout value: ${defaultConfig.accito}`,
+		`Value must be higher than accelerometer inactivity timeout value: ${accitoValue}`,
+		// Value must be higher than accelerometer inactivity timeout value: 1.7
 	)
 	await expect(page.locator('#asset-settings-form')).toContainText(
 		`Value must be lower than Movement Resolution value: ${mvres}`,
 	)
 
 	// update mvres
-	const updatedMvres = 100 // Movement resolution
+	const updatedMvres = parseInt(accitoValue, 10) + 100 // Movement resolution
 	await page.fill('#mvres', updatedMvres.toString())
 
 	// expect error messages dissapear
 	await expect(page.locator('#asset-settings-form')).not.toContainText(
-		`Value must be higher than accelerometer inactivity timeout value: ${defaultConfig.accito}`,
+		`Value must be higher than accelerometer inactivity timeout value: ${await page
+			.locator('#accito')
+			.inputValue()}`,
 	)
 	await expect(page.locator('#asset-settings-form')).not.toContainText(
 		`Value must be lower than Movement Resolution value: ${updatedMvres}`,
@@ -79,10 +82,7 @@ test("'Movement resolution' must be higher than 'Accelerometer inactivity timeou
 	expect(payload).not.toBeUndefined()
 	const shadow = JSON.parse(toUtf8(payload as Uint8Array))
 
-	expect(shadow.state.desired.cfg).toMatchObject({
-		...defaultConfig,
-		mvres: updatedMvres,
-	})
+	expect(shadow.state.desired.cfg.mvres).toEqual(updatedMvres)
 })
 
 test("'Accelerometer Activity Threshold' must be higher than 'Accelerometer inactivity threshold' in order to submit configuration", async ({
@@ -100,7 +100,9 @@ test("'Accelerometer Activity Threshold' must be higher than 'Accelerometer inac
 
 	// expect error messages
 	await expect(page.locator('#asset-settings-form')).toContainText(
-		`Value must be higher than Accelerometer inactivity threshold value: ${defaultConfig.accith}`,
+		`Value must be higher than Accelerometer inactivity threshold value: ${await page
+			.locator('#accith')
+			.inputValue()}`,
 	)
 	await expect(page.locator('#asset-settings-form')).toContainText(
 		`Value must be lower than Accelerometer Activity Threshold value: ${accath}`,
@@ -112,7 +114,9 @@ test("'Accelerometer Activity Threshold' must be higher than 'Accelerometer inac
 
 	// expect error messages dissapear
 	await expect(page.locator('#asset-settings-form')).not.toContainText(
-		`Value must be higher than Accelerometer inactivity threshold value: ${defaultConfig.accith}`,
+		`Value must be higher than Accelerometer inactivity threshold value: ${await page
+			.locator('#accith')
+			.inputValue()}`,
 	)
 	await expect(page.locator('#asset-settings-form')).not.toContainText(
 		`Value must be lower than Accelerometer Activity Threshold value: ${updatedAccath}`,
@@ -141,9 +145,5 @@ test("'Accelerometer Activity Threshold' must be higher than 'Accelerometer inac
 	expect(payload).not.toBeUndefined()
 	const shadow = JSON.parse(toUtf8(payload as Uint8Array))
 
-	expect(shadow.state.desired.cfg).toMatchObject({
-		...defaultConfig,
-		accath: updatedAccath,
-		mvres: 100, // value updated from "'Movement resolution' must be higher than 'Accelerometer inactivity timeout' in order to submit configuration" test
-	})
+	expect(shadow.state.desired.cfg.accath).toEqual(updatedAccath)
 })

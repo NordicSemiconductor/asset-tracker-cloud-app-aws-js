@@ -1,9 +1,8 @@
 import type { Static } from '@sinclair/typebox'
 import type { AssetConfig } from 'asset/asset'
+import { explainDuration } from 'components/Asset/Settings/explainDuration.js'
 import styles from 'components/Asset/Settings/SettingsExplainer.module.css'
 import { TextAsButton } from 'components/Asset/Settings/textAsButton.js'
-import formatDuration from 'date-fns/formatDuration'
-import intervalToDuration from 'date-fns/intervalToDuration'
 
 export const SettingsExplainer = ({
 	settings,
@@ -16,13 +15,6 @@ export const SettingsExplainer = ({
 	accitoRef: React.RefObject<HTMLInputElement>
 	mvtRef: React.RefObject<HTMLInputElement>
 }) => {
-	const getTime = (value: number) => {
-		if (isNaN(value)) return '... click here to fill input'
-		return `${formatDuration(
-			intervalToDuration({ start: 0, end: value * 1000 }),
-		)} (${value} seconds)`
-	}
-
 	return (
 		<aside>
 			<div className={styles.text}>
@@ -36,7 +28,7 @@ export const SettingsExplainer = ({
 						onKeyPress={() => mvresRef.current?.focus()}
 						className={styles.link}
 					>
-						{getTime(settings.mvres)}
+						{explainDuration(settings.mvres)}
 					</TextAsButton>
 				</p>
 				<p id="accito-config-explainer" data-test="accito-config-explainer">
@@ -48,7 +40,7 @@ export const SettingsExplainer = ({
 						onKeyPress={() => accitoRef.current?.focus()}
 						className={styles.link}
 					>
-						{getTime(settings.accito)}
+						{explainDuration(settings.accito)}
 					</TextAsButton>
 					, an update will be sent to the cloud.
 				</p>
@@ -61,7 +53,7 @@ export const SettingsExplainer = ({
 						onKeyPress={() => mvtRef.current?.focus()}
 						className={styles.link}
 					>
-						{getTime(settings.mvt)}
+						{explainDuration(settings.mvt)}
 					</TextAsButton>
 				</p>
 			</div>

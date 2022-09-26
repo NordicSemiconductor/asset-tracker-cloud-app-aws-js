@@ -29,8 +29,8 @@ export const Presets = ({
 				<div>
 					<p id="about">
 						Below are configuration presets that provide sensible defaults for
-						typical application scenarios. Click 'Apply' to apply these settings
-						to the asset.
+						typical application scenarios. Click 'Apply' to upload these
+						settings to the asset.
 					</p>
 					<div>
 						{Object.keys(presetConfigs).map((element) => (

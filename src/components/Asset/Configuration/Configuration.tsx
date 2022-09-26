@@ -103,9 +103,11 @@ const ConfigurationUI = ({
 	return (
 		<>
 			<Presets
-				setDesiredConfig={(cfg) => {
+				setDesiredConfig={(config: any) => {
 					setPresetApplied(presetApplied + 1)
-					setNewDesiredConfig(cfg)
+					setNewDesiredConfig(config)
+					// update form
+					update({ cfg: config }).catch(console.error)
 				}}
 				currentDesiredConfig={currentDesiredConfig}
 			/>

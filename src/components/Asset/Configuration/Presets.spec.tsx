@@ -22,7 +22,7 @@ describe('Presets()', () => {
 
 		const description = presets.findOne('#about')
 		expect(description.content()).toEqual(
-			"Below are configuration presets that provide sensible defaults for typical application scenarios. Click 'Apply' to apply these settings to the asset.",
+			"Below are configuration presets that provide sensible defaults for typical application scenarios. Click 'Apply' to upload these settings to the asset.",
 		)
 	})
 

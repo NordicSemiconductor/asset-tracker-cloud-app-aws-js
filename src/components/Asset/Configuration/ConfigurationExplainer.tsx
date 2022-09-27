@@ -5,55 +5,50 @@ import { explainDuration } from 'components/Asset/Configuration/explainDuration.
 
 export const ConfigurationExplainer = ({
 	settings,
-	mvresRef,
-	accitoRef,
-	mvtRef,
+	onMovementResolutionClicked,
+	onMovementTimeoutClicked,
+	onAccelerometerInactivityTimeoutClicked,
 }: {
 	settings: Static<typeof AssetConfig>
-	mvresRef: React.RefObject<HTMLInputElement>
-	accitoRef: React.RefObject<HTMLInputElement>
-	mvtRef: React.RefObject<HTMLInputElement>
+	onMovementResolutionClicked: () => unknown
+	onAccelerometerInactivityTimeoutClicked: () => unknown
+	onMovementTimeoutClicked: () => unknown
 }) => {
 	return (
-		<aside>
-			<div className={styles.text}>
-				<p id="mvres-config-explainer" data-test="mvres-config-explainer">
-					{`When in motion the tracker will send an update to the cloud every `}
-					<TextAsButton
-						role="button"
-						tabIndex={0}
-						onClick={() => mvresRef.current?.focus()}
-						onKeyPress={() => mvresRef.current?.focus()}
-					>
-						{explainDuration(settings.mvres)}
-					</TextAsButton>
-					.
-				</p>
-				<p id="accito-config-explainer" data-test="accito-config-explainer">
-					{`When motion stops for more than `}
-					<TextAsButton
-						role="button"
-						tabIndex={0}
-						onClick={() => accitoRef.current?.focus()}
-						onKeyPress={() => accitoRef.current?.focus()}
-					>
-						{explainDuration(settings.accito)}
-					</TextAsButton>
-					, an update will be sent to the cloud.
-				</p>
-				<p id="mvt-config-explainer" data-test="mvt-config-explainer">
-					{`If not in motion an update will be sent to the cloud every `}
-					<TextAsButton
-						role="button"
-						tabIndex={0}
-						onClick={() => mvtRef.current?.focus()}
-						onKeyPress={() => mvtRef.current?.focus()}
-					>
-						{explainDuration(settings.mvt)}
-					</TextAsButton>
-					.
-				</p>
-			</div>
+		<aside className={styles.text}>
+			<p data-test="mvres">
+				{`When in motion the tracker will send an update to the cloud every `}
+				<TextAsButton
+					role="button"
+					tabIndex={0}
+					onClick={onMovementResolutionClicked}
+				>
+					{explainDuration(settings.mvres)}
+				</TextAsButton>
+				.
+			</p>
+			<p data-test="accito">
+				{`When motion stops for more than `}
+				<TextAsButton
+					role="button"
+					tabIndex={0}
+					onClick={onAccelerometerInactivityTimeoutClicked}
+				>
+					{explainDuration(settings.accito)}
+				</TextAsButton>
+				, an update will be sent to the cloud.
+			</p>
+			<p data-test="mvt">
+				{`If not in motion an update will be sent to the cloud every `}
+				<TextAsButton
+					role="button"
+					tabIndex={0}
+					onClick={onMovementTimeoutClicked}
+				>
+					{explainDuration(settings.mvt)}
+				</TextAsButton>
+				.
+			</p>
 		</aside>
 	)
 }
@@ -62,13 +57,11 @@ const TextAsButton = ({
 	role,
 	tabIndex,
 	onClick,
-	onKeyPress,
 	children,
 }: {
 	role: string
 	tabIndex: number
 	onClick: () => any
-	onKeyPress: () => any
 	children: React.ReactNode
 }) => {
 	return (
@@ -76,7 +69,6 @@ const TextAsButton = ({
 			role={role}
 			tabIndex={tabIndex}
 			onClick={() => onClick()}
-			onKeyPress={() => onKeyPress()}
 			className={'btn btn-link p-0'}
 			style={{ marginTop: '-3px' }}
 		>

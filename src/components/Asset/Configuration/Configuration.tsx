@@ -489,9 +489,15 @@ const ConfigurationUI = ({
 					>
 						<ConfigurationExplainer
 							settings={newDesiredConfig}
-							mvresRef={mvresRef}
-							accitoRef={accitoRef}
-							mvtRef={mvtRef}
+							onMovementResolutionClicked={() => {
+								mvresRef.current?.focus()
+							}}
+							onAccelerometerInactivityTimeoutClicked={() => {
+								accitoRef.current?.focus()
+							}}
+							onMovementTimeoutClicked={() => {
+								mvtRef.current?.focus()
+							}}
 						/>
 					</Collapsable>
 				</div>

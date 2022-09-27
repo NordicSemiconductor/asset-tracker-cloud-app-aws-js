@@ -7,64 +7,43 @@ import { isolateComponent } from 'isolate-react'
 
 describe('ConfigurationExplainer()', () => {
 	it('should display an explanation in text related to the config meaning', () => {
-		const mvresMockFocus = jest.fn()
-		const accitoMockFocus = jest.fn()
-		const mvtMockFocus = jest.fn()
+		const movementResClicked = jest.fn()
+		const accelerometerInactivityClicked = jest.fn()
+		const movementTimeoutClicked = jest.fn()
 
-		const settingsExplainer = isolateComponent(
+		const isolated = isolateComponent(
 			<ConfigurationExplainer
 				settings={defaultConfig}
-				mvresRef={
-					{
-						current: {
-							focus: mvresMockFocus,
-						},
-					} as any
-				}
-				accitoRef={
-					{
-						current: {
-							focus: accitoMockFocus,
-						},
-					} as any
-				}
-				mvtRef={
-					{
-						current: {
-							focus: mvtMockFocus,
-						},
-					} as any
-				}
+				onMovementResolutionClicked={movementResClicked}
+				onAccelerometerInactivityTimeoutClicked={accelerometerInactivityClicked}
+				onMovementTimeoutClicked={movementTimeoutClicked}
 			/>,
 		)
+		isolated.inline('*')
 
-		const mvres = settingsExplainer.findOne('#mvres-config-explainer')
-		const mvresRefLink = mvres.findOne('TextAsButton')
-		const mvresText = `${mvres.children[0].type}${mvresRefLink.content()}`
-		expect(mvresText).toContain(
-			'When in motion the tracker will send an update to the cloud every 5 minutes (300 seconds)',
+		const movementResolutionButton = isolated
+			.findOne('[data-test=mvres]')
+			.findOne('button')
+		expect(movementResolutionButton.content()).toContain(
+			'5 minutes (300 seconds)',
 		)
-		mvresRefLink.props.onClick()
-		expect(mvresMockFocus).toHaveBeenCalled()
+		movementResolutionButton.props.onClick()
+		expect(movementResClicked).toHaveBeenCalled()
 
-		const accito = settingsExplainer.findOne('#accito-config-explainer')
-		const accitoRefLink = accito.findOne('TextAsButton')
-		const accitoText = `${accito.children[0].type}${accitoRefLink.content()}${
-			accito.children[2].type
-		}`
-		expect(accitoText).toContain(
-			'When motion stops for more than 1 minute (60 seconds), an update will be sent to the cloud',
+		const accellerometrInactivityButton = isolated
+			.findOne('[data-test=accito]')
+			.findOne('button')
+		expect(accellerometrInactivityButton.content()).toContain(
+			'1 minute (60 seconds)',
 		)
-		accitoRefLink.props.onClick()
-		expect(mvresMockFocus).toHaveBeenCalled()
+		accellerometrInactivityButton.props.onClick()
+		expect(movementResClicked).toHaveBeenCalled()
 
-		const mvt = settingsExplainer.findOne('#mvt-config-explainer')
-		const mvtRefLink = mvt.findOne('TextAsButton')
-		const mvtText = `${mvt.children[0].type}${mvtRefLink.content()}`
-		expect(mvtText).toContain(
-			'If not in motion an update will be sent to the cloud every 1 hour (3600 seconds)',
-		)
-		mvtRefLink.props.onClick()
-		expect(mvresMockFocus).toHaveBeenCalled()
+		const movementTimeoutButton = isolated
+			.findOne('[data-test=mvt]')
+			.findOne('button')
+		expect(movementTimeoutButton.content()).toContain('1 hour (3600 seconds)')
+		movementTimeoutButton.props.onClick()
+		expect(movementResClicked).toHaveBeenCalled()
 	})
 })

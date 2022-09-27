@@ -3,6 +3,5 @@ e2e-tests
 node_modules
 build/
 test-session/
-e2e-tests-out/
 .swc/
 setup-jest.js

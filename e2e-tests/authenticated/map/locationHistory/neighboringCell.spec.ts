@@ -27,7 +27,7 @@ test('Map with historical neighboring cell asset location should be visible', as
 		follow: false,
 	})
 
-	await zoom(page, -4)
+	await zoom(page, -3)
 
 	await verifyMapMarker(page, AssetType.NoGNSS)
 

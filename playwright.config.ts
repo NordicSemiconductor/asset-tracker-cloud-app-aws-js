@@ -1,10 +1,10 @@
-import { devices, PlaywrightTestConfig } from '@playwright/test'
-import * as path from 'path'
-
+import type { PlaywrightTestConfig } from '@playwright/test'
+import { devices } from '@playwright/test'
+import path from 'path'
 const isCI = process.env.CI !== undefined
 
 const config: PlaywrightTestConfig = {
-	testDir: path.join(__dirname, 'e2e-tests'),
+	testDir: path.join(process.cwd(), 'e2e-tests'),
 	forbidOnly: isCI,
 	retries: isCI ? 2 : 0,
 	use: {

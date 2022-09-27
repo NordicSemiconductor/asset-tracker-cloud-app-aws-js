@@ -90,6 +90,10 @@ You can then run the tests using
 
     npm run test:e2e
 
+### Running individual tests
+
+    npx playwright test authenticated/map/locationHistory/gnss.spec.ts
+
 ### Playwright Inspector
 
 For developing tests it is helpful to run the
@@ -104,7 +108,7 @@ You can enabled the inspector during the tests by running
 [This workflow](./.github/workflows/test-and-release.yaml) runs the end-to-end
 tests for every commit. For this to work a running instance of
 [nRF Asset Tracker for AWS](https://github.com/NordicSemiconductor/asset-tracker-cloud-aws-js)
-is needed. The tests will be run agains this instance. Typically it will be the
+is needed. The tests will be run against this instance. Typically it will be the
 production instance, to ensure that the web application works with the current
 production setup.
 

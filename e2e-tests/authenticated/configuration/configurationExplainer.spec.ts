@@ -1,4 +1,5 @@
-import { expect, Page, test } from '@playwright/test'
+import type { Page } from '@playwright/test'
+import { expect, test } from '@playwright/test'
 import { formatDuration, intervalToDuration } from 'date-fns'
 import * as path from 'path'
 import { checkForConsoleErrors } from '../../lib/checkForConsoleErrors.js'

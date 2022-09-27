@@ -1,4 +1,4 @@
-import { ReportedState } from 'asset/asset.js'
+import type { ReportedState } from '../../src/asset/asset.js'
 import { defaultConfig } from '../../src/asset/config.js'
 
 const now = Date.now()

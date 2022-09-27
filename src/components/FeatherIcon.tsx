@@ -466,6 +466,10 @@ export const ImpactsIcon = (options?: TypedIconOptions) => (
 	<FeatherIcon {...options} title="impacts" type="alert-triangle" />
 )
 
+export const PresetsIcon = (options?: TypedIconOptions) => (
+	<FeatherIcon {...options} title="presets" type="sliders" />
+)
+
 export const QueuedAtIcon = CloudUploadIcon
 
 export const LoadingIcon = (options?: TypedIconOptions) => (

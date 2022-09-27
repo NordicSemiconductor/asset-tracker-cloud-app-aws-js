@@ -4,18 +4,18 @@ import styles from 'components/Asset/Configuration/ConfigurationExplainer.module
 import { explainDuration } from 'components/Asset/Configuration/explainDuration.js'
 
 export const ConfigurationExplainer = ({
-	settings,
+	configuration,
 	onMovementResolutionClicked,
 	onMovementTimeoutClicked,
 	onAccelerometerInactivityTimeoutClicked,
 }: {
-	settings: Static<typeof AssetConfig>
+	configuration: Static<typeof AssetConfig>
 	onMovementResolutionClicked: () => unknown
 	onAccelerometerInactivityTimeoutClicked: () => unknown
 	onMovementTimeoutClicked: () => unknown
 }) => {
 	return (
-		<aside className={styles.text}>
+		<aside className={styles.text} data-test="configuration-explainer">
 			<p data-test="mvres">
 				{`When in motion the tracker will send an update to the cloud every `}
 				<TextAsButton
@@ -23,7 +23,7 @@ export const ConfigurationExplainer = ({
 					tabIndex={0}
 					onClick={onMovementResolutionClicked}
 				>
-					{explainDuration(settings.mvres)}
+					{explainDuration(configuration.mvres)}
 				</TextAsButton>
 				.
 			</p>
@@ -34,7 +34,7 @@ export const ConfigurationExplainer = ({
 					tabIndex={0}
 					onClick={onAccelerometerInactivityTimeoutClicked}
 				>
-					{explainDuration(settings.accito)}
+					{explainDuration(configuration.accito)}
 				</TextAsButton>
 				, an update will be sent to the cloud.
 			</p>
@@ -45,7 +45,7 @@ export const ConfigurationExplainer = ({
 					tabIndex={0}
 					onClick={onMovementTimeoutClicked}
 				>
-					{explainDuration(settings.mvt)}
+					{explainDuration(configuration.mvt)}
 				</TextAsButton>
 				.
 			</p>

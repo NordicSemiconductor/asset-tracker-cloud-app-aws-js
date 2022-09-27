@@ -5,7 +5,7 @@ import { defaultConfig } from 'asset/config.js'
 import { ConfigurationExplainer } from 'components/Asset/Configuration/ConfigurationExplainer.js'
 import { isolateComponent } from 'isolate-react'
 
-describe('ConfigurationExplainer()', () => {
+describe('<ConfigurationExplainer/>', () => {
 	it('should display an explanation in text related to the config meaning', () => {
 		const movementResClicked = jest.fn()
 		const accelerometerInactivityClicked = jest.fn()
@@ -13,7 +13,7 @@ describe('ConfigurationExplainer()', () => {
 
 		const isolated = isolateComponent(
 			<ConfigurationExplainer
-				settings={defaultConfig}
+				configuration={defaultConfig}
 				onMovementResolutionClicked={movementResClicked}
 				onAccelerometerInactivityTimeoutClicked={accelerometerInactivityClicked}
 				onMovementTimeoutClicked={movementTimeoutClicked}

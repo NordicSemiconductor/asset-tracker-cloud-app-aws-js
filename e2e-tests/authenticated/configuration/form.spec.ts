@@ -135,3 +135,45 @@ test("Should check 'update' button to be disabled when form is fill with null va
 		page.locator('#asset-configuration-form >> footer >> button'),
 	).not.toBeDisabled()
 })
+
+test('clicking the link in the configuration explainer for Accelerometer Inactivity Timeout the respective configuration input field should be focused', async ({
+	page,
+}) => {
+	await page.click('header[role="button"]:has-text("Configuration")')
+	await page
+		.locator('header[role="button"]:has-text("Configuration Explainer")')
+		.click()
+
+	await page.click(
+		'[data-test="configuration-explainer"] >> [data-test="accito"] >> button',
+	)
+	await expect(page.locator('#accito')).toBeFocused()
+})
+
+test('clicking the link in the configuration explainer for Movement Resolution the respective configuration input field should be focused', async ({
+	page,
+}) => {
+	await page.click('header[role="button"]:has-text("Configuration")')
+	await page
+		.locator('header[role="button"]:has-text("Configuration Explainer")')
+		.click()
+
+	await page.click(
+		'[data-test="configuration-explainer"] >> [data-test="mvres"] >> button',
+	)
+	await expect(page.locator('#mvres')).toBeFocused()
+})
+
+test('clicking the link in the configuration explainer for Movement Timeout the respective configuration input field should be focused', async ({
+	page,
+}) => {
+	await page.click('header[role="button"]:has-text("Configuration")')
+	await page
+		.locator('header[role="button"]:has-text("Configuration Explainer")')
+		.click()
+
+	await page.click(
+		'[data-test="configuration-explainer"] >> [data-test="mvt"] >> button',
+	)
+	await expect(page.locator('#mvt')).toBeFocused()
+})

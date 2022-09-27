@@ -25,13 +25,13 @@ const expectTestSelectorToContain = async (
 	page: Page,
 	selector: string,
 	expected: string,
-) => expect(page.locator(`[data-test="${selector}"]`)).toContainText(expected)
+) => expect(page.locator(selector)).toContainText(expected)
 
 // Check the "movement resolution" explanation sentence
 const checkMvresExplainerSentence = async (page: Page, value: string) =>
 	expectTestSelectorToContain(
 		page,
-		'mvres-config-explainer',
+		'[data-test="configuration-explainer"] >> [data-test="mvres"]',
 		`When in motion the tracker will send an update to the cloud every ${value}`,
 	)
 
@@ -39,7 +39,7 @@ const checkMvresExplainerSentence = async (page: Page, value: string) =>
 const checkAccitoExplainerSentence = async (page: Page, value: string) =>
 	expectTestSelectorToContain(
 		page,
-		'accito-config-explainer',
+		'[data-test="configuration-explainer"] >> [data-test="accito"]',
 		`When motion stops for more than ${value}, an update will be sent to the cloud.`,
 	)
 
@@ -47,7 +47,7 @@ const checkAccitoExplainerSentence = async (page: Page, value: string) =>
 const checkMvtExplainerSentence = async (page: Page, value: string) =>
 	expectTestSelectorToContain(
 		page,
-		'mvt-config-explainer',
+		'[data-test="configuration-explainer"] >> [data-test="mvt"]',
 		`If not in motion an update will be sent to the cloud every ${value}`,
 	)
 

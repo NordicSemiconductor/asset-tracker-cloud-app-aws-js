@@ -1,6 +1,6 @@
 import { Type } from '@sinclair/typebox'
 import { useState } from 'react'
-import { withLocalStorage } from 'utils/withLocalStorage'
+import { withLocalStorage } from 'utils/withLocalStorage.js'
 
 export const useCollapsed = (
 	id: string,

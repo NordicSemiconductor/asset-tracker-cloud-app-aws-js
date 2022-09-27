@@ -1,4 +1,4 @@
-import { ChevronDownIcon, SettingsIcon } from 'components/FeatherIcon'
+import { ChevronDownIcon, ConfigurationIcon } from 'components/FeatherIcon'
 import styles from 'components/Map/ShowSettingsButton.module.css'
 import { useState } from 'react'
 
@@ -26,7 +26,7 @@ export const ShowSettingsButton = ({
 				data-test="show-map-settings"
 				data-intro="Click this icon to configure what's shown on the map."
 			>
-				<SettingsIcon className={styles.cog} />
+				<ConfigurationIcon className={styles.cog} />
 				<ChevronDownIcon className={styles.chevron} />
 			</button>
 		)
@@ -41,7 +41,7 @@ export const ShowSettingsButton = ({
 			data-test="show-map-settings"
 			className={styles.showSettingsButton}
 		>
-			<SettingsIcon className={styles.cog} />
+			<ConfigurationIcon className={styles.cog} />
 			<ChevronDownIcon className={styles.chevron} />
 		</button>
 	)

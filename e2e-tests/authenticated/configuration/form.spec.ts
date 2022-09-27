@@ -6,10 +6,11 @@ import { toUtf8 } from '@aws-sdk/util-utf8-browser'
 import { fromEnv } from '@nordicsemiconductor/from-env'
 import { expect, test } from '@playwright/test'
 import * as path from 'path'
-import { DataModules } from '../../src/asset/asset.js'
-import { checkForConsoleErrors } from '../lib/checkForConsoleErrors.js'
-import { loadSessionData } from '../lib/loadSessionData.js'
-import { AssetType, selectCurrentAsset } from './lib.js'
+import { DataModules } from '../../../src/asset/asset.js'
+import { checkForConsoleErrors } from '../../lib/checkForConsoleErrors.js'
+import { ensureCollapsableIsOpen } from '../../lib/ensureCollapsableIsOpen.js'
+import { loadSessionData } from '../../lib/loadSessionData.js'
+import { AssetType, selectCurrentAsset } from '../lib.js'
 
 const { mqttEndpoint } = fromEnv({
 	mqttEndpoint: 'PUBLIC_MQTT_ENDPOINT',
@@ -24,7 +25,7 @@ test.afterEach(checkForConsoleErrors)
 test.beforeEach(selectCurrentAsset())
 
 test('Change asset name', async ({ page }) => {
-	await page.click('header[role="button"]:has-text("Settings")')
+	await ensureCollapsableIsOpen(page)('asset:configuration')
 	const { name } = await loadSessionData(AssetType.Default)
 	await page.fill('input[id="asset-name"]', `${name}-renamed`)
 	await page.click('form[id="personalization-form"] button:has-text("Update")')
@@ -35,7 +36,7 @@ test('Change asset name', async ({ page }) => {
 })
 
 test('Configuration note should exist', async ({ page }) => {
-	await page.click('header[role="button"]:has-text("Settings")')
+	await ensureCollapsableIsOpen(page)('asset:configuration')
 	const note = page.locator('#asset-configuration-help-note')
 	await expect(note).toBeVisible()
 	await page.click('#asset-configuration-help-note button[aria-label="Close"]')
@@ -48,18 +49,18 @@ const randFloat = (min: number, max: number) =>
 const randInt = (min: number, max: number) => Math.floor(randFloat(min, max))
 
 test('Update asset configuration', async ({ page }) => {
-	await page.click('header[role="button"]:has-text("Settings")')
+	await ensureCollapsableIsOpen(page)('asset:configuration')
 
 	const gnsst = randInt(0, 3600)
-	const mvres = randInt(0, 3600)
 	const mvt = randInt(0, 3600)
+	const mvres = 300
+	// Accelerometer Inactivity Timeout in s: Hysteresis timeout for stillness detection.
+	const accito = 1.7
 	const actwt = randInt(0, 3600)
-	// Accelerometer activity threshold in m/s²: Minimal absolute value for an accelerometer reading to be considered movement.
-	const accath = randFloat(0, 78.4532)
-	// Accelerometer inactivity threshold in m/s²: Maximum absolute value for an accelerometer reading to be considered stillness. Should be lower than the activity threshold.
-	const accith = randFloat(0, 78.4532)
-	// Accelerometer inactivity timeout in s: Hysteresis timeout for stillness detection.
-	const accito = randFloat(0.08, 5242.88)
+	// Accelerometer Activity Threshold in m/s²: Minimal absolute value for an accelerometer reading to be considered movement.
+	const accath = 10.5
+	// Accelerometer Inactivity Threshold in m/s²: Maximum absolute value for an accelerometer reading to be considered stillness. Should be lower than the activity threshold.
+	const accith = 5
 
 	await page.click('#active-mode')
 	await page.fill('#gnsst', gnsst.toString())
@@ -71,7 +72,7 @@ test('Update asset configuration', async ({ page }) => {
 	await page.fill('#actwt', actwt.toString())
 	await page.click('#gnss-disable')
 	await page.click('#ncellmeas-disable')
-	await page.click('#asset-settings-form >> footer >> button')
+	await page.click('#asset-configuration-form >> footer >> button')
 	await page.screenshot({
 		path: `./test-session/asset-settings.png`,
 	})
@@ -104,11 +105,11 @@ test('Update asset configuration', async ({ page }) => {
 test("Should check 'update' button to be disabled when form is fill with null values", async ({
 	page,
 }) => {
-	await page.click('header[role="button"]:has-text("Settings")')
+	await ensureCollapsableIsOpen(page)('asset:configuration')
 
 	// expect 'update' button to be disable be default
 	await expect(
-		page.locator('#asset-settings-form >> footer >> button'),
+		page.locator('#asset-configuration-form >> footer >> button'),
 	).toBeDisabled()
 
 	// update Active Wait Time with value
@@ -116,7 +117,7 @@ test("Should check 'update' button to be disabled when form is fill with null va
 
 	// expect 'update' button to be enable
 	await expect(
-		page.locator('#asset-settings-form >> footer >> button'),
+		page.locator('#asset-configuration-form >> footer >> button'),
 	).not.toBeDisabled()
 
 	// update Active Wait Time with wrong value
@@ -124,7 +125,7 @@ test("Should check 'update' button to be disabled when form is fill with null va
 
 	// expect update button to be disabled
 	await expect(
-		page.locator('#asset-settings-form >> footer >> button'),
+		page.locator('#asset-configuration-form >> footer >> button'),
 	).toBeDisabled()
 
 	// update Active Wait Time with correct value
@@ -132,6 +133,42 @@ test("Should check 'update' button to be disabled when form is fill with null va
 
 	// expect update to be enable
 	await expect(
-		page.locator('#asset-settings-form >> footer >> button'),
+		page.locator('#asset-configuration-form >> footer >> button'),
 	).not.toBeDisabled()
+})
+
+test('clicking the link in the configuration explainer for Accelerometer Inactivity Timeout the respective configuration input field should be focused', async ({
+	page,
+}) => {
+	await ensureCollapsableIsOpen(page)('asset:configuration')
+	await ensureCollapsableIsOpen(page)('asset:configuration-explainer')
+
+	await page.click(
+		'[data-test="configuration-explainer"] >> [data-test="accito"] >> button',
+	)
+	await expect(page.locator('#accito')).toBeFocused()
+})
+
+test('clicking the link in the configuration explainer for Movement Resolution the respective configuration input field should be focused', async ({
+	page,
+}) => {
+	await ensureCollapsableIsOpen(page)('asset:configuration')
+	await ensureCollapsableIsOpen(page)('asset:configuration-explainer')
+
+	await page.click(
+		'[data-test="configuration-explainer"] >> [data-test="mvres"] >> button',
+	)
+	await expect(page.locator('#mvres')).toBeFocused()
+})
+
+test('clicking the link in the configuration explainer for Movement Timeout the respective configuration input field should be focused', async ({
+	page,
+}) => {
+	await ensureCollapsableIsOpen(page)('asset:configuration')
+	await ensureCollapsableIsOpen(page)('asset:configuration-explainer')
+
+	await page.click(
+		'[data-test="configuration-explainer"] >> [data-test="mvt"] >> button',
+	)
+	await expect(page.locator('#mvt')).toBeFocused()
 })

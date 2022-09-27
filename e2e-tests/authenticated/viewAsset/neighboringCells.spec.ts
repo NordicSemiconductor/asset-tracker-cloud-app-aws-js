@@ -1,6 +1,7 @@
 import { expect, test } from '@playwright/test'
 import * as path from 'path'
 import { checkForConsoleErrors } from '../../lib/checkForConsoleErrors.js'
+import { ensureCollapsableIsOpen } from '../../lib/ensureCollapsableIsOpen.js'
 import { loadSessionData } from '../../lib/loadSessionData.js'
 import { neighboringCellLocations } from '../../setup/neighboringCellLocations.js'
 import { AssetType, selectCurrentAsset } from '../lib.js'
@@ -16,7 +17,7 @@ test.beforeEach(selectCurrentAsset())
 test('Neighboring cells', async ({ page }) => {
 	const { thingName } = await loadSessionData(AssetType.Default)
 	const ncellmeasReport = neighboringCellLocations({ thingName })
-	await page.click('header[role="button"]:has-text("Neighboring cells")')
+	await ensureCollapsableIsOpen(page)('asset:neighboringcells')
 	await expect(
 		page.locator('#neighboring-cells li:first-child dd[data-test="rsrp"]'),
 	).toHaveText(ncellmeasReport[0].report.nmr[0].rsrp.toString())

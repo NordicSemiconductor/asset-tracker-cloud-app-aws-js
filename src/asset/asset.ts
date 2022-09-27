@@ -47,21 +47,21 @@ export const AssetConfig = Type.Object(
 		}),
 		accath: Type.Number({
 			description:
-				'Accelerometer activity threshold in m/s²: Minimal absolute value for an accelerometer reading to be considered movement.',
+				'Accelerometer Activity Threshold in m/s²: Minimal absolute value for an accelerometer reading to be considered movement.',
 			minimum: 0,
 			maximum: 78.4532,
 			examples: [10],
 		}),
 		accith: Type.Number({
 			description:
-				'Accelerometer inactivity threshold in m/s²: Maximum absolute value for an accelerometer reading to be considered stillness. Should be lower than the activity threshold.',
+				'Accelerometer Inactivity Threshold in m/s²: Maximum absolute value for an accelerometer reading to be considered stillness. Should be lower than the activity threshold.',
 			minimum: 0,
 			maximum: 78.4532,
 			examples: [5],
 		}),
 		accito: Type.Number({
 			description:
-				'Accelerometer inactivity timeout in s: Hysteresis timeout for stillness detection.',
+				'Accelerometer Inactivity Timeout in s: Hysteresis timeout for stillness detection.',
 			minimum: 0.08,
 			maximum: 5242.88,
 			examples: [60],

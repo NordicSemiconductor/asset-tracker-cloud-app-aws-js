@@ -2,6 +2,7 @@ import { expect, test } from '@playwright/test'
 import * as fs from 'fs'
 import * as path from 'path'
 import { checkForConsoleErrors } from '../../lib/checkForConsoleErrors.js'
+import { ensureCollapsableIsOpen } from '../../lib/ensureCollapsableIsOpen.js'
 import { loadSessionData } from '../../lib/loadSessionData.js'
 import { AssetType, selectCurrentAsset } from '../lib.js'
 
@@ -28,7 +29,7 @@ const updateFileWithoutVersion = path.join(
 )
 
 test('Create firmware update from file', async ({ page }) => {
-	await page.click('header[role="button"]:has-text("Firmware Upgrade")')
+	await ensureCollapsableIsOpen(page)('asset:fota')
 	const { thingName } = await loadSessionData(AssetType.Default)
 
 	await page.locator('input[type="file"]').setInputFiles(updateFileWithVersion)
@@ -109,7 +110,7 @@ test('Create firmware update from file', async ({ page }) => {
 })
 
 test('create firmware version from current version', async ({ page }) => {
-	await page.click('header[role="button"]:has-text("Firmware Upgrade")')
+	await ensureCollapsableIsOpen(page)('asset:fota')
 	await page
 		.locator('input[type="file"]')
 		.setInputFiles(updateFileWithoutVersion)

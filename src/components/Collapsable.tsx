@@ -1,6 +1,6 @@
 import styles from 'components/Collapsable.module.css'
-import { ChevronDownIcon } from 'components/FeatherIcon'
-import { useCollapsed } from 'hooks/useCollapsed'
+import { ChevronDownIcon } from 'components/FeatherIcon.js'
+import { useCollapsed } from 'hooks/useCollapsed.js'
 
 export const Collapsable = ({
 	id,
@@ -46,7 +46,7 @@ export const Collapsable = ({
 		)
 
 	return (
-		<section className={styles.collapsable} {...restProps}>
+		<section className={styles.collapsable} id={id} {...restProps}>
 			<header
 				onClick={handleClick}
 				role={'button'}

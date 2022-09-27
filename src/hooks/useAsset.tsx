@@ -1,6 +1,6 @@
 import type { Static } from '@sinclair/typebox'
 import type { Asset, AssetConfig, AssetTwin, AssetWithTwin } from 'asset/asset'
-import { defaultConfig } from 'asset/defaultConfig'
+import { defaultConfig } from 'asset/config'
 import equal from 'fast-deep-equal'
 import { useAppConfig } from 'hooks/useAppConfig'
 import { useServices } from 'hooks/useServices'

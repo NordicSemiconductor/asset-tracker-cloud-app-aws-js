@@ -1,9 +1,9 @@
-.SettingsForm {
+.ConfigurationForm {
   margin-top: 1rem;
 }
 
 @media (min-width: 768px) {
-  .SettingsForm {
+  .ConfigurationForm {
     display: grid;
     grid-template-columns: 1fr 1fr;
     grid-template-rows: auto;
@@ -11,32 +11,32 @@
   }
 }
 
-.SettingsForm fieldset legend {
+.ConfigurationForm fieldset legend {
   margin-bottom: 0.5rem;
   font-size: 80%;
 }
 
-.SettingsForm label {
+.ConfigurationForm label {
   font-size: 90%;
 }
 
 @media (min-width: 768px) {
-  .SettingsForm fieldset {
+  .ConfigurationForm fieldset {
     border-radius: 5px;
     border: 1px solid #cccccc;
     padding: 0.5rem 1rem 0 1rem;
     margin-bottom: 1rem;
   }
-  .SettingsForm legend {
+  .ConfigurationForm legend {
     width: auto;
     margin: 0;
   }
 }
 
-.SettingsForm :global(.btn-group) {
+.ConfigurationForm :global(.btn-group) {
   width: 100%;
 }
-.SettingsForm label {
+.ConfigurationForm label {
   font-weight: normal;
 }
 
@@ -65,8 +65,35 @@
   padding: 0 0.25rem;
 }
 
-.FooterWithFullWidthButton {
+.FullWidth {
   grid-column: auto / span 2;
   display: flex;
   flex-direction: column;
+}
+
+.FullWidthGrayBox {
+  composes: FullWidth;
+  margin-bottom: 1rem;
+  margin-top: 0.5rem;
+  padding: 1rem;
+  background-color: #f5f5f5;
+  border-radius: 5px;
+}
+
+@media (min-width: 768px) {
+  .FullWidthGrayBox {
+    margin-top: 0rem;
+  }
+}
+
+fieldset:nth-child(1) {
+  grid-row: 1;
+}
+
+fieldset:nth-child(3) {
+  grid-row: 2;
+}
+
+fieldset:nth-child(7) {
+  grid-row: 3;
 }

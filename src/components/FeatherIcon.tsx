@@ -337,7 +337,7 @@ export const SpeedIcon = (options?: TypedIconOptions) => (
 export const CloudUploadIcon = (options?: TypedIconOptions) => (
 	<FeatherIcon {...options} title="☁️" type="upload-cloud" />
 )
-export const SettingsIcon = (options?: TypedIconOptions) => (
+export const ConfigurationIcon = (options?: TypedIconOptions) => (
 	<FeatherIcon {...options} title="⚙️" type="settings" />
 )
 export const AlertIcon = (options?: TypedIconOptions) => (
@@ -464,6 +464,10 @@ export const CenterIcon = (options?: TypedIconOptions) => (
 
 export const ImpactsIcon = (options?: TypedIconOptions) => (
 	<FeatherIcon {...options} title="impacts" type="alert-triangle" />
+)
+
+export const PresetsIcon = (options?: TypedIconOptions) => (
+	<FeatherIcon {...options} title="presets" type="sliders" />
 )
 
 export const QueuedAtIcon = CloudUploadIcon

@@ -1,6 +1,6 @@
-import { Static } from '@sinclair/typebox'
-import { NCellMeasReport } from 'asset/asset.js'
+import type { Static } from '@sinclair/typebox'
 import id128 from 'id128'
+import { NCellMeasReport } from '../../src/asset/asset.js'
 import { state } from './asset-reported-state.js'
 
 export const neighboringCellLocations = ({
@@ -50,8 +50,8 @@ export const neighboringCellLocations = ({
 		timestamp: new Date(Date.now() - 12 * 60 * 1000).toISOString(),
 		unresolved: false,
 		accuracy: 91,
-		lat: 63.793945,
-		lng: 11.486816,
+		lat: 63.437991506665405,
+		lng: 10.627978535078947,
 		report: {
 			area: 31801,
 			adv: 80,
@@ -79,8 +79,8 @@ export const neighboringCellLocations = ({
 		timestamp: new Date(Date.now() - 13 * 60 * 1000).toISOString(),
 		unresolved: false,
 		accuracy: 886,
-		lat: 63.79517414,
-		lng: 11.50304609,
+		lat: 63.41110757448426,
+		lng: 10.792197897113734,
 		report: {
 			area: 31801,
 			adv: 65535,
@@ -114,8 +114,8 @@ export const neighboringCellLocations = ({
 		timestamp: new Date(Date.now() - 14 * 60 * 1000).toISOString(),
 		unresolved: false,
 		accuracy: 1174,
-		lat: 63.80781751,
-		lng: 11.51768887,
+		lat: 63.460714204378846,
+		lng: 10.919885631033754,
 		report: {
 			area: 31801,
 			adv: 65535,

@@ -1,4 +1,4 @@
-import { Page } from '@playwright/test'
+import type { Page } from '@playwright/test'
 
 export const zoom = async (page: Page, levels: number): Promise<void> => {
 	await page.locator('#asset-map').isVisible({ timeout: 30000 })

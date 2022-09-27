@@ -1,4 +1,5 @@
-import { expect, Page } from '@playwright/test'
+import type { Page } from '@playwright/test'
+import { expect } from '@playwright/test'
 
 /**
  * Helper function that ensures the collapsable with the id is open.

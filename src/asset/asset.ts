@@ -1,4 +1,5 @@
-import { Static, Type } from '@sinclair/typebox'
+import type { Static } from '@sinclair/typebox'
+import { Type } from '@sinclair/typebox'
 
 export type Asset = { id: string; name: string; version: number }
 export type AssetWithTwin = {

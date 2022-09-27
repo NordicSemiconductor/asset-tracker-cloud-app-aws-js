@@ -67,8 +67,7 @@ export const listWebAppCIThings =
 						thingsWithShadow
 							.filter(({ shadow }) =>
 								shadow?.payload !== undefined
-									? JSON.parse(toUtf8(shadow.payload as Uint8Array))
-											?.timestamp ??
+									? JSON.parse(toUtf8(shadow.payload))?.timestamp ??
 									  Date.now() / 1000 > Date.now() - 24 * 60 * 60 * 1000
 									: false,
 							)
@@ -88,7 +87,7 @@ if (thingsToDelete.length > 0) {
 	console.log('Deleting...', thingsToDelete)
 
 	await Promise.all(
-		thingsToDelete.map((thingName) =>
+		thingsToDelete.map(async (thingName) =>
 			iot.send(new DeleteThingCommand({ thingName })),
 		),
 	)

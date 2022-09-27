@@ -98,11 +98,8 @@
     "*.{ts,tsx}": [
       "prettier --write"
     ],
-    "src/**/*.{ts,tsx}": [
+    "**/*.{ts,tsx}": [
       "eslint --ext .js,.ts,.jsx,.tsx"
-    ],
-    "e2e-tests/**/*.{ts,tsx}": [
-      "eslint --ext .js,.ts,.jsx,.tsx --parser-options tsconfigRootDir:e2e-tests"
     ],
     "*.{md,json,yaml,yml,html}": [
       "prettier --write"

@@ -70,7 +70,9 @@ jobs:
         run: |
           aws iot delete-thing --thing-name `cat test-session/asset.json | jq -r '.thingName'`
           aws iot delete-thing --thing-name `cat test-session/asset-no-gnss.json | jq -r '.thingName'`
-          npx tsx e2e-tests/clean-up/cleanOldAssets.ts
+
+      - name: Cleanup old assets
+        run: npx tsx e2e-tests/clean-up/cleanOldAssets.ts
 
       - uses: actions/upload-artifact@v3
         if: always()

@@ -1,6 +1,7 @@
 import { expect, test } from '@playwright/test'
 import * as path from 'path'
 import { checkForConsoleErrors } from '../../lib/checkForConsoleErrors.js'
+import { ensureCollapsableIsOpen } from '../../lib/ensureCollapsableIsOpen.js'
 import { selectCurrentAsset } from '../lib.js'
 
 test.use({
@@ -12,7 +13,7 @@ test.afterEach(checkForConsoleErrors)
 test.beforeEach(selectCurrentAsset())
 
 test('Impacts history', async ({ page }) => {
-	await page.click('header[role="button"]:has-text("Impacts")')
+	await ensureCollapsableIsOpen(page)('asset:impacts')
 	await expect(page.locator('.historical-data-chart.impacts')).toBeVisible({
 		timeout: 30000,
 	})

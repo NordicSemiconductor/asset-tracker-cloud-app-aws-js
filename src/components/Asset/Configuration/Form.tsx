@@ -440,7 +440,7 @@ export const Form = ({
 							Configuration Explainer
 						</IconWithText>
 					}
-					id="cat:configuration-explainer"
+					id="asset:configuration-explainer"
 					data-intro="This explains how the current asset configuration will affect the behavior of the asset."
 				>
 					<ConfigurationExplainer

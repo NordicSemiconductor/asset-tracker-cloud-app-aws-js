@@ -7,6 +7,7 @@ import { fromEnv } from '@nordicsemiconductor/from-env'
 import { expect, test } from '@playwright/test'
 import * as path from 'path'
 import { checkForConsoleErrors } from '../../lib/checkForConsoleErrors.js'
+import { ensureCollapsableIsOpen } from '../../lib/ensureCollapsableIsOpen.js'
 import { loadSessionData } from '../../lib/loadSessionData.js'
 import { AssetType, selectCurrentAsset } from '../lib.js'
 
@@ -25,7 +26,7 @@ test.beforeEach(selectCurrentAsset())
 test("'Movement resolution' must be higher than 'Accelerometer Inactivity Timeout' in order to submit configuration", async ({
 	page,
 }) => {
-	await page.click('header[role="button"]:has-text("Configuration")')
+	await ensureCollapsableIsOpen(page)('asset:configuration')
 
 	const mvres = 1 // 'Movement resolution' lower than default 'Accelerometer Inactivity Timeout' value
 	await page.fill('#mvres', mvres.toString())
@@ -87,7 +88,7 @@ test("'Movement resolution' must be higher than 'Accelerometer Inactivity Timeou
 test("'Accelerometer Activity Threshold' must be higher than 'Accelerometer Inactivity Threshold' in order to submit configuration", async ({
 	page,
 }) => {
-	await page.click('header[role="button"]:has-text("Configuration")')
+	await ensureCollapsableIsOpen(page)('asset:configuration')
 
 	const accith = parseInt(await page.locator('#accith').inputValue(), 10)
 	const accath = accith - 1 // Accelerometer Activity Threshold lower than "Accelerometer Inactivity Threshold" default value

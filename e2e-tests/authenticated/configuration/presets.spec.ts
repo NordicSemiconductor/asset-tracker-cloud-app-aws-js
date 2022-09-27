@@ -8,6 +8,7 @@ import { expect, test } from '@playwright/test'
 import * as path from 'path'
 import { presetConfigs } from '../../../src/asset/config.js'
 import { checkForConsoleErrors } from '../../lib/checkForConsoleErrors.js'
+import { ensureCollapsableIsOpen } from '../../lib/ensureCollapsableIsOpen.js'
 import { loadSessionData } from '../../lib/loadSessionData.js'
 import { AssetType, selectCurrentAsset } from '../lib.js'
 
@@ -26,19 +27,15 @@ test.beforeEach(selectCurrentAsset())
 test("should change preset values for 'Parcel tracking' configuration", async ({
 	page,
 }) => {
-	await page.click('header[role="button"]:has-text("Configuration")')
+	await ensureCollapsableIsOpen(page)('asset:configuration')
+	await ensureCollapsableIsOpen(page)('asset:presets')
 
-	// Open collapsible with presets
 	await page
-		.locator('[data-test="presets-collapsible"] header[role="button"]')
+		.locator('[id="asset:presets"] >> [data-test="parcel"] >> button')
 		.click()
-	// select Parcel preset
-	await page.locator('[data-test="parcel-preset-config"]').click()
 
-	// update config
 	await page.click('#asset-configuration-form >> footer >> button')
 
-	// Verify
 	const { thingName } = await loadSessionData(AssetType.Default)
 	const { payload } = await new IoTDataPlaneClient({
 		endpoint: `https://${mqttEndpoint}`,
@@ -56,20 +53,15 @@ test("should change preset values for 'Parcel tracking' configuration", async ({
 test("should change preset values for 'walking' configuration", async ({
 	page,
 }) => {
-	await page.click('header[role="button"]:has-text("Configuration")')
+	await ensureCollapsableIsOpen(page)('asset:configuration')
+	await ensureCollapsableIsOpen(page)('asset:presets')
 
-	// Open collapsible with presets
 	await page
-		.locator('[data-test="presets-collapsible"] header[role="button"]')
+		.locator('[id="asset:presets"] >> [data-test="walking"] >> button')
 		.click()
 
-	// select Walking preset
-	await page.locator('[data-test="walking-preset-config"]').click()
-
-	// update config
 	await page.click('#asset-configuration-form >> footer >> button')
 
-	// Verify
 	const { thingName } = await loadSessionData(AssetType.Default)
 	const { payload } = await new IoTDataPlaneClient({
 		endpoint: `https://${mqttEndpoint}`,

@@ -8,6 +8,7 @@ import { expect, test } from '@playwright/test'
 import * as path from 'path'
 import { DataModules } from '../../../src/asset/asset.js'
 import { checkForConsoleErrors } from '../../lib/checkForConsoleErrors.js'
+import { ensureCollapsableIsOpen } from '../../lib/ensureCollapsableIsOpen.js'
 import { loadSessionData } from '../../lib/loadSessionData.js'
 import { AssetType, selectCurrentAsset } from '../lib.js'
 
@@ -24,7 +25,7 @@ test.afterEach(checkForConsoleErrors)
 test.beforeEach(selectCurrentAsset())
 
 test('Change asset name', async ({ page }) => {
-	await page.click('header[role="button"]:has-text("Configuration")')
+	await ensureCollapsableIsOpen(page)('asset:configuration')
 	const { name } = await loadSessionData(AssetType.Default)
 	await page.fill('input[id="asset-name"]', `${name}-renamed`)
 	await page.click('form[id="personalization-form"] button:has-text("Update")')
@@ -35,7 +36,7 @@ test('Change asset name', async ({ page }) => {
 })
 
 test('Configuration note should exist', async ({ page }) => {
-	await page.click('header[role="button"]:has-text("Configuration")')
+	await ensureCollapsableIsOpen(page)('asset:configuration')
 	const note = page.locator('#asset-configuration-help-note')
 	await expect(note).toBeVisible()
 	await page.click('#asset-configuration-help-note button[aria-label="Close"]')
@@ -48,7 +49,7 @@ const randFloat = (min: number, max: number) =>
 const randInt = (min: number, max: number) => Math.floor(randFloat(min, max))
 
 test('Update asset configuration', async ({ page }) => {
-	await page.click('header[role="button"]:has-text("Configuration")')
+	await ensureCollapsableIsOpen(page)('asset:configuration')
 
 	const gnsst = randInt(0, 3600)
 	const mvt = randInt(0, 3600)
@@ -104,7 +105,7 @@ test('Update asset configuration', async ({ page }) => {
 test("Should check 'update' button to be disabled when form is fill with null values", async ({
 	page,
 }) => {
-	await page.click('header[role="button"]:has-text("Configuration")')
+	await ensureCollapsableIsOpen(page)('asset:configuration')
 
 	// expect 'update' button to be disable be default
 	await expect(
@@ -139,10 +140,8 @@ test("Should check 'update' button to be disabled when form is fill with null va
 test('clicking the link in the configuration explainer for Accelerometer Inactivity Timeout the respective configuration input field should be focused', async ({
 	page,
 }) => {
-	await page.click('header[role="button"]:has-text("Configuration")')
-	await page
-		.locator('header[role="button"]:has-text("Configuration Explainer")')
-		.click()
+	await ensureCollapsableIsOpen(page)('asset:configuration')
+	await ensureCollapsableIsOpen(page)('asset:configuration-explainer')
 
 	await page.click(
 		'[data-test="configuration-explainer"] >> [data-test="accito"] >> button',
@@ -153,10 +152,8 @@ test('clicking the link in the configuration explainer for Accelerometer Inactiv
 test('clicking the link in the configuration explainer for Movement Resolution the respective configuration input field should be focused', async ({
 	page,
 }) => {
-	await page.click('header[role="button"]:has-text("Configuration")')
-	await page
-		.locator('header[role="button"]:has-text("Configuration Explainer")')
-		.click()
+	await ensureCollapsableIsOpen(page)('asset:configuration')
+	await ensureCollapsableIsOpen(page)('asset:configuration-explainer')
 
 	await page.click(
 		'[data-test="configuration-explainer"] >> [data-test="mvres"] >> button',
@@ -167,10 +164,8 @@ test('clicking the link in the configuration explainer for Movement Resolution t
 test('clicking the link in the configuration explainer for Movement Timeout the respective configuration input field should be focused', async ({
 	page,
 }) => {
-	await page.click('header[role="button"]:has-text("Configuration")')
-	await page
-		.locator('header[role="button"]:has-text("Configuration Explainer")')
-		.click()
+	await ensureCollapsableIsOpen(page)('asset:configuration')
+	await ensureCollapsableIsOpen(page)('asset:configuration-explainer')
 
 	await page.click(
 		'[data-test="configuration-explainer"] >> [data-test="mvt"] >> button',

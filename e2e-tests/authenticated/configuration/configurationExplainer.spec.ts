@@ -2,6 +2,7 @@ import { expect, Page, test } from '@playwright/test'
 import { formatDuration, intervalToDuration } from 'date-fns'
 import * as path from 'path'
 import { checkForConsoleErrors } from '../../lib/checkForConsoleErrors.js'
+import { ensureCollapsableIsOpen } from '../../lib/ensureCollapsableIsOpen.js'
 import { selectCurrentAsset } from '../lib.js'
 
 // Copy from src/components/Asset/Configuration/explainDuration.ts
@@ -60,12 +61,9 @@ const checkMvtExplainerSentence = async (page: Page, value: string) =>
 test('Should update the explainer configuration text in order of the field changes', async ({
 	page,
 }) => {
-	await page.click('header[role="button"]:has-text("Configuration")')
+	await ensureCollapsableIsOpen(page)('asset:configuration')
 
-	// open Collapsable component
-	await page
-		.locator('header[role="button"]:has-text("Configuration Explainer")')
-		.click()
+	await ensureCollapsableIsOpen(page)('asset:configuration-explainer')
 
 	const mvresValue = parseInt(await page.locator('#mvres').inputValue(), 10)
 	const accitoValue = parseInt(await page.locator('#accito').inputValue(), 10)
@@ -81,21 +79,22 @@ test('Should update the explainer configuration text in order of the field chang
 	await checkAccitoExplainerSentence(page, explainDuration(accitoValue))
 	await checkMvtExplainerSentence(page, explainDuration(mvtValue))
 
-	// Open collapsible with presets
-	await page
-		.locator('[data-test="presets-collapsible"] header[role="button"]')
-		.click()
+	await ensureCollapsableIsOpen(page)('asset:presets')
+
 	// select Walking preset
-	await page.locator('[data-test="walking-preset-config"]').click()
+	await page
+		.locator('[id="asset:presets"] >> [data-test="walking"] >> button')
+		.click()
 
 	// check config explainer with "Walking" preset config values
 	await checkMvresExplainerSentence(page, explainDuration(300))
 	await checkAccitoExplainerSentence(page, explainDuration(60))
 	await checkMvtExplainerSentence(page, explainDuration(3600))
 
-	// 'Presets' collapsible is already open
 	// select Parcel preset
-	await page.locator('[data-test="parcel-preset-config"]').click()
+	await page
+		.locator('[id="asset:presets"] >> [data-test="parcel"] >> button')
+		.click()
 
 	// check config explainer with "Parcel" preset config values
 	await checkMvresExplainerSentence(page, explainDuration(3600))

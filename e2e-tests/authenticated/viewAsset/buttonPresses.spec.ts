@@ -1,6 +1,7 @@
 import { expect, test } from '@playwright/test'
 import * as path from 'path'
 import { checkForConsoleErrors } from '../../lib/checkForConsoleErrors.js'
+import { ensureCollapsableIsOpen } from '../../lib/ensureCollapsableIsOpen.js'
 import { selectCurrentAsset } from '../lib.js'
 
 test.use({
@@ -12,7 +13,7 @@ test.afterEach(checkForConsoleErrors)
 test.beforeEach(selectCurrentAsset())
 
 test('Button presses', async ({ page }) => {
-	await page.click('header[role="button"]:has-text("Button")')
+	await ensureCollapsableIsOpen(page)('asset:button')
 	await expect(page.locator('table.table.button-presses')).toBeVisible()
 	expect(
 		await page.locator('table.table.button-presses tbody tr').count(),

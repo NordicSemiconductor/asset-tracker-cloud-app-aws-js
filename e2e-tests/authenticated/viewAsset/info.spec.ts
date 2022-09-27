@@ -1,6 +1,7 @@
 import { expect, test } from '@playwright/test'
 import * as path from 'path'
 import { checkForConsoleErrors } from '../../lib/checkForConsoleErrors.js'
+import { ensureCollapsableIsOpen } from '../../lib/ensureCollapsableIsOpen.js'
 import { state as reported } from '../../setup/asset-reported-state.js'
 import { selectCurrentAsset } from '../lib.js'
 
@@ -13,7 +14,7 @@ test.afterEach(checkForConsoleErrors)
 test.beforeEach(selectCurrentAsset())
 
 test('Asset Information', async ({ page }) => {
-	await page.click('header[role="button"]:has-text("Asset Information")')
+	await ensureCollapsableIsOpen(page)('asset:information')
 
 	// Check asset information
 	for (const prop of ['imei', 'iccid', 'modV', 'brdV', 'appV']) {

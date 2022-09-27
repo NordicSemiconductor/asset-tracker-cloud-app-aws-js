@@ -46,7 +46,7 @@ export const Collapsable = ({
 		)
 
 	return (
-		<section className={styles.collapsable} {...restProps}>
+		<section className={styles.collapsable} id={id} {...restProps}>
 			<header
 				onClick={handleClick}
 				role={'button'}

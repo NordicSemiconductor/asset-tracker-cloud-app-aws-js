@@ -22,7 +22,7 @@ export const Presets = ({
 						Configuration Presets
 					</IconWithText>
 				}
-				id="cat:presets"
+				id="asset:presets"
 				data-intro="This provides sensible presets for different scenarios."
 			>
 				<>

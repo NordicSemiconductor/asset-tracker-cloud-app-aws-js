@@ -2,6 +2,7 @@ import { expect, test } from '@playwright/test'
 import * as path from 'path'
 import { AssetType } from '../authenticated/lib.js'
 import { checkForConsoleErrors } from '../lib/checkForConsoleErrors.js'
+import { ensureCollapsableIsOpen } from '../lib/ensureCollapsableIsOpen.js'
 import { loadSessionData } from '../lib/loadSessionData.js'
 
 test.use({
@@ -11,7 +12,6 @@ test.use({
 test.afterEach(checkForConsoleErrors)
 
 test('Users can delete assets', async ({ page }) => {
-	let open = false
 	for (const type of [AssetType.Default, AssetType.NoGNSS]) {
 		const { name, thingName } = await loadSessionData(type)
 
@@ -29,10 +29,7 @@ test('Users can delete assets', async ({ page }) => {
 		}
 
 		await assetLink.click()
-		if (!open) {
-			await page.click('header[role="button"]:has-text("Danger zone")')
-			open = true
-		}
+		await ensureCollapsableIsOpen(page)('asset:danger')
 		await page.click('text=Enable to unlock asset deletion')
 		await page.click('text=Delete asset')
 

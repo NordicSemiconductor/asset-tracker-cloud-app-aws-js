@@ -101,7 +101,7 @@ export const Asset = () => {
 										Asset Information
 									</IconWithText>
 								}
-								id="cat:information"
+								id="asset:information"
 								data-intro="This shows hard- and software, and connection information about the asset. Click to reveal the information."
 							>
 								<AssetInformation twin={twin} />
@@ -113,7 +113,7 @@ export const Asset = () => {
 										Configuration
 									</IconWithText>
 								}
-								id="cat:configuration"
+								id="asset:configuration"
 								data-intro="This allows to change the run-time configuration of the asset."
 							>
 								<h4>Personalization</h4>

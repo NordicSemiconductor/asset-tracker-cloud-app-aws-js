@@ -1,5 +1,4 @@
 playwright.config.ts
-e2e-tests
 node_modules
 build/
 test-session/

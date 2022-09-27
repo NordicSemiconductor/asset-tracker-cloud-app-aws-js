@@ -1,6 +1,6 @@
 import type { Static } from '@sinclair/typebox'
 import id128 from 'id128'
-import { NCellMeasReport } from '../../src/asset/asset.js'
+import type { NCellMeasReport } from '../../src/asset/asset.js'
 import { state } from './asset-reported-state.js'
 
 export const neighboringCellLocations = ({

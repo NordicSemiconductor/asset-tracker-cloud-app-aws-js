@@ -35,9 +35,6 @@ test("should change preset values for 'Parcel tracking' configuration", async ({
 	// select Parcel preset
 	await page.locator('[data-test="parcel-preset-config"]').click()
 
-	// TODO: check input fields to be updated
-	//await expect(page.locator('#mvres')).toHaveValue(`${defaultConfig.mvres}`)
-
 	// update config
 	await page.click('#asset-configuration-form >> footer >> button')
 
@@ -68,8 +65,6 @@ test("should change preset values for 'walking' configuration", async ({
 
 	// select Walking preset
 	await page.locator('[data-test="walking-preset-config"]').click()
-
-	// TODO: check input fields to be updated
 
 	// update config
 	await page.click('#asset-configuration-form >> footer >> button')

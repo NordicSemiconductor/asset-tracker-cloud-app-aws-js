@@ -39,7 +39,6 @@ test("'Movement resolution' must be higher than 'Accelerometer Inactivity Timeou
 	const accitoValue = await page.locator('#accito').inputValue()
 	await expect(page.locator('#asset-configuration-form')).toContainText(
 		`Value must be higher than accelerometer inactivity timeout value: ${accitoValue}`,
-		// Value must be higher than accelerometer inactivity timeout value: 1.7
 	)
 	await expect(page.locator('#asset-configuration-form')).toContainText(
 		`Value must be lower than Movement Resolution value: ${mvres}`,

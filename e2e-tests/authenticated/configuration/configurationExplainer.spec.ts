@@ -27,7 +27,9 @@ const expectTestSelectorToContain = async (
 	expected: string,
 ) => expect(page.locator(selector)).toContainText(expected)
 
-// Check the "movement resolution" explanation sentence
+/**
+ * Check the "movement resolution" explanation sentence
+ */
 const checkMvresExplainerSentence = async (page: Page, value: string) =>
 	expectTestSelectorToContain(
 		page,
@@ -35,7 +37,9 @@ const checkMvresExplainerSentence = async (page: Page, value: string) =>
 		`When in motion the tracker will send an update to the cloud every ${value}`,
 	)
 
-// Check the "Accelerometer Inactivity Timeout" explanation sentence
+/**
+ * Check the "Accelerometer Inactivity Timeout" explanation sentence
+ */
 const checkAccitoExplainerSentence = async (page: Page, value: string) =>
 	expectTestSelectorToContain(
 		page,
@@ -43,7 +47,9 @@ const checkAccitoExplainerSentence = async (page: Page, value: string) =>
 		`When motion stops for more than ${value}, an update will be sent to the cloud.`,
 	)
 
-// Check the "movement timeout" explanation sentence
+/**
+ * Check the "movement timeout" explanation sentence
+ */
 const checkMvtExplainerSentence = async (page: Page, value: string) =>
 	expectTestSelectorToContain(
 		page,

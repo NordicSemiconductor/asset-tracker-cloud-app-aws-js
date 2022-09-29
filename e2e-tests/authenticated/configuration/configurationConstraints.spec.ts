@@ -1,19 +1,21 @@
-import {
-	GetThingShadowCommand,
-	IoTDataPlaneClient,
-} from '@aws-sdk/client-iot-data-plane'
-import { toUtf8 } from '@aws-sdk/util-utf8-browser'
+import { IoTDataPlaneClient } from '@aws-sdk/client-iot-data-plane'
 import { fromEnv } from '@nordicsemiconductor/from-env'
 import { expect, test } from '@playwright/test'
 import * as path from 'path'
 import { checkForConsoleErrors } from '../../lib/checkForConsoleErrors.js'
 import { ensureCollapsableIsOpen } from '../../lib/ensureCollapsableIsOpen.js'
+import { fillWithRandomNumber } from '../../lib/fillWithRandomNumber.js'
 import { loadSessionData } from '../../lib/loadSessionData.js'
+import { verifyShadow } from '../../lib/verifyShadow.js'
 import { AssetType, selectCurrentAsset } from '../lib.js'
 
 const { mqttEndpoint } = fromEnv({
 	mqttEndpoint: 'PUBLIC_MQTT_ENDPOINT',
 })(process.env)
+
+const iotDataPlaneClient = new IoTDataPlaneClient({
+	endpoint: `https://${mqttEndpoint}`,
+})
 
 test.use({
 	storageState: path.join(process.cwd(), 'test-session', 'authenticated.json'),
@@ -28,8 +30,9 @@ test("'Movement resolution' must be higher than 'Accelerometer Inactivity Timeou
 }) => {
 	await ensureCollapsableIsOpen(page)('asset:configuration')
 
-	const mvres = 1 // 'Movement resolution' lower than default 'Accelerometer Inactivity Timeout' value
-	await page.fill('#mvres', mvres.toString())
+	// Set `Movement Resolution` to lower value
+	await page.fill('#mvres', '10')
+	await page.fill('#accito', '11')
 
 	// expect 'update' button to be disable
 	await expect(
@@ -37,26 +40,27 @@ test("'Movement resolution' must be higher than 'Accelerometer Inactivity Timeou
 	).toBeDisabled()
 
 	// expect error messages
-	const accitoValue = await page.locator('#accito').inputValue()
 	await expect(page.locator('#asset-configuration-form')).toContainText(
-		`Value must be higher than accelerometer inactivity timeout value: ${accitoValue}`,
+		`Value must be higher than accelerometer inactivity timeout value: 11`,
 	)
 	await expect(page.locator('#asset-configuration-form')).toContainText(
-		`Value must be lower than Movement Resolution value: ${mvres}`,
+		`Value must be lower than Movement Resolution value: 10`,
 	)
 
-	// update mvres
-	const updatedMvres = parseInt(accitoValue, 10) + 100 // Movement resolution
-	await page.fill('#mvres', updatedMvres.toString())
+	// Set `Accelerometer Inactivity Threshold` and `Movement Resolution` to new values
+	const updatedAccelInactivityThrsh = await fillWithRandomNumber(
+		page,
+		'#accito',
+	)
+	const updatedMoveRes = Math.round(updatedAccelInactivityThrsh) + 10
+	await page.fill('#mvres', updatedMoveRes.toString())
 
 	// expect error messages dissapear
 	await expect(page.locator('#asset-configuration-form')).not.toContainText(
-		`Value must be higher than accelerometer inactivity timeout value: ${await page
-			.locator('#accito')
-			.inputValue()}`,
+		`Value must be higher than accelerometer inactivity timeout value`,
 	)
 	await expect(page.locator('#asset-configuration-form')).not.toContainText(
-		`Value must be lower than Movement Resolution value: ${updatedMvres}`,
+		`Value must be lower than Movement Resolution value`,
 	)
 
 	// expect 'update' button to be enable
@@ -72,17 +76,10 @@ test("'Movement resolution' must be higher than 'Accelerometer Inactivity Timeou
 
 	// Verify
 	const { thingName } = await loadSessionData(AssetType.Default)
-	const { payload } = await new IoTDataPlaneClient({
-		endpoint: `https://${mqttEndpoint}`,
-	}).send(
-		new GetThingShadowCommand({
-			thingName,
-		}),
-	)
-	expect(payload).not.toBeUndefined()
-	const shadow = JSON.parse(toUtf8(payload as Uint8Array))
-
-	expect(shadow.state.desired.cfg.mvres).toEqual(updatedMvres)
+	await verifyShadow(thingName, iotDataPlaneClient, (shadow) => {
+		expect(shadow.state.desired.cfg.accito).toEqual(updatedAccelInactivityThrsh)
+		expect(shadow.state.desired.cfg.mvres).toEqual(updatedMoveRes)
+	})
 })
 
 test("'Accelerometer Activity Threshold' must be higher than 'Accelerometer Inactivity Threshold' in order to submit configuration", async ({
@@ -90,9 +87,9 @@ test("'Accelerometer Activity Threshold' must be higher than 'Accelerometer Inac
 }) => {
 	await ensureCollapsableIsOpen(page)('asset:configuration')
 
-	const accith = parseInt(await page.locator('#accith').inputValue(), 10)
-	const accath = accith - 1 // Accelerometer Activity Threshold lower than "Accelerometer Inactivity Threshold" default value
-	await page.fill('#accath', accath.toString())
+	// Set `Accelerometer Activity Threshold` to lower value
+	await page.fill('#accath', '10')
+	await page.fill('#accith', '11')
 
 	// expect 'update' button to be disable
 	await expect(
@@ -101,26 +98,23 @@ test("'Accelerometer Activity Threshold' must be higher than 'Accelerometer Inac
 
 	// expect error messages
 	await expect(page.locator('#asset-configuration-form')).toContainText(
-		`Value must be higher than Accelerometer Inactivity Threshold value: ${await page
-			.locator('#accith')
-			.inputValue()}`,
+		`Value must be higher than Accelerometer Inactivity Threshold value: 11`,
 	)
 	await expect(page.locator('#asset-configuration-form')).toContainText(
-		`Value must be lower than Accelerometer Activity Threshold value: ${accath}`,
+		`Value must be lower than Accelerometer Activity Threshold value: 10`,
 	)
 
-	// update accath
-	const updatedAccath = accith + 1
-	await page.fill('#accath', updatedAccath.toString())
+	// Set `Accelerometer Activity Threshold` and `Accelerometer Inactivity Threshold` to new values
+	const updatedAccInactivityThrsh = await fillWithRandomNumber(page, '#accith')
+	const updatedAccActivityThrsh = updatedAccInactivityThrsh + 10
+	await page.fill('#accath', updatedAccActivityThrsh.toString())
 
 	// expect error messages dissapear
 	await expect(page.locator('#asset-configuration-form')).not.toContainText(
-		`Value must be higher than Accelerometer Inactivity Threshold value: ${await page
-			.locator('#accith')
-			.inputValue()}`,
+		`Value must be higher than Accelerometer Inactivity Threshold value`,
 	)
 	await expect(page.locator('#asset-configuration-form')).not.toContainText(
-		`Value must be lower than Accelerometer Activity Threshold value: ${updatedAccath}`,
+		`Value must be lower than Accelerometer Activity Threshold value`,
 	)
 
 	// expect 'update' button to be enable
@@ -136,15 +130,8 @@ test("'Accelerometer Activity Threshold' must be higher than 'Accelerometer Inac
 
 	// Verify
 	const { thingName } = await loadSessionData(AssetType.Default)
-	const { payload } = await new IoTDataPlaneClient({
-		endpoint: `https://${mqttEndpoint}`,
-	}).send(
-		new GetThingShadowCommand({
-			thingName,
-		}),
-	)
-	expect(payload).not.toBeUndefined()
-	const shadow = JSON.parse(toUtf8(payload as Uint8Array))
-
-	expect(shadow.state.desired.cfg.accath).toEqual(updatedAccath)
+	await verifyShadow(thingName, iotDataPlaneClient, (shadow) => {
+		expect(shadow.state.desired.cfg.accith).toEqual(updatedAccInactivityThrsh)
+		expect(shadow.state.desired.cfg.accath).toEqual(updatedAccActivityThrsh)
+	})
 })

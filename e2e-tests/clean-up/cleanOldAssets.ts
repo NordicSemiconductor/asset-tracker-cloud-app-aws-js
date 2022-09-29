@@ -14,7 +14,15 @@ import { toUtf8 } from '@aws-sdk/util-utf8-browser'
 import { paginate } from '../../src/utils/paginate.js'
 
 export const listWebAppCIThings =
-	({ iot, iotData }: { iot: IoTClient; iotData: IoTDataPlaneClient }) =>
+	({
+		iot,
+		iotData,
+		ageInHours,
+	}: {
+		iot: IoTClient
+		iotData: IoTDataPlaneClient
+		ageInHours: number
+	}) =>
 	async (): Promise<string[]> =>
 		paginate<string>({
 			paginator: async (startKey) => {
@@ -27,7 +35,7 @@ export const listWebAppCIThings =
 				if (things === undefined || things === null) {
 					return {
 						items: [],
-						startKey: nextToken,
+						nextStartKey: nextToken,
 					}
 				}
 
@@ -38,7 +46,7 @@ export const listWebAppCIThings =
 				if (webAppThings.length === 0)
 					return {
 						items: [],
-						startKey: nextToken,
+						nextStartKey: nextToken,
 					}
 
 				const thingsWithShadow = await Promise.all(
@@ -68,11 +76,11 @@ export const listWebAppCIThings =
 							.filter(({ shadow }) =>
 								shadow?.payload !== undefined
 									? JSON.parse(toUtf8(shadow.payload))?.timestamp ??
-									  Date.now() / 1000 > Date.now() - 24 * 60 * 60 * 1000
+									  Date.now() / 1000 > Date.now() - ageInHours * 60 * 60 * 1000
 									: false,
 							)
 							.map(({ thing: { thingName } }) => thingName as string),
-					startKey: nextToken,
+					nextStartKey: nextToken,
 				}
 			},
 		})
@@ -81,6 +89,7 @@ const iot = new IoTClient({})
 const thingsToDelete = await listWebAppCIThings({
 	iot,
 	iotData: new IoTDataPlaneClient({}),
+	ageInHours: Math.min(0, parseInt(process.env.AGE ?? '24', 10)),
 })()
 
 if (thingsToDelete.length > 0) {

@@ -18,6 +18,8 @@ const config: PlaywrightTestConfig = {
 			use: { ...devices['Desktop Firefox'] },
 		},
 	],
+	// Many tests operate on the Thing shadow of the same device, so we disable parallel test runs here globally
+	workers: 1,
 }
 
 export default config

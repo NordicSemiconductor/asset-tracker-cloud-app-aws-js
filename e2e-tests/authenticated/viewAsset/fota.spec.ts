@@ -1,6 +1,7 @@
 import { expect, test } from '@playwright/test'
 import * as fs from 'fs'
 import * as path from 'path'
+import { ulid } from '../../../src/utils/ulid.js'
 import { checkForConsoleErrors } from '../../lib/checkForConsoleErrors.js'
 import { ensureCollapsableIsOpen } from '../../lib/ensureCollapsableIsOpen.js'
 import { loadSessionData } from '../../lib/loadSessionData.js'
@@ -37,6 +38,9 @@ test('Create firmware update from file', async ({ page }) => {
 	// It should parse the filename and pre-fill the next version
 	await expect(page.locator('input[name="nextVersion"]')).toHaveValue('3.0.14')
 
+	const versionName = `3.0.14-${ulid()}`
+	await page.fill('input[name="nextVersion"]', versionName)
+
 	// Create the job
 	await page.click('button:has-text("Create upgrade job")')
 
@@ -45,11 +49,18 @@ test('Create firmware update from file', async ({ page }) => {
 		path: `./test-session/fota.png`,
 	})
 
+	// Click the refresh button
+	const refreshing = setInterval(() => {
+		page.click('[data-test="refresh-fota-jobs"]').catch(console.error)
+	}, 1000)
+
 	// It should show up in the list
 	const jobHeader = page.locator(
-		'div[data-test="firmware-upgrade-jobs"] div[role="button"]:has-text("3.0.14 (QUEUED)")',
+		`div[data-test="firmware-upgrade-jobs"] div[role="button"]:has-text("${versionName} (QUEUED)")`,
 	)
 	await expect(jobHeader).toBeVisible({ timeout: 2 * 60 * 1000 })
+
+	clearInterval(refreshing)
 
 	// Show details
 	await jobHeader.click()
@@ -58,10 +69,10 @@ test('Create firmware update from file', async ({ page }) => {
 	const jobInfo =
 		'div[data-test="firmware-upgrade-jobs"] [data-test="firmware-upgrade-job-info"]'
 	await expect(page.locator(`${jobInfo} [data-test="description"]`)).toHaveText(
-		`Upgrade ${thingName} to version 3.0.14.`,
+		`Upgrade ${thingName} to version ${versionName}.`,
 	)
 	await expect(page.locator(`${jobInfo} [data-test="version"]`)).toHaveText(
-		`3.0.14`,
+		versionName,
 	)
 	await expect(page.locator(`${jobInfo} [data-test="firmware"]`)).toHaveText(
 		`asset_tracker_v2-nRF9160DK-debug-app_upgrade-v3.0.14.bin`,

@@ -1,19 +1,10 @@
 import type { Page } from '@playwright/test'
 import { expect, test } from '@playwright/test'
-import { formatDuration, intervalToDuration } from 'date-fns'
 import * as path from 'path'
+import { explainDuration } from '../../../src/components/Asset/Configuration/explainDuration.js'
 import { checkForConsoleErrors } from '../../lib/checkForConsoleErrors.js'
 import { ensureCollapsableIsOpen } from '../../lib/ensureCollapsableIsOpen.js'
 import { selectCurrentAsset } from '../lib.js'
-
-// Copy from src/components/Asset/Configuration/explainDuration.ts
-// TODO: re-use code from application
-export const explainDuration = (value: number): string => {
-	if (isNaN(value)) return '... click here to fill input'
-	return `${formatDuration(
-		intervalToDuration({ start: 0, end: value * 1000 }),
-	)} (${Math.round(value)} seconds)`
-}
 
 test.use({
 	storageState: path.join(process.cwd(), 'test-session', 'authenticated.json'),
@@ -63,11 +54,11 @@ test('Should update the explainer configuration text in order of the field chang
 	page,
 }) => {
 	await ensureCollapsableIsOpen(page)('asset:configuration')
-
 	await ensureCollapsableIsOpen(page)('asset:configuration-explainer')
+	await ensureCollapsableIsOpen(page)('asset:presets')
 
 	const mvresValue = parseInt(await page.locator('#mvres').inputValue(), 10)
-	const accitoValue = parseInt(await page.locator('#accito').inputValue(), 10)
+	const accitoValue = parseFloat(await page.locator('#accito').inputValue())
 	const mvtValue = parseInt(await page.locator('#mvt').inputValue(), 10)
 
 	// Ensure that we have proper values

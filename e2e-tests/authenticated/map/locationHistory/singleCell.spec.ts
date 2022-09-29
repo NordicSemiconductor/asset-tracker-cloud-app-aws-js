@@ -69,9 +69,8 @@ test('Map with historical single cell asset location should be visible', async (
 	})
 
 	// Click on first location circle should show info
+	await zoom(page, -1)
 	await offsetClick(location1)
-
-	await page.waitForTimeout(500)
 
 	await page.screenshot({
 		path: `./test-session/map-historical-single-cell-locations-1.png`,

@@ -1,5 +1,6 @@
 import { IoTDataPlaneClient } from '@aws-sdk/client-iot-data-plane'
 import { fromEnv } from '@nordicsemiconductor/from-env'
+import { randomWords } from '@nordicsemiconductor/random-words'
 import { expect, test } from '@playwright/test'
 import * as path from 'path'
 import { DataModules } from '../../../src/asset/asset.js'

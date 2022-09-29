@@ -6,7 +6,7 @@ const isCI = process.env.CI !== undefined
 const config: PlaywrightTestConfig = {
 	testDir: path.join(process.cwd(), 'e2e-tests'),
 	forbidOnly: isCI,
-	retries: isCI ? 2 : 0,
+	retries: isCI ? 3 : 1,
 	use: {
 		trace: 'on-first-retry',
 		video: 'on-first-retry',

@@ -34,6 +34,7 @@ export const FOTA = () => {
 						type="button"
 						className="btn btn-link"
 						style={{ padding: 0 }}
+						data-test="refresh-fota-jobs"
 						onClick={() => {
 							reload()
 						}}

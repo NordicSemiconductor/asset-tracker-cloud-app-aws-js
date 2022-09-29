@@ -27,7 +27,7 @@ test('Map with historical neighboring cell asset location should be visible', as
 		follow: false,
 	})
 
-	await zoom(page, -3)
+	await zoom(page, -4)
 
 	await verifyMapMarker(page, AssetType.NoGNSS)
 
@@ -68,9 +68,8 @@ test('Map with historical neighboring cell asset location should be visible', as
 	})
 
 	// Click on first location circle should show info
+	await zoom(page, -1)
 	await offsetClick(location1)
-
-	await page.waitForTimeout(500)
 
 	await page.screenshot({
 		path: `./test-session/map-historical-neighboring-cell-locations-1.png`,

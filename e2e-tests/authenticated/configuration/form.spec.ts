@@ -28,12 +28,13 @@ test.beforeEach(selectCurrentAsset())
 test('Change asset name', async ({ page }) => {
 	await ensureCollapsableIsOpen(page)('asset:configuration')
 	const { name } = await loadSessionData(AssetType.Default)
-	await page.fill('input[id="asset-name"]', `${name}-renamed`)
+	const newName = `${name}-${(await randomWords()).join('-')}`
+	await page.fill('input[id="asset-name"]', newName)
 	await page.click('form[id="personalization-form"] button:has-text("Update")')
 	await page.screenshot({
 		path: `./test-session/asset-rename.png`,
 	})
-	await expect(page.locator('.navbar-brand')).toContainText(`${name}-renamed`)
+	await expect(page.locator('.navbar-brand')).toContainText(newName)
 })
 
 test('Configuration note should exist', async ({ page }) => {

@@ -13,7 +13,7 @@ env:
 
 jobs:
   test-and-release:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
 
     environment: production
 

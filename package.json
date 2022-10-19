@@ -42,7 +42,7 @@
     "@nordicsemiconductor/from-env": "1.0.2",
     "@nordicsemiconductor/rsrp-bar": "5.0.4",
     "@nordicsemiconductor/timestream-helpers": "4.1.2",
-    "@sinclair/typebox": "0.24.46",
+    "@sinclair/typebox": "0.24.47",
     "ajv": "8.11.0",
     "aws-amplify": "4.3.39",
     "bootstrap": "5.2.2",

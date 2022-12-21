@@ -1,5 +1,5 @@
 import type { Static } from '@sinclair/typebox'
-import id128 from 'id128'
+import { randomUUID } from 'node:crypto'
 import type { NCellMeasReport } from '../../src/asset/asset.js'
 import { state } from './asset-reported-state.js'
 
@@ -9,7 +9,7 @@ export const neighboringCellLocations = ({
 	thingName: string
 }): Static<typeof NCellMeasReport>[] => [
 	{
-		reportId: id128.Uuid4.generate().toCanonical(),
+		reportId: randomUUID(),
 		nw: state.roam.v.nw,
 		deviceId: thingName,
 		timestamp: new Date(Date.now() - 11 * 60 * 1000).toISOString(),
@@ -44,7 +44,7 @@ export const neighboringCellLocations = ({
 		},
 	},
 	{
-		reportId: id128.Uuid4.generate().toCanonical(),
+		reportId: randomUUID(),
 		nw: state.roam.v.nw,
 		deviceId: thingName,
 		timestamp: new Date(Date.now() - 12 * 60 * 1000).toISOString(),
@@ -73,7 +73,7 @@ export const neighboringCellLocations = ({
 		},
 	},
 	{
-		reportId: id128.Uuid4.generate().toCanonical(),
+		reportId: randomUUID(),
 		nw: state.roam.v.nw,
 		deviceId: thingName,
 		timestamp: new Date(Date.now() - 13 * 60 * 1000).toISOString(),
@@ -108,7 +108,7 @@ export const neighboringCellLocations = ({
 		},
 	},
 	{
-		reportId: id128.Uuid4.generate().toCanonical(),
+		reportId: randomUUID(),
 		nw: state.roam.v.nw,
 		deviceId: thingName,
 		timestamp: new Date(Date.now() - 14 * 60 * 1000).toISOString(),

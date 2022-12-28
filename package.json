@@ -44,7 +44,7 @@
     "@nordicsemiconductor/timestream-helpers": "4.1.3",
     "@sinclair/typebox": "0.25.16",
     "ajv": "8.11.2",
-    "aws-amplify": "4.3.44",
+    "aws-amplify": "4.3.45",
     "bootstrap": "5.2.3",
     "date-fns": "2.29.3",
     "e118-iin-list": "2.4.0",

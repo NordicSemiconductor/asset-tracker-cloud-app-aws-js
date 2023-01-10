@@ -83,7 +83,7 @@
     "@vitejs/plugin-react": "2.2.0",
     "chance": "1.1.9",
     "eslint-config-react-app": "7.0.1",
-    "eslint-plugin-jsx-a11y": "6.6.1",
+    "eslint-plugin-jsx-a11y": "6.7.0",
     "eslint-plugin-no-restricted-imports": "0.0.0",
     "handlebars": "4.7.7",
     "id128": "1.6.6",

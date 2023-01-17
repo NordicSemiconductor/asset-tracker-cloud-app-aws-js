@@ -11,7 +11,7 @@ export const NumberConfigSetting = forwardRef<
 		unit?: string
 		example?: number
 		step?: number
-		id: 'actwt' | 'mvres' | 'mvt' | 'gnsst' | 'accath' | 'accith' | 'accito'
+		id: 'actwt' | 'mvres' | 'mvt' | 'loct' | 'accath' | 'accith' | 'accito'
 		onChange: (v: string) => any
 		desired?: number
 		reported?: number

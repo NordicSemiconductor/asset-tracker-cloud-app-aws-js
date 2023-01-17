@@ -54,7 +54,7 @@ const randInt = (min: number, max: number) => Math.floor(randFloat(min, max))
 test('Update asset configuration', async ({ page }) => {
 	await ensureCollapsableIsOpen(page)('asset:configuration')
 
-	const gnsst = randInt(0, 3600)
+	const loct = randInt(0, 3600)
 	const mvt = randInt(0, 3600)
 	const mvres = 300
 	// Accelerometer Inactivity Timeout in s: Hysteresis timeout for stillness detection.
@@ -66,7 +66,7 @@ test('Update asset configuration', async ({ page }) => {
 	const accith = 5
 
 	await page.click('#active-mode')
-	await page.fill('#gnsst', gnsst.toString())
+	await page.fill('#loct', loct.toString())
 	await page.fill('#mvres', mvres.toString())
 	await page.fill('#mvt', mvt.toString())
 	await page.fill('#accath', accath.toString())
@@ -88,7 +88,7 @@ test('Update asset configuration', async ({ page }) => {
 			actwt,
 			mvres,
 			mvt,
-			gnsst,
+			loct,
 			accath,
 			accith,
 			accito,

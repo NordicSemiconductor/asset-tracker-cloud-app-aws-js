@@ -40,8 +40,9 @@ export const AssetConfig = Type.Object(
 			maximum: 2147483647,
 			examples: [3600],
 		}),
-		gnsst: Type.Integer({
-			description: 'GNSS timeout (in seconds): Timeout for GNSS fix.',
+		loct: Type.Integer({
+			description:
+				'Location search timeout (in seconds): Timeout for location search (GNSS fix, cellular, and WiFi positioning).',
 			minimum: 1,
 			maximum: 2147483647,
 			examples: [60],

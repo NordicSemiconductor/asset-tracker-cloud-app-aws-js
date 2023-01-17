@@ -236,14 +236,14 @@ export const Form = ({
 					ref={accitoRef}
 				/>
 			</fieldset>
-			<fieldset data-intro={'How long to try to acquire a GNSS fix.'}>
-				<legend>GNSS Timeout</legend>
+			<fieldset data-intro={'How long to try to acquire location.'}>
+				<legend>Location Timeout</legend>
 				<NumberConfigSetting
-					id={'gnsst'}
-					desired={newDesiredConfig.gnsst}
-					reported={reportedConfig?.gnsst}
+					id={'loct'}
+					desired={newDesiredConfig.loct}
+					reported={reportedConfig?.loct}
 					example={60}
-					onChange={updateConfigProperty('gnsst')}
+					onChange={updateConfigProperty('loct')}
 					minimum={1}
 					maximum={MAX_INT32}
 				/>

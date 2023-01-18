@@ -7,7 +7,7 @@ export const MapSettings = () => {
 	const { settings, update: updateSettings } = useMapSettings()
 
 	const updateEnabledLayers = (
-		update: Partial<typeof settings['enabledLayers']>,
+		update: Partial<(typeof settings)['enabledLayers']>,
 	) => {
 		const newState: typeof settings = {
 			...settings,
@@ -19,7 +19,7 @@ export const MapSettings = () => {
 		updateSettings(newState)
 	}
 
-	const updateHistory = (update: Partial<typeof settings['history']>) => {
+	const updateHistory = (update: Partial<(typeof settings)['history']>) => {
 		const newState: typeof settings = {
 			...settings,
 			history: {

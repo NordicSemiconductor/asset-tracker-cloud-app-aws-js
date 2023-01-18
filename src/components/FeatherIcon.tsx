@@ -14,7 +14,7 @@ type IconOptions = {
 }
 
 // Must be wrapped in an element: https://github.com/reactjs/rfcs/pull/129
-const wrapSvg = (options: IconOptions) => (f: typeof featherIcons[0]) =>
+const wrapSvg = (options: IconOptions) => (f: (typeof featherIcons)[0]) =>
 	(
 		<span
 			className={`${options.className ?? ''} ${

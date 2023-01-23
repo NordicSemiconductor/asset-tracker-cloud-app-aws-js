@@ -37,7 +37,7 @@ test('<Presets/>', async () => {
 	expect(walking.findOne('h5').content()).toEqual('Walking')
 
 	expect(walking.findOne('p').content()).toEqual(
-		'Use this to track people activities like walking. It records location every hour when not moving and every 5 minutes when on the move. The accelerometer is configured for light motion, like walking.',
+		'Use this to track people activities like walking. It records location every hour when not moving and every 3 minutes when on the move. The accelerometer is configured for light motion, like walking.',
 	)
 
 	walking.findOne('button').props.onClick()
@@ -49,9 +49,17 @@ test('<Presets/>', async () => {
 	expect(parcel.findOne('h5').content()).toEqual('Parcel tracking')
 
 	expect(parcel.findOne('p').content()).toEqual(
-		'Use this if you want to track parcels. It records location every hour when not moving and every 20 minutes when on the move. The accelerometer is configured for motion in vehicles.',
+		'Use this if you want to track parcels. It records location every 24 hours when not moving and every 30 seconds when on the move. The accelerometer is configured for tracking movement of handling packages, but avoids tracking motion in vehicle.',
 	)
 
 	parcel.findOne('button').props.onClick()
 	expect(setNewDesiredConfig).toHaveBeenCalledWith(presetConfigs.parcel.config)
+
+	//Use driving presets
+	const driving = isolated.findOne('[data-test=driving]')
+
+	expect(driving.findOne('h5').content()).toEqual('Driving')
+	expect(driving.findOne('p').content()).toEqual(
+		'Use this to track vehicles. It records location every hour when not moving and every 1 minutes when on the move. The accelerometer is configured for vehicles.',
+	)
 })

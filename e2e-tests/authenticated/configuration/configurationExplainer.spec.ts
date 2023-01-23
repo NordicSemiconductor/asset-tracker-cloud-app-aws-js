@@ -79,7 +79,7 @@ test('Should update the explainer configuration text in order of the field chang
 		.click()
 
 	// check config explainer with "Walking" preset config values
-	await checkMvresExplainerSentence(page, explainDuration(300))
+	await checkMvresExplainerSentence(page, explainDuration(180))
 	await checkAccitoExplainerSentence(page, explainDuration(60))
 	await checkMvtExplainerSentence(page, explainDuration(3600))
 
@@ -89,9 +89,19 @@ test('Should update the explainer configuration text in order of the field chang
 		.click()
 
 	// check config explainer with "Parcel" preset config values
-	await checkMvresExplainerSentence(page, explainDuration(3600))
-	await checkAccitoExplainerSentence(page, explainDuration(1200))
-	await checkMvtExplainerSentence(page, explainDuration(21600))
+	await checkMvresExplainerSentence(page, explainDuration(30))
+	await checkAccitoExplainerSentence(page, explainDuration(10))
+	await checkMvtExplainerSentence(page, explainDuration(86400))
+
+	// select Driving preset
+	await page
+		.locator('[id="asset:presets"] >> [data-test="driving"] >> button')
+		.click()
+
+	// check config explainer with "Driving" preset config values
+	await checkMvresExplainerSentence(page, explainDuration(60))
+	await checkAccitoExplainerSentence(page, explainDuration(30))
+	await checkMvtExplainerSentence(page, explainDuration(3600))
 
 	// fill form with other info
 	await page.fill('#mvres', (1000).toString())

@@ -25,26 +25,26 @@ export const presetConfigs: Record<
 		config: {
 			...defaultConfig,
 			mvres: 3600,
-			accito: 1200,
-			mvt: 21600,
-			accath: 10,
-			accith: 5,
+			accito: 300,
+			mvt: 86400,
+			accath: 11,
+			accith: 7,
 		},
 		label: 'Parcel tracking',
 		description:
-			'Use this if you want to track parcels. It records location every hour when not moving and every 20 minutes when on the move. The accelerometer is configured for motion in vehicles.',
+			'Use this if you want to track parcels. It records location every 24 hours when not moving and every hour when on the move. The accelerometer is configured for tracking movement of handling packages, but avoids tracking motion in vehicle.',
 	},
 	walking: {
 		config: {
 			...defaultConfig,
-			mvres: 300,
+			mvres: 180,
 			accito: 60,
 			mvt: 3600,
-			accath: 3,
-			accith: 1,
+			accath: 5,
+			accith: 4.5,
 		},
 		label: 'Walking',
 		description:
-			'Use this to track people activities like walking. It records location every hour when not moving and every 5 minutes when on the move. The accelerometer is configured for light motion, like walking.',
+			'Use this to track people activities like walking. It records location every hour when not moving and every 3 minutes when on the move. The accelerometer is configured for light motion, like walking.',
 	},
 }

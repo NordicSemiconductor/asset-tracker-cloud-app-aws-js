@@ -60,6 +60,6 @@ test('<Presets/>', async () => {
 
 	expect(driving.findOne('h5').content()).toEqual('Driving')
 	expect(driving.findOne('p').content()).toEqual(
-		'Use this to track people activities like driving. It records location every hour when not moving and every 1 minutes when on the move. The accelerometer is configured for driving.',
+		'Use this to track vehicles. It records location every hour when not moving and every 1 minutes when on the move. The accelerometer is configured for vehicles.',
 	)
 })

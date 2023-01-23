@@ -58,6 +58,6 @@ export const presetConfigs: Record<
 		},
 		label: 'Driving',
 		description:
-			'Use this to track people activities like driving. It records location every hour when not moving and every 1 minutes when on the move. The accelerometer is configured for driving.',
+			'Use this to track vehicles. It records location every hour when not moving and every 1 minutes when on the move. The accelerometer is configured for vehicles.',
 	},
 }

@@ -146,3 +146,21 @@ gh secret set AWS_ACCESS_KEY_ID --env production --body "${AWS_ACCESS_KEY_ID}"
 gh secret set AWS_SECRET_ACCESS_KEY --env production --body "${AWS_SECRET_ACCESS_KEY}"
 gh secret set WEBAPP_STACK_NAME --env production --body "${WEBAPP_STACK_NAME}"
 ```
+
+## Sentry
+
+Optionally, Sentry can be enabled for the web application. Export the
+`PUBLIC_SENTRY_DSN` environment variable.
+
+To enable this in the continuous deployment pipeline of nRF Asset Tracker,
+configure the DSN using the CLI:
+
+```bash
+./cli.sh configure thirdParty sentry sentryDsn https://4f901247818d46099a3f15b6ada9390e@o4504255385174016.ingest.sentry.io/4504684789170176
+```
+
+When the next deployment is triggered, the DSN becomes available via
+
+```bash
+./cli.sh web-app-config
+```

@@ -1,5 +1,8 @@
 import styles from 'components/FeatherIcon.module.css'
-import { icons as featherIcons } from 'feather-icons'
+import {
+	FeatherIcon as FeatherIconType,
+	icons as featherIcons,
+} from 'feather-icons'
 import type { FunctionComponent, PropsWithChildren } from 'react'
 
 type IconOptions = {
@@ -14,7 +17,7 @@ type IconOptions = {
 }
 
 // Must be wrapped in an element: https://github.com/reactjs/rfcs/pull/129
-const wrapSvg = (options: IconOptions) => (f: (typeof featherIcons)[0]) =>
+const wrapSvg = (options: IconOptions) => (f: FeatherIconType) =>
 	(
 		<span
 			className={`${options.className ?? ''} ${

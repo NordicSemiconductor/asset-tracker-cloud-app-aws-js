@@ -30,5 +30,7 @@ interface ImportMeta {
 		PUBLIC_REGION: string
 		PUBLIC_USER_POOL_ID: string
 		PUBLIC_USER_POOL_CLIENT_ID: string
+		// Sentry settings
+		PUBLIC_SENTRY_DSN?: string
 	}
 }

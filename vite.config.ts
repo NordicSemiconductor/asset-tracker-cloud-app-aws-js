@@ -64,6 +64,25 @@ export default defineConfig({
 	},
 	build: {
 		outDir: './build',
+		rollupOptions: {
+			output: {
+				manualChunks: {
+					charts: ['@amcharts/amcharts5', 'react-leaflet'],
+					aws: [
+						'@aws-amplify/ui-react',
+						'@aws-sdk/client-dynamodb',
+						'@aws-sdk/client-iot',
+						'@aws-sdk/client-iot-data-plane',
+						'@aws-sdk/client-s3',
+						'@aws-sdk/util-dynamodb',
+						'@nordicsemiconductor/timestream-helpers',
+						'aws-amplify',
+					],
+					sentry: ['@sentry/react', '@sentry/tracing'],
+					react: ['react', 'react-dom', 'react-router-dom'],
+				},
+			},
+		},
 	},
 	envPrefix: 'PUBLIC_',
 })

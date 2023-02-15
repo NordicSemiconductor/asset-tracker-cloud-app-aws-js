@@ -13,6 +13,7 @@ import { MapDataProvider } from 'hooks/useMapData'
 import { MapSettingsProvider } from 'hooks/useMapSettings'
 import { ServicesProvider } from 'hooks/useServices'
 import { createRoot } from 'react-dom/client'
+import 'utils/sentry'
 
 const container = document.getElementById('root') as HTMLElement
 const root = createRoot(container)

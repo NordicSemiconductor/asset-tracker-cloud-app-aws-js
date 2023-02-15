@@ -1,5 +1,5 @@
 import { fromEnv } from '@nordicsemiconductor/from-env'
-import Amplify from 'aws-amplify'
+import { Amplify } from 'aws-amplify'
 import { createContext, useContext } from 'react'
 
 const {

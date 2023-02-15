@@ -34,9 +34,9 @@ test('Register a new account', async ({ page }) => {
 	})
 
 	// input user information
-	await page.fill('[placeholder="Email"]', email)
-	await page.fill('[placeholder="Password"]', password)
-	await page.fill('[placeholder="Confirm Password"]', password)
+	await page.fill('[placeholder="Enter your Email"]', email)
+	await page.fill('[placeholder="Enter your Password"]', password)
+	await page.fill('[placeholder="Please confirm your Password"]', password)
 	await page.click('form button:has-text("Create Account")')
 	await expect(page.locator('div#root')).toContainText('We Emailed You')
 	await page.screenshot({
@@ -52,12 +52,10 @@ test('Register a new account', async ({ page }) => {
 
 	// log in
 	await page.click('text=Sign In')
-	await page.fill('[placeholder="Email"]', email)
-	await page.fill('[placeholder="Password"]', password)
+	await page.fill('[placeholder="Enter your Email"]', email)
+	await page.fill('[placeholder="Enter your Password"]', password)
 	await page.click('form button:has-text("Sign in")')
-	await page.waitForNavigation({
-		url: 'http://localhost:8080/assets',
-	})
+	await page.waitForURL('http://localhost:8080/assets')
 	await expect(page.locator('main')).toContainText(`Assets`)
 
 	// Store state to be re-used in authenticated tests

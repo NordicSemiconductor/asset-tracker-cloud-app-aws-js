@@ -40,7 +40,7 @@
     "@aws-sdk/util-dynamodb": "3.284.0",
     "@nordicsemiconductor/cell-geolocation-helpers": "5.0.2",
     "@nordicsemiconductor/from-env": "1.0.3",
-    "@nordicsemiconductor/rsrp-bar": "5.0.5",
+    "@nordicsemiconductor/rsrp-bar": "6.0.0",
     "@nordicsemiconductor/timestream-helpers": "5.0.0",
     "@sentry/react": "7.41.0",
     "@sentry/tracing": "7.41.0",

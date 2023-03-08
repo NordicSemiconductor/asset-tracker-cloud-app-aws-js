@@ -63,7 +63,7 @@
     "semver": "7.3.8"
   },
   "devDependencies": {
-    "@aws-sdk/client-cloudformation": "3.282.0",
+    "@aws-sdk/client-cloudformation": "3.287.0",
     "@aws-sdk/client-cognito-identity-provider": "3.282.0",
     "@aws-sdk/client-ssm": "3.282.0",
     "@aws-sdk/client-timestream-write": "3.282.0",

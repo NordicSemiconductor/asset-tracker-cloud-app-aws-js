@@ -2,10 +2,10 @@ import { Type } from '@sinclair/typebox'
 import equal from 'fast-deep-equal'
 import {
 	createContext,
-	FunctionComponent,
-	ReactNode,
 	useContext,
 	useState,
+	type FunctionComponent,
+	type ReactNode,
 } from 'react'
 import { withLocalStorage } from 'utils/withLocalStorage'
 

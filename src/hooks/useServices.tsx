@@ -10,10 +10,10 @@ import { timestreamService } from 'api/timestream'
 import { useAppConfig } from 'hooks/useAppConfig'
 import {
 	createContext,
-	FunctionComponent,
-	ReactNode,
 	useContext,
 	useEffect,
+	type FunctionComponent,
+	type ReactNode,
 } from 'react'
 
 export const ServicesContext = createContext<{

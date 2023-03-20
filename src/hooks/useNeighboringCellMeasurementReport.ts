@@ -1,6 +1,6 @@
 import {
 	fetchNeighboringCellMeasurementReports,
-	ParsedNCellMeasReport,
+	type ParsedNCellMeasReport,
 } from 'api/fetchNeighboringCellMeasurementReports'
 import { useAppConfig } from 'hooks/useAppConfig'
 import { useAsset } from 'hooks/useAsset'

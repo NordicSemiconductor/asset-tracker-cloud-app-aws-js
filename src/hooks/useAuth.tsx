@@ -4,10 +4,10 @@ import type { useAuthenticator } from '@aws-amplify/ui-react'
 import { Auth } from 'aws-amplify'
 import {
 	createContext,
-	FunctionComponent,
 	useContext,
 	useEffect,
 	useState,
+	type FunctionComponent,
 } from 'react'
 
 type CognitoUserAttributes = {

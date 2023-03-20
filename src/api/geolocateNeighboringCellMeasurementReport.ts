@@ -1,5 +1,5 @@
 import type { ParsedNCellMeasReport } from 'api/fetchNeighboringCellMeasurementReports'
-import { AssetGeoLocation, AssetGeoLocationSource } from 'hooks/useMapData'
+import { AssetGeoLocationSource, type AssetGeoLocation } from 'hooks/useMapData'
 
 export const reportToLocation = (
 	report: ParsedNCellMeasReport &

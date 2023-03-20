@@ -8,9 +8,9 @@ import {
 	ListAttachedPoliciesCommand,
 	ListThingPrincipalsCommand,
 	ListThingsCommand,
-	ThingAttribute,
 	UpdateCertificateCommand,
 	UpdateThingCommand,
+	type ThingAttribute,
 } from '@aws-sdk/client-iot'
 import {
 	IoTDataPlaneClient,
@@ -21,7 +21,7 @@ import { fromUtf8 } from '@aws-sdk/util-utf8-browser'
 import { cancelUpgradeFirmwareJob } from 'api/iot/cancelUpgradeFirmwareJob'
 import {
 	createFirmwareJob,
-	DeviceUpgradeFirmwareJob,
+	type DeviceUpgradeFirmwareJob,
 } from 'api/iot/createFirmwareJob'
 import { deleteUpgradeFirmwareJob } from 'api/iot/deleteUpgradeFirmwareJob'
 import { getTwin } from 'api/iot/getTwin'

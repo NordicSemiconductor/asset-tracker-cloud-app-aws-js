@@ -7,7 +7,11 @@ import { markerIcon } from 'components/Map/MarkerIcon'
 import { NoMap } from 'components/Map/NoMap'
 import styles from 'components/Map/SingleAssetMap.module.css'
 import { formatDistanceToNow } from 'date-fns'
-import { AssetGeoLocationSource, Position, useMapData } from 'hooks/useMapData'
+import {
+	AssetGeoLocationSource,
+	useMapData,
+	type Position,
+} from 'hooks/useMapData'
 import { useMapSettings } from 'hooks/useMapSettings'
 import { nanoid } from 'nanoid'
 import React from 'react'

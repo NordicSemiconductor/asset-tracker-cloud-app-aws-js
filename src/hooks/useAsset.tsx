@@ -6,11 +6,11 @@ import { useAppConfig } from 'hooks/useAppConfig'
 import { useServices } from 'hooks/useServices'
 import {
 	createContext,
-	FunctionComponent,
-	ReactNode,
 	useContext,
 	useEffect,
 	useState,
+	type FunctionComponent,
+	type ReactNode,
 } from 'react'
 
 export const AssetContext = createContext<{

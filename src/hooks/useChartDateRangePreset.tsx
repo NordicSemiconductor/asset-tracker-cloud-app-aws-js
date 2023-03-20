@@ -1,14 +1,14 @@
 import { Type } from '@sinclair/typebox'
-import { DateRange, useChartDateRange } from 'hooks/useChartDateRange.js'
+import { useChartDateRange, type DateRange } from 'hooks/useChartDateRange.js'
 import {
 	createContext,
-	FunctionComponent,
-	ReactNode,
 	useCallback,
 	useContext,
 	useEffect,
 	useRef,
 	useState,
+	type FunctionComponent,
+	type ReactNode,
 } from 'react'
 import { withLocalStorage } from 'utils/withLocalStorage.js'
 

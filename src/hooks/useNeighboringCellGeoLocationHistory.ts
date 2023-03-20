@@ -1,6 +1,6 @@
 import {
 	fetchNeighboringCellMeasurementReports,
-	ParsedNCellMeasReport,
+	type ParsedNCellMeasReport,
 } from 'api/fetchNeighboringCellMeasurementReports'
 import { geolocateNeighboringCellMeasurementReport } from 'api/geolocateNeighboringCellMeasurementReport'
 import type { Asset } from 'asset/asset'

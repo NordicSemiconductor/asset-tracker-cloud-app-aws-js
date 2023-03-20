@@ -3,10 +3,10 @@ import {
 	DescribeThingCommand,
 	GetJobDocumentCommand,
 	IoTClient,
-	Job,
 	JobExecutionStatus,
-	JobExecutionSummary,
 	ListJobExecutionsForThingCommand,
+	type Job,
+	type JobExecutionSummary,
 } from '@aws-sdk/client-iot'
 import type { DeviceUpgradeFirmwareJob } from 'api/iot/createFirmwareJob'
 import { paginate } from 'utils/paginate'

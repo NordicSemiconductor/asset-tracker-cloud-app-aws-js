@@ -7,7 +7,12 @@ import { useGNSSLocationHistory } from 'hooks/useGNSSHistory'
 import { useMapSettings } from 'hooks/useMapSettings'
 import { useNeighboringCellGeoLocationHistory } from 'hooks/useNeighboringCellGeoLocationHistory'
 import { useNeighboringCellMeasurementReportGeoLocation } from 'hooks/useNeighboringCellMeasurementReportGeoLocation'
-import { createContext, FunctionComponent, ReactNode, useContext } from 'react'
+import {
+	createContext,
+	useContext,
+	type FunctionComponent,
+	type ReactNode,
+} from 'react'
 
 export type Position = { lat: number; lng: number; accuracy: number }
 

@@ -1,7 +1,7 @@
 import {
 	TimestreamWriteClient,
 	WriteRecordsCommand,
-	_Record,
+	type _Record,
 } from '@aws-sdk/client-timestream-write'
 import { toRecord } from '@nordicsemiconductor/timestream-helpers'
 import { SensorProperties } from '../../src/asset/asset.js'

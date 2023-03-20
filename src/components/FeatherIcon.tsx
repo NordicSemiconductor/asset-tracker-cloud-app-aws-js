@@ -1,7 +1,7 @@
 import styles from 'components/FeatherIcon.module.css'
 import {
-	FeatherIcon as FeatherIconType,
 	icons as featherIcons,
+	type FeatherIcon as FeatherIconType,
 } from 'feather-icons'
 import type { FunctionComponent, PropsWithChildren } from 'react'
 

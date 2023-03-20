@@ -1,6 +1,6 @@
 import type { Static } from '@sinclair/typebox'
-import { timeStreamFormatDate, TimestreamService } from 'api/timestream'
-import { Asset, Roaming, SensorProperties } from 'asset/asset'
+import { timeStreamFormatDate, type TimestreamService } from 'api/timestream'
+import { Roaming, SensorProperties, type Asset } from 'asset/asset'
 import { validateWithJSONSchema } from 'utils/validateWithJSONSchema'
 import { validFilter } from 'utils/validFilter'
 

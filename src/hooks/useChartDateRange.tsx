@@ -2,11 +2,11 @@ import { Type } from '@sinclair/typebox'
 import { sub } from 'date-fns'
 import {
 	createContext,
-	FunctionComponent,
-	ReactNode,
 	useCallback,
 	useContext,
 	useState,
+	type FunctionComponent,
+	type ReactNode,
 } from 'react'
 import { withLocalStorage } from 'utils/withLocalStorage.js'
 

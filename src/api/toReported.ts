@@ -4,8 +4,8 @@ import {
 	Battery,
 	Environment,
 	GNSS,
-	ReportedState,
 	Roaming,
+	type ReportedState,
 } from 'asset/asset'
 import { validPassthrough } from 'utils/validPassthrough'
 

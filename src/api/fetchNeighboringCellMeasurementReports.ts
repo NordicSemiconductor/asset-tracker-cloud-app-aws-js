@@ -2,11 +2,11 @@ import {
 	DynamoDBClient,
 	GetItemCommand,
 	QueryCommand,
-	QueryCommandInput,
+	type QueryCommandInput,
 } from '@aws-sdk/client-dynamodb'
 import { unmarshall } from '@aws-sdk/util-dynamodb'
 import type { Static } from '@sinclair/typebox'
-import { Asset, NCellMeasReport } from 'asset/asset'
+import { NCellMeasReport, type Asset } from 'asset/asset'
 import { validPassthrough } from 'utils/validPassthrough'
 
 const validPassthroughNeighboringCellMeasurementReport =

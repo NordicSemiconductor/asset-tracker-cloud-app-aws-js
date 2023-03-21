@@ -9,6 +9,11 @@ env:
   AWS_ROLE: ${{ secrets.AWS_ROLE }}
   WEBAPP_STACK_NAME: ${{ secrets.WEBAPP_STACK_NAME }}
 
+permissions:
+  id-token: write
+  contents: write
+  issues: write
+
 jobs:
   test-and-release:
     runs-on: ubuntu-22.04

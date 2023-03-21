@@ -1,23 +1,24 @@
-import type { Static } from '@sinclair/typebox'
+import { type ParsedNetworkSurvey } from 'api/fetchNetworkSurveys.js'
 import { randomUUID } from 'node:crypto'
-import type { NCellMeasReport } from '../../src/asset/asset.js'
 import { state } from './asset-reported-state.js'
 
-export const neighboringCellLocations = ({
+export const networkSurveys = ({
 	thingName,
 }: {
 	thingName: string
-}): Static<typeof NCellMeasReport>[] => [
+}): ParsedNetworkSurvey[] => [
 	{
-		reportId: randomUUID(),
+		surveyId: randomUUID(),
 		nw: state.roam.v.nw,
 		deviceId: thingName,
-		timestamp: new Date(Date.now() - 11 * 60 * 1000).toISOString(),
+		timestamp: new Date(Date.now() - 11 * 60 * 1000),
 		unresolved: false,
-		lng: 10.394017,
-		lat: 63.417746,
-		accuracy: 2000,
-		report: {
+		position: {
+			lng: 10.394017,
+			lat: 63.417746,
+			accuracy: 2000,
+		},
+		lte: {
 			mcc: 242,
 			mnc: 1,
 			cell: 30976,
@@ -44,15 +45,17 @@ export const neighboringCellLocations = ({
 		},
 	},
 	{
-		reportId: randomUUID(),
+		surveyId: randomUUID(),
 		nw: state.roam.v.nw,
 		deviceId: thingName,
-		timestamp: new Date(Date.now() - 12 * 60 * 1000).toISOString(),
+		timestamp: new Date(Date.now() - 12 * 60 * 1000),
 		unresolved: false,
-		accuracy: 91,
-		lat: 63.437991506665405,
-		lng: 10.627978535078947,
-		report: {
+		position: {
+			accuracy: 91,
+			lat: 63.437991506665405,
+			lng: 10.627978535078947,
+		},
+		lte: {
 			area: 31801,
 			adv: 80,
 			nmr: [
@@ -73,15 +76,18 @@ export const neighboringCellLocations = ({
 		},
 	},
 	{
-		reportId: randomUUID(),
+		surveyId: randomUUID(),
 		nw: state.roam.v.nw,
 		deviceId: thingName,
-		timestamp: new Date(Date.now() - 13 * 60 * 1000).toISOString(),
+		timestamp: new Date(Date.now() - 13 * 60 * 1000),
 		unresolved: false,
-		accuracy: 886,
-		lat: 63.41110757448426,
-		lng: 10.792197897113734,
-		report: {
+		position: {
+			accuracy: 886,
+			lat: 63.41110757448426,
+			lng: 10.792197897113734,
+		},
+
+		lte: {
 			area: 31801,
 			adv: 65535,
 			nmr: [
@@ -108,15 +114,17 @@ export const neighboringCellLocations = ({
 		},
 	},
 	{
-		reportId: randomUUID(),
+		surveyId: randomUUID(),
 		nw: state.roam.v.nw,
 		deviceId: thingName,
-		timestamp: new Date(Date.now() - 14 * 60 * 1000).toISOString(),
+		timestamp: new Date(Date.now() - 14 * 60 * 1000),
 		unresolved: false,
-		accuracy: 1174,
-		lat: 63.460714204378846,
-		lng: 10.919885631033754,
-		report: {
+		position: {
+			accuracy: 1174,
+			lat: 63.460714204378846,
+			lng: 10.919885631033754,
+		},
+		lte: {
 			area: 31801,
 			adv: 65535,
 			nmr: [

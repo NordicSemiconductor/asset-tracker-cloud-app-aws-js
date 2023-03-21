@@ -1,5 +1,4 @@
-import type { Static } from '@sinclair/typebox'
-import type { AssetConfig } from 'asset/asset.js'
+import { type ConfigData } from '@nordicsemiconductor/asset-tracker-cloud-docs/protocol'
 import { defaultConfig } from 'asset/config.js'
 import { Form } from 'components/Asset/Configuration/Form.js'
 import { Presets } from 'components/Asset/Configuration/Presets.js'
@@ -10,8 +9,7 @@ import { useEffect, useState } from 'react'
 export const Configuration = () => {
 	const { twin } = useAsset()
 
-	const [currentDesiredConfig, setCurrentDesiredConfig] =
-		useState<Static<typeof AssetConfig>>()
+	const [currentDesiredConfig, setCurrentDesiredConfig] = useState<ConfigData>()
 
 	useEffect(() => {
 		if (twin === undefined) return
@@ -27,17 +25,17 @@ export const Configuration = () => {
 const ConfigurationUI = ({
 	currentDesiredConfig,
 }: {
-	currentDesiredConfig: Static<typeof AssetConfig>
+	currentDesiredConfig: ConfigData
 }) => {
 	const { update, twin } = useAsset()
 
 	const {
 		reported: { cfg: reportedConfig },
-	} = twin ?? { reported: { cfg: {} as Static<typeof AssetConfig> } }
+	} = twin ?? { reported: { cfg: {} as ConfigData } }
 	const [newDesiredConfig, setNewDesiredConfig] =
-		useState<Static<typeof AssetConfig>>(currentDesiredConfig)
+		useState<ConfigData>(currentDesiredConfig)
 
-	const updateNewDesiredConfig = (cfg: Partial<Static<typeof AssetConfig>>) => {
+	const updateNewDesiredConfig = (cfg: Partial<ConfigData>) => {
 		const updated = {
 			...newDesiredConfig,
 			...cfg,

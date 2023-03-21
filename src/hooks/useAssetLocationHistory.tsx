@@ -1,6 +1,7 @@
+import { GNSS } from '@nordicsemiconductor/asset-tracker-cloud-docs/protocol'
 import { fetchRoamingData } from 'api/fetchRoamingData'
 import { timeStreamFormatDate } from 'api/timestream'
-import { GNSS, SensorProperties, type Asset } from 'asset/asset'
+import { SensorProperties, type Asset } from 'asset/asset'
 import type { DateRange } from 'hooks/useChartDateRange'
 import { AssetGeoLocationSource, type AssetGeoLocation } from 'hooks/useMapData'
 import { useServices } from 'hooks/useServices'

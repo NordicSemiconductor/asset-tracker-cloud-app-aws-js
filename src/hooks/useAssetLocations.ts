@@ -1,13 +1,15 @@
-import type { Static } from '@sinclair/typebox'
+import {
+	GNSS,
+	type GNSSData,
+} from '@nordicsemiconductor/asset-tracker-cloud-docs/protocol'
 import type { Asset, AssetTwin, AssetWithTwin } from 'asset/asset'
-import { GNSS } from 'asset/asset'
 import { useServices } from 'hooks/useServices'
 import { useEffect, useState } from 'react'
 import { validFilter } from 'utils/validFilter'
 
 type AssetLocation = {
 	asset: Asset
-	position: Static<typeof GNSS>['v']
+	position: GNSSData['v']
 	ts: Date
 }
 
@@ -45,7 +47,7 @@ export const useAssetLocations = (): AssetLocation[] => {
 							) as (AssetWithTwin & {
 								twin: AssetTwin & {
 									reported: {
-										gnss: Static<typeof GNSS>
+										gnss: GNSSData
 									}
 								}
 							})[],

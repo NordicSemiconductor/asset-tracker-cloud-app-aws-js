@@ -143,7 +143,7 @@ export const MapSettings = () => {
 						<input
 							className="form-check-input"
 							type="checkbox"
-							name="mapSettingsNeighboringCellGeoLocations"
+							name="mapSettingsNetworkSurveyGeoLocations"
 							onChange={() => {
 								updateEnabledLayers({
 									neighboringCellGeoLocations:
@@ -151,16 +151,16 @@ export const MapSettings = () => {
 								})
 							}}
 							checked={settings.enabledLayers.neighboringCellGeoLocations}
-							id="mapSettingsNeighboringCellGeoLocations"
+							id="mapSettingsNetworkSurveyGeoLocations"
 						/>
-						<label htmlFor="mapSettingsNeighboringCellGeoLocations">
+						<label htmlFor="mapSettingsNetworkSurveyGeoLocations">
 							Location based on asset's neighboring cell information
 						</label>
 					</div>
 				</div>
 				<div className="row">
 					<SwitchWithNumber
-						id="mapSettingsFetchNeighboringCellHistory"
+						id="mapSettingsFetchNetworkSurveyHistory"
 						label="Neighboring cell location history"
 						disabled={!settings.enabledLayers.neighboringCellGeoLocations}
 						checked={settings.history.neighboringCell}
@@ -169,10 +169,10 @@ export const MapSettings = () => {
 								neighboringCell,
 							})
 						}
-						value={settings.history.maxNeighboringCellGeoLocationEntries}
-						updateValue={(maxNeighboringCellGeoLocationEntries) =>
+						value={settings.history.maxNetworkSurveyGeoLocationEntries}
+						updateValue={(maxNetworkSurveyGeoLocationEntries) =>
 							updateHistory({
-								maxNeighboringCellGeoLocationEntries,
+								maxNetworkSurveyGeoLocationEntries,
 							})
 						}
 					/>

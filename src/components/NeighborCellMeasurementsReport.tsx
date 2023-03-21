@@ -3,7 +3,7 @@ import { expectedSendIntervalInSeconds } from 'asset/expectedSendIntervalInSecon
 import styles from 'components/Asset/AssetInformation.module.css'
 import { NoData } from 'components/NoData'
 import { ReportedTime } from 'components/ReportedTime'
-import { useNeighboringCellMeasurementReport } from 'hooks/useNeighboringCellMeasurementReport'
+import { useNetworkSurvey } from 'hooks/useNetworkSurvey'
 
 export const NeighborCellMeasurementsReport = ({
 	twin,
@@ -11,18 +11,18 @@ export const NeighborCellMeasurementsReport = ({
 	twin?: AssetTwin
 }) => {
 	const expectedInterval = expectedSendIntervalInSeconds(twin)
-	const report = useNeighboringCellMeasurementReport()
+	const survey = useNetworkSurvey()
 
-	if (report === undefined) return <NoData />
+	if (survey?.lte === undefined) return <NoData />
 
 	return (
 		<div className={styles.assetInformation} id="neighboring-cells">
-			{(report.nmr?.length ?? 0) === 0 && (
+			{(survey.lte.nmr?.length ?? 0) === 0 && (
 				<NoData>No neighboring cells found.</NoData>
 			)}
-			{(report.nmr?.length ?? 0) > 0 && (
+			{(survey.lte.nmr?.length ?? 0) > 0 && (
 				<ol>
-					{report.nmr?.map((cell, k) => (
+					{survey.lte.nmr?.map((cell, k) => (
 						<li key={k}>
 							<dl className={styles.AssetInformation}>
 								<dt>RSRP</dt>
@@ -47,8 +47,8 @@ export const NeighborCellMeasurementsReport = ({
 				</ol>
 			)}
 			<ReportedTime
-				receivedAtSeconds={report.receivedAt.getTime() / 1000}
-				reportedAtSeconds={report.reportedAt.getTime() / 1000}
+				receivedAtSeconds={survey.timestamp.getTime() / 1000}
+				reportedAtSeconds={survey.lte.ts / 1000}
 				staleAfterSeconds={expectedInterval}
 			/>
 		</div>

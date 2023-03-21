@@ -399,7 +399,7 @@ export const BatteryIcon = (options?: TypedIconOptions) => (
 export const ClockIcon = (options?: TypedIconOptions) => (
 	<FeatherIcon {...options} title="🕒" type="clock" />
 )
-export const NeighboringCellsIcon = (options?: TypedIconOptions) => (
+export const NetworkSurveysIcon = (options?: TypedIconOptions) => (
 	<FeatherIcon {...options} title="Neighboring Cells" type="loader" />
 )
 export const MapIcon = (options?: TypedIconOptions) => (

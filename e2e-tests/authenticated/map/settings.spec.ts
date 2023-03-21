@@ -21,10 +21,10 @@ test('Show map settings', async ({ page }) => {
 		page.locator('#mapSettingsFetchSingleCellHistory'),
 	).not.toBeChecked()
 	await expect(
-		page.locator('#mapSettingsNeighboringCellGeoLocations'),
+		page.locator('#mapSettingsNetworkSurveyGeoLocations'),
 	).toBeChecked()
 	await expect(
-		page.locator('#mapSettingsFetchNeighboringCellHistory'),
+		page.locator('#mapSettingsFetchNetworkSurveyHistory'),
 	).not.toBeChecked()
 	await page.screenshot({
 		path: `./test-session/map-settings.png`,

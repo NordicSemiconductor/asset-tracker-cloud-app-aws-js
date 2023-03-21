@@ -1,5 +1,4 @@
-import type { Static } from '@sinclair/typebox'
-import type { AssetConfig } from 'asset/asset'
+import { type ConfigData } from '@nordicsemiconductor/asset-tracker-cloud-docs/protocol'
 import styles from 'components/Asset/Configuration/ConfigurationExplainer.module.css'
 import { explainDuration } from 'components/Asset/Configuration/explainDuration.js'
 
@@ -9,7 +8,7 @@ export const ConfigurationExplainer = ({
 	onMovementTimeoutClicked,
 	onAccelerometerInactivityTimeoutClicked,
 }: {
-	configuration: Static<typeof AssetConfig>
+	configuration: ConfigData
 	onMovementResolutionClicked: () => unknown
 	onAccelerometerInactivityTimeoutClicked: () => unknown
 	onMovementTimeoutClicked: () => unknown

@@ -15,8 +15,8 @@ const {
 	backgroundColor,
 	mqttEndpoint,
 	userIotPolicyName,
-	nCellMeasReportTableName,
-	nCellMeasCellGeolocationApiEndpoint,
+	networkSurveyTableName,
+	networkSurveyGeolocationApiEndpoint,
 	geolocationApiEndpoint,
 	historicaldataTableInfo,
 	fotaBucketName,
@@ -33,9 +33,9 @@ const {
 	backgroundColor: 'PUBLIC_MANIFEST_BACKGROUND_COLOR',
 	mqttEndpoint: 'PUBLIC_MQTT_ENDPOINT',
 	userIotPolicyName: 'PUBLIC_USER_IOT_POLICY_NAME',
-	nCellMeasReportTableName: 'PUBLIC_NCELLMEAS_STORAGE_TABLE_NAME',
-	nCellMeasCellGeolocationApiEndpoint:
-		'PUBLIC_NEIGHBOR_CELL_GEOLOCATION_API_URL',
+	networkSurveyTableName: 'PUBLIC_NETWORKSURVEY_STORAGE_TABLE_NAME',
+	networkSurveyGeolocationApiEndpoint:
+		'PUBLIC_NETWORK_SURVEY_GEOLOCATION_API_URL',
 	geolocationApiEndpoint: 'PUBLIC_GEOLOCATION_API_URL',
 	historicaldataTableInfo: 'PUBLIC_HISTORICALDATA_TABLE_INFO',
 	fotaBucketName: 'PUBLIC_FOTA_BUCKET_NAME',
@@ -67,8 +67,8 @@ export const AppConfigContext = createContext<{
 	}
 	mqttEndpoint: string
 	userIotPolicyName: string
-	nCellMeasReportTableName: string
-	nCellMeasCellGeolocationApiEndpoint: URL
+	networkSurveyTableName: string
+	networkSurveyGeolocationApiEndpoint: URL
 	geolocationApiEndpoint: URL
 	timestream: {
 		db: string
@@ -92,9 +92,9 @@ export const AppConfigContext = createContext<{
 	},
 	mqttEndpoint,
 	userIotPolicyName,
-	nCellMeasReportTableName,
-	nCellMeasCellGeolocationApiEndpoint: new URL(
-		nCellMeasCellGeolocationApiEndpoint.replace(/\/+$/, ''),
+	networkSurveyTableName,
+	networkSurveyGeolocationApiEndpoint: new URL(
+		networkSurveyGeolocationApiEndpoint.replace(/\/+$/, ''),
 	),
 	geolocationApiEndpoint: new URL(geolocationApiEndpoint.replace(/\/+$/, '')),
 	timestream: {

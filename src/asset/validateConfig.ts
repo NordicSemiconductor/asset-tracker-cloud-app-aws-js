@@ -1,9 +1,5 @@
-import type { Static } from '@sinclair/typebox'
-import type { AssetConfig } from 'asset/asset'
-
-export const validateConfig = (
-	config: Static<typeof AssetConfig>,
-): Record<string, string> => {
+import { type ConfigData } from '@nordicsemiconductor/asset-tracker-cloud-docs/protocol'
+export const validateConfig = (config: ConfigData): Record<string, string> => {
 	const errors: Record<string, string> = {}
 
 	// Movement resolution must be higher than Accelerometer Inactivity Timeout

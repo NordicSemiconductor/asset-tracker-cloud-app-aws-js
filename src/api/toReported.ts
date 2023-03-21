@@ -1,23 +1,23 @@
 import {
-	AssetConfig,
-	AssetInfo,
+	AWSDevice,
 	Battery,
+	Config,
 	Environment,
 	GNSS,
-	Roaming,
-	type ReportedState,
-} from 'asset/asset'
+	RoamingInfo,
+	type AWSReportedData,
+} from '@nordicsemiconductor/asset-tracker-cloud-docs/protocol'
 import { validPassthrough } from 'utils/validPassthrough'
 
-const validPassthroughRoam = validPassthrough(Roaming)
+const validPassthroughRoam = validPassthrough(RoamingInfo)
 const validPassthroughGNSS = validPassthrough(GNSS)
 const validPassthroughBattery = validPassthrough(Battery)
 const validPassthroughEnvironment = validPassthrough(Environment)
-const validPassthroughAssetConfig = validPassthrough(AssetConfig)
-const validPassthroughAssetInfo = validPassthrough(AssetInfo)
+const validPassthroughAssetConfig = validPassthrough(Config)
+const validPassthroughAssetInfo = validPassthrough(AWSDevice)
 
 /** Ensure that the asset's reported state is supported by this application */
-export const toReported = (reported: ReportedState): ReportedState => {
+export const toReported = (reported: AWSReportedData): AWSReportedData => {
 	if (reported.roam !== undefined) {
 		reported.roam = validPassthroughRoam(reported.roam)
 	}

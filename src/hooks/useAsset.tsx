@@ -1,5 +1,5 @@
-import type { Static } from '@sinclair/typebox'
-import type { Asset, AssetConfig, AssetTwin, AssetWithTwin } from 'asset/asset'
+import { type ConfigData } from '@nordicsemiconductor/asset-tracker-cloud-docs/protocol'
+import type { Asset, AssetTwin, AssetWithTwin } from 'asset/asset'
 import { defaultConfig } from 'asset/config'
 import equal from 'fast-deep-equal'
 import { useAppConfig } from 'hooks/useAppConfig'
@@ -18,10 +18,7 @@ export const AssetContext = createContext<{
 	twin?: AssetTwin
 	setAssetId: (assetId?: string) => void
 	deleteAsset: () => Promise<void>
-	update: (patch: {
-		name?: string
-		cfg?: Static<typeof AssetConfig>
-	}) => Promise<void>
+	update: (patch: { name?: string; cfg?: ConfigData }) => Promise<void>
 	error?: Error
 }>({
 	setAssetId: () => undefined,

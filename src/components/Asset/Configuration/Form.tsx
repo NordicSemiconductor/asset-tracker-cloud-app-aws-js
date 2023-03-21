@@ -1,5 +1,8 @@
-import type { Static } from '@sinclair/typebox'
-import { AssetConfig, DataModules } from 'asset/asset.js'
+import {
+	Config,
+	type ConfigData,
+} from '@nordicsemiconductor/asset-tracker-cloud-docs/protocol'
+import { DataModules } from 'asset/asset.js'
 import { validateConfig } from 'asset/validateConfig.js'
 import cx from 'classnames'
 import styles from 'components/Asset/Configuration/Configuration.module.css'
@@ -35,11 +38,11 @@ export const Form = ({
 	currentDesiredConfig,
 	onSave,
 }: {
-	newDesiredConfig: Static<typeof AssetConfig>
-	reportedConfig?: Static<typeof AssetConfig>
-	updateNewDesiredConfig: (cfg: Partial<Static<typeof AssetConfig>>) => unknown
-	currentDesiredConfig: Static<typeof AssetConfig>
-	onSave: (cfg: Static<typeof AssetConfig>) => unknown
+	newDesiredConfig: ConfigData
+	reportedConfig?: ConfigData
+	updateNewDesiredConfig: (cfg: Partial<ConfigData>) => unknown
+	currentDesiredConfig: ConfigData
+	onSave: (cfg: ConfigData) => unknown
 }) => {
 	const updateConfigProperty =
 		(property: string, parser?: (v: string) => number) => (value: string) => {
@@ -59,7 +62,7 @@ export const Form = ({
 	const hasChanges = !equal(newDesiredConfig, currentDesiredConfig)
 
 	const isNewDesiredConfigValid = !(
-		'errors' in validateWithJSONSchema(AssetConfig)(newDesiredConfig)
+		'errors' in validateWithJSONSchema(Config)(newDesiredConfig)
 	)
 	const formValidationErrors: Record<string, string> =
 		validateConfig(newDesiredConfig)

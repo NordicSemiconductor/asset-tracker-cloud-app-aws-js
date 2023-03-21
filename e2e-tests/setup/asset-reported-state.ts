@@ -1,4 +1,4 @@
-import type { ReportedState } from '../../src/asset/asset.js'
+import { type AWSReportedData } from '@nordicsemiconductor/asset-tracker-cloud-docs'
 import { defaultConfig } from '../../src/asset/config.js'
 
 const now = Date.now()
@@ -6,7 +6,7 @@ const now = Date.now()
 /**
  * @see https://github.com/NordicSemiconductor/asset-tracker-cloud-docs/blob/344a5a63945f7d9d14c8f37d4a96d6f666ba8148/docs/cloud-protocol/state.reported.aws.json
  */
-export const state: Required<ReportedState> = {
+export const state: Required<AWSReportedData> = {
 	bat: {
 		v: 2754,
 		ts: now,

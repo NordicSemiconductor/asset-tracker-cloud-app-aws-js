@@ -11,7 +11,7 @@ export const networkSurveys = ({
 		surveyId: randomUUID(),
 		nw: state.roam.v.nw,
 		deviceId: thingName,
-		timestamp: new Date(Date.now() - 11 * 60 * 1000),
+		timestamp: new Date(Date.now() - 11 * 60 * 1000).toISOString(),
 		unresolved: false,
 		position: {
 			lng: 10.394017,
@@ -48,7 +48,7 @@ export const networkSurveys = ({
 		surveyId: randomUUID(),
 		nw: state.roam.v.nw,
 		deviceId: thingName,
-		timestamp: new Date(Date.now() - 12 * 60 * 1000),
+		timestamp: new Date(Date.now() - 12 * 60 * 1000).toISOString(),
 		unresolved: false,
 		position: {
 			accuracy: 91,
@@ -79,7 +79,7 @@ export const networkSurveys = ({
 		surveyId: randomUUID(),
 		nw: state.roam.v.nw,
 		deviceId: thingName,
-		timestamp: new Date(Date.now() - 13 * 60 * 1000),
+		timestamp: new Date(Date.now() - 13 * 60 * 1000).toISOString(),
 		unresolved: false,
 		position: {
 			accuracy: 886,
@@ -117,7 +117,7 @@ export const networkSurveys = ({
 		surveyId: randomUUID(),
 		nw: state.roam.v.nw,
 		deviceId: thingName,
-		timestamp: new Date(Date.now() - 14 * 60 * 1000),
+		timestamp: new Date(Date.now() - 14 * 60 * 1000).toISOString(),
 		unresolved: false,
 		position: {
 			accuracy: 1174,

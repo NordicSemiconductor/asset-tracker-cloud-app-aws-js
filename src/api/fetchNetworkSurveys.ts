@@ -18,7 +18,7 @@ export type ParsedNetworkSurvey = {
 	surveyId: string
 	deviceId: string
 	nw?: string
-	timestamp: Date
+	timestamp: string
 	unresolved?: boolean
 	position?: { lat: number; lng: number; accuracy: number }
 } & NetworkSurveyData
@@ -76,7 +76,7 @@ export const fetchNetworkSurveys =
 
 		if (Items === undefined || Items.length === 0) return []
 
-		const fullReports = await Promise.all(
+		const fullSurveys = await Promise.all(
 			Items.map(async ({ surveyId }) =>
 				dynamoDB.send(
 					new GetItemCommand({
@@ -89,7 +89,7 @@ export const fetchNetworkSurveys =
 			),
 		)
 
-		const validReports = fullReports
+		const validSurveys = fullSurveys
 			.map(({ Item }) =>
 				validPassthroughNetworkSurvey(
 					unmarshall(Item ?? {}) as ParsedNetworkSurvey,
@@ -97,8 +97,5 @@ export const fetchNetworkSurveys =
 			)
 			.filter((survey) => survey !== undefined) as ParsedNetworkSurvey[]
 
-		return validReports.map((survey) => ({
-			...survey,
-			timestamp: new Date(survey.timestamp),
-		}))
+		return validSurveys
 	}

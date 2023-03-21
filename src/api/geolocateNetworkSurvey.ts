@@ -7,13 +7,13 @@ export const surveyToLocation = (
 	const loc: AssetGeoLocation = {
 		location: {
 			position: survey.position,
-			ts: survey.timestamp,
+			ts: new Date(survey.timestamp),
 			source: AssetGeoLocationSource.NetworkSurvey,
 		},
 	}
 	if (survey.lte !== undefined && survey.nw !== undefined) {
 		loc.roaming = {
-			ts: survey.timestamp.getTime(),
+			ts: new Date(survey.timestamp).getTime(),
 			v: {
 				area: survey.lte.area,
 				cell: survey.lte.cell,

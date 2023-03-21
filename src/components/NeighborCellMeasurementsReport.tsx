@@ -47,7 +47,7 @@ export const NeighborCellMeasurementsReport = ({
 				</ol>
 			)}
 			<ReportedTime
-				receivedAtSeconds={survey.timestamp.getTime() / 1000}
+				receivedAtSeconds={new Date(survey.timestamp).getTime() / 1000}
 				reportedAtSeconds={survey.lte.ts / 1000}
 				staleAfterSeconds={expectedInterval}
 			/>

@@ -46,7 +46,7 @@
     "@sentry/tracing": "7.43.0",
     "@sinclair/typebox": "0.25.24",
     "ajv": "8.12.0",
-    "aws-amplify": "5.0.15",
+    "aws-amplify": "5.0.21",
     "bootstrap": "5.2.3",
     "date-fns": "2.29.3",
     "e118-iin-list": "2.4.1",

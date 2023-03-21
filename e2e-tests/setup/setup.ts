@@ -8,8 +8,8 @@ import { TimestreamWriteClient } from '@aws-sdk/client-timestream-write'
 import { marshall } from '@aws-sdk/util-dynamodb'
 import { fromUtf8 } from '@aws-sdk/util-utf8-browser'
 import {
-	cellId,
 	NetworkMode,
+	cellId,
 } from '@nordicsemiconductor/cell-geolocation-helpers'
 import { fromEnv } from '@nordicsemiconductor/from-env'
 import { randomWords } from '@nordicsemiconductor/random-words'
@@ -18,7 +18,7 @@ import * as path from 'path'
 import { SensorProperties } from '../../src/asset/asset.js'
 import { AssetType } from '../authenticated/lib.js'
 import { state } from './asset-reported-state.js'
-import { neighboringCellLocations } from './neighboringCellLocations.js'
+import { networkSurveys } from './networkSurveys.js'
 import {
 	storeSensorUpdate,
 	timestreamDataGenerator,
@@ -26,12 +26,12 @@ import {
 
 const {
 	mqttEndpoint,
-	neighborCellMeasurementsStorageTable,
+	networkSurveyStorageTable,
 	cellGeoLocationCacheTableName,
 	historicaldataTableInfo,
 } = fromEnv({
 	mqttEndpoint: 'PUBLIC_MQTT_ENDPOINT',
-	neighborCellMeasurementsStorageTable: 'PUBLIC_NCELLMEAS_STORAGE_TABLE_NAME',
+	networkSurveyStorageTable: 'PUBLIC_NETWORKSURVEY_STORAGE_TABLE_NAME',
 	cellGeoLocationCacheTableName: 'PUBLIC_CELL_GEO_LOCATION_CACHE_TABLE_NAME',
 	historicaldataTableInfo: 'PUBLIC_HISTORICALDATA_TABLE_INFO',
 })(process.env)
@@ -116,14 +116,14 @@ const globalSetup = async (type: AssetType) => {
 	])
 
 	// Publish neighboring cell measurement
-	const reports = neighboringCellLocations({ thingName })
+	const surveys = networkSurveys({ thingName })
 	console.log(`Storing neighboring cell report`)
 	await Promise.all(
-		reports.map(async (report) =>
+		surveys.map(async (survey) =>
 			db.send(
 				new PutItemCommand({
-					TableName: neighborCellMeasurementsStorageTable,
-					Item: marshall(report),
+					TableName: networkSurveyStorageTable,
+					Item: marshall(survey),
 				}),
 			),
 		),

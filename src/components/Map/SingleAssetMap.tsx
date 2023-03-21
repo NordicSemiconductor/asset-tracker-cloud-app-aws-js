@@ -7,7 +7,11 @@ import { markerIcon } from 'components/Map/MarkerIcon'
 import { NoMap } from 'components/Map/NoMap'
 import styles from 'components/Map/SingleAssetMap.module.css'
 import { formatDistanceToNow } from 'date-fns'
-import { AssetGeoLocationSource, Position, useMapData } from 'hooks/useMapData'
+import {
+	AssetGeoLocationSource,
+	useMapData,
+	type Position,
+} from 'hooks/useMapData'
 import { useMapSettings } from 'hooks/useMapSettings'
 import { nanoid } from 'nanoid'
 import React from 'react'
@@ -25,14 +29,14 @@ import { nullOrUndefined } from 'utils/nullOrUndefined'
 import { toFixed } from 'utils/toFixed'
 
 const baseColors = {
-	[AssetGeoLocationSource.NeighboringCell]: '#E56399',
+	[AssetGeoLocationSource.NetworkSurvey]: '#E56399',
 	[AssetGeoLocationSource.SingleCell]: '#F6C270',
 	[AssetGeoLocationSource.GNSS]: '#1f56d2',
 } as const
 const lineColor = `#1f56d2`
 const zIndexBySource = {
 	[AssetGeoLocationSource.GNSS]: 420,
-	[AssetGeoLocationSource.NeighboringCell]: 410,
+	[AssetGeoLocationSource.NetworkSurvey]: 410,
 	[AssetGeoLocationSource.SingleCell]: 400,
 } as const
 
@@ -280,7 +284,7 @@ const formatSource = (source: AssetGeoLocationSource): string => {
 	switch (source) {
 		case AssetGeoLocationSource.GNSS:
 			return 'GNSS'
-		case AssetGeoLocationSource.NeighboringCell:
+		case AssetGeoLocationSource.NetworkSurvey:
 			return 'Neighboring cell geo location'
 		case AssetGeoLocationSource.SingleCell:
 			return 'Single cell geo location'

@@ -1,5 +1,4 @@
-import type { Static } from '@sinclair/typebox'
-import type { AssetConfig } from 'asset/asset'
+import { type ConfigData } from '@nordicsemiconductor/asset-tracker-cloud-docs/protocol'
 import { presetConfigs } from 'asset/config.js'
 import styles from 'components/Asset/Configuration/Presets.module.css'
 import { Collapsable } from 'components/Collapsable.js'
@@ -8,10 +7,8 @@ import { IconWithText, PresetsIcon } from 'components/FeatherIcon.js'
 export const Presets = ({
 	setDesiredConfig,
 }: {
-	setDesiredConfig: React.Dispatch<
-		React.SetStateAction<Static<typeof AssetConfig>>
-	>
-	currentDesiredConfig: Static<typeof AssetConfig>
+	setDesiredConfig: React.Dispatch<React.SetStateAction<ConfigData>>
+	currentDesiredConfig: ConfigData
 }) => {
 	return (
 		<div className={styles.wrapper}>

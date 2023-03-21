@@ -15,7 +15,7 @@ import {
 	IconWithText,
 	ImpactsIcon,
 	InfoIcon,
-	NeighboringCellsIcon,
+	NetworkSurveysIcon,
 	ThermometerIcon,
 } from 'components/FeatherIcon'
 import { FOTA } from 'components/FOTA/FOTA'
@@ -145,7 +145,7 @@ export const Asset = () => {
 								id="asset:neighboringcells"
 								title={
 									<IconWithText>
-										<NeighboringCellsIcon size={22} /> Neighboring cells
+										<NetworkSurveysIcon size={22} /> Neighboring cells
 									</IconWithText>
 								}
 								data-intro="This shows the most recent neighboring cells the asset able to identify."

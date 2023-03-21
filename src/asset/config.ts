@@ -1,7 +1,6 @@
-import type { Static } from '@sinclair/typebox'
-import type { AssetConfig, DataModules } from 'asset/asset'
-
-export const defaultConfig: Static<typeof AssetConfig> = {
+import { type ConfigData } from '@nordicsemiconductor/asset-tracker-cloud-docs/protocol'
+import type { DataModules } from 'asset/asset'
+export const defaultConfig: ConfigData = {
 	act: false, // Whether to enable the active mode
 	actwt: 300, // In active mode: wait this amount of seconds until sending the next update. The actual interval will be this time plus the time it takes to get a GNSS fix.
 	mvres: 300, // (movement resolution) In passive mode: Time in seconds to wait after detecting movement before sending the next update
@@ -16,7 +15,7 @@ export const defaultConfig: Static<typeof AssetConfig> = {
 export const presetConfigs: Record<
 	string,
 	{
-		config: Static<typeof AssetConfig>
+		config: ConfigData
 		label: string
 		description: string
 	}

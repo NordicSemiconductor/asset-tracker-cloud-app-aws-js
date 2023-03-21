@@ -41,16 +41,16 @@ export const updateSettings =
 		}
 		if (neighboringCell !== undefined) {
 			if (neighboringCell) {
-				await page.locator('#mapSettingsNeighboringCellGeoLocations').check()
+				await page.locator('#mapSettingsNetworkSurveyGeoLocations').check()
 			} else {
-				await page.locator('#mapSettingsNeighboringCellGeoLocations').uncheck()
+				await page.locator('#mapSettingsNetworkSurveyGeoLocations').uncheck()
 			}
 		}
 		if (neighboringCellHistory !== undefined) {
 			if (neighboringCellHistory) {
-				await page.locator('#mapSettingsFetchNeighboringCellHistory').check()
+				await page.locator('#mapSettingsFetchNetworkSurveyHistory').check()
 			} else {
-				await page.locator('#mapSettingsFetchNeighboringCellHistory').uncheck()
+				await page.locator('#mapSettingsFetchNetworkSurveyHistory').uncheck()
 			}
 		}
 		if (follow !== undefined) {

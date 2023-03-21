@@ -1,11 +1,10 @@
+import { type RoamingInfoData } from '@nordicsemiconductor/asset-tracker-cloud-docs/protocol'
 import {
 	cellId,
 	NetworkMode,
 } from '@nordicsemiconductor/cell-geolocation-helpers'
-import type { Static } from '@sinclair/typebox'
 import { fetchRoamingData } from 'api/fetchRoamingData'
 import { geolocateCell } from 'api/geolocateCell'
-import type { Roaming } from 'asset/asset'
 import { useAppConfig } from 'hooks/useAppConfig'
 import { useAsset } from 'hooks/useAsset'
 import { useChartDateRange } from 'hooks/useChartDateRange'
@@ -70,7 +69,7 @@ export const useCellGeoLocationHistory = (): AssetGeoLocation[] => {
 							cellMap[id] = roam
 						}
 						return cellMap
-					}, {} as Record<string, Static<typeof Roaming>>),
+					}, {} as Record<string, RoamingInfoData>),
 			)
 			// Resolve
 			.then(async (cellMap) =>

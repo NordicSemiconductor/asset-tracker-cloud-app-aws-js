@@ -1,11 +1,14 @@
-import type { Static } from '@sinclair/typebox'
-import { timeStreamFormatDate, TimestreamService } from 'api/timestream'
-import { Asset, Roaming, SensorProperties } from 'asset/asset'
+import {
+	RoamingInfo,
+	type RoamingInfoData,
+} from '@nordicsemiconductor/asset-tracker-cloud-docs/protocol'
+import { timeStreamFormatDate, type TimestreamService } from 'api/timestream'
+import { SensorProperties, type Asset } from 'asset/asset'
 import { validateWithJSONSchema } from 'utils/validateWithJSONSchema'
 import { validFilter } from 'utils/validFilter'
 
-const validateRoamingReading = validateWithJSONSchema(Roaming)
-const validRoamingReadingFilter = validFilter(Roaming)
+const validateRoamingReading = validateWithJSONSchema(RoamingInfo)
+const validRoamingReadingFilter = validFilter(RoamingInfo)
 
 const toRoam = ({
 	objectValuesDouble,
@@ -17,7 +20,7 @@ const toRoam = ({
 	objectValuesVarchar: string[]
 	objectKeys: string[]
 	date: Date
-}): Static<typeof Roaming> => ({
+}): RoamingInfoData => ({
 	v: objectKeys.reduce(
 		(obj, k, i) => ({
 			...obj,
@@ -66,10 +69,10 @@ export const fetchRoamingData = async ({
 	start: Date
 	end: Date
 	timestream: TimestreamService
-}): Promise<Static<typeof Roaming>[]> => {
+}): Promise<RoamingInfoData[]> => {
 	// So, first, build the state of the asset's roaming information,
 	// before the first location by fetching 100 updates older than that.
-	const olderRoamingData = await timestream.query<{
+	const olderRoamingInfoData = await timestream.query<{
 		objectValuesDouble: number[]
 		objectValuesVarchar: string[]
 		objectKeys: string[]
@@ -100,14 +103,14 @@ export const fetchRoamingData = async ({
 	// In case there is no roaming data older than the first entry to start from,
 	// fetch data from the selected date range to build the first full roaming
 	// object
-	if (olderRoamingData.length === 0) {
+	if (olderRoamingInfoData.length === 0) {
 		console.debug(
 			'[fetchRoamingData]',
 			`No previous roaming information found. Fetching data between start and end.`,
 		)
 	}
-	const betweenRoamingData =
-		olderRoamingData.length === 0
+	const betweenRoamingInfoData =
+		olderRoamingInfoData.length === 0
 			? await timestream.query<{
 					objectValuesDouble: number[]
 					objectValuesVarchar: string[]
@@ -138,10 +141,10 @@ export const fetchRoamingData = async ({
 			: []
 
 	// Build up the roaming reading by adding properties from updates to the object, until it is valid
-	let firstRoam: Static<typeof Roaming> | undefined = undefined
+	let firstRoam: RoamingInfoData | undefined = undefined
 
-	if (olderRoamingData.length > 0 || betweenRoamingData.length > 0)
-		firstRoam = [...olderRoamingData, ...betweenRoamingData].reduce(
+	if (olderRoamingInfoData.length > 0 || betweenRoamingInfoData.length > 0)
+		firstRoam = [...olderRoamingInfoData, ...betweenRoamingInfoData].reduce(
 			(roaming, data) => {
 				if (!('errors' in validateRoamingReading(roaming))) return roaming
 				const update = toRoam(data)
@@ -155,7 +158,7 @@ export const fetchRoamingData = async ({
 				}
 				return roamingWithUpdate
 			},
-			{} as Static<typeof Roaming>,
+			{} as RoamingInfoData,
 		)
 
 	if (firstRoam === undefined) {
@@ -187,7 +190,7 @@ export const fetchRoamingData = async ({
 				SensorProperties.Roaming
 			}.'`,
 			`AND date_trunc('second', time) >= '${timeStreamFormatDate(
-				new Date((firstRoam as Static<typeof Roaming>).ts),
+				new Date((firstRoam as RoamingInfoData).ts),
 			)}'`,
 			`AND date_trunc('second', time) <= '${timeStreamFormatDate(end)}'`,
 			`GROUP BY measureGroup, time`,
@@ -196,7 +199,7 @@ export const fetchRoamingData = async ({
 	)
 
 	// Merge the updates with the one full update, and storing them as new full roaming states
-	const roaming: Static<typeof Roaming>[] = [firstRoam]
+	const roaming: RoamingInfoData[] = [firstRoam]
 	for (const update of roamingData.map(toRoam)) {
 		roaming.push({
 			ts: update.ts,

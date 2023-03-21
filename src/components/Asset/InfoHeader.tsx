@@ -1,13 +1,11 @@
-import type { Static } from '@sinclair/typebox'
-import type {
-	AssetInfo,
-	AssetWithTwin,
-	Battery,
-	Environment,
-	GNSS,
-	Roaming,
-	UnixTimeInSeconds,
-} from 'asset/asset'
+import {
+	type BatteryData,
+	type DeviceData,
+	type EnvironmentData,
+	type GNSSData,
+	type RoamingInfoData,
+} from '@nordicsemiconductor/asset-tracker-cloud-docs/protocol'
+import type { AssetWithTwin, UnixTimeInSeconds } from 'asset/asset'
 import { expectedSendIntervalInSeconds } from 'asset/expectedSendIntervalInSeconds'
 import { ConnectionInformation } from 'components/Asset/ConnectionInformation'
 import styles from 'components/Asset/InfoHeader.module.css'
@@ -30,8 +28,8 @@ const RoamInfo = ({
 	receivedAtSeconds,
 }: {
 	expectedSendIntervalInSeconds: number
-	roam?: Static<typeof Roaming>
-	dev?: Static<typeof AssetInfo>
+	roam?: RoamingInfoData
+	dev?: DeviceData
 	receivedAtSeconds?: UnixTimeInSeconds
 }) => {
 	if (roam === undefined) return null
@@ -57,7 +55,7 @@ const BatteryInfo = ({
 	expectedSendIntervalInSeconds,
 	receivedAtSeconds,
 }: {
-	bat?: Static<typeof Battery>
+	bat?: BatteryData
 	expectedSendIntervalInSeconds: number
 	receivedAtSeconds?: UnixTimeInSeconds
 }) => {
@@ -89,7 +87,7 @@ const GNSSInfo = ({
 	expectedSendIntervalInSeconds,
 	receivedAtSeconds,
 }: {
-	gnss?: Static<typeof GNSS>
+	gnss?: GNSSData
 	expectedSendIntervalInSeconds: number
 	receivedAtSeconds?: UnixTimeInSeconds
 }) => {
@@ -126,7 +124,7 @@ const EnvInfo = ({
 	expectedSendIntervalInSeconds,
 	receivedAtSeconds,
 }: {
-	env?: Static<typeof Environment>
+	env?: EnvironmentData
 	expectedSendIntervalInSeconds: number
 	receivedAtSeconds?: UnixTimeInSeconds
 }) => {

@@ -2,10 +2,10 @@ import { Type } from '@sinclair/typebox'
 import equal from 'fast-deep-equal'
 import {
 	createContext,
-	FunctionComponent,
-	ReactNode,
 	useContext,
 	useState,
+	type FunctionComponent,
+	type ReactNode,
 } from 'react'
 import { withLocalStorage } from 'utils/withLocalStorage'
 
@@ -21,7 +21,7 @@ export type Settings = {
 		singleCell: boolean
 		maxSingleCellGeoLocationEntries: number
 		neighboringCell: boolean
-		maxNeighboringCellGeoLocationEntries: number
+		maxNetworkSurveyGeoLocationEntries: number
 	}
 	follow: boolean
 	zoom: number
@@ -45,7 +45,7 @@ const SettingsType = Type.Object(
 				singleCell: Type.Boolean(),
 				maxSingleCellGeoLocationEntries: Type.Integer({ minimum: 1 }),
 				neighboringCell: Type.Boolean(),
-				maxNeighboringCellGeoLocationEntries: Type.Integer({ minimum: 1 }),
+				maxNetworkSurveyGeoLocationEntries: Type.Integer({ minimum: 1 }),
 			},
 			{ additionalProperties: false },
 		),
@@ -67,7 +67,7 @@ const defaultSettings: Settings = {
 		singleCell: false,
 		maxSingleCellGeoLocationEntries: 100,
 		neighboringCell: false,
-		maxNeighboringCellGeoLocationEntries: 100,
+		maxNetworkSurveyGeoLocationEntries: 100,
 	},
 	zoom: 13,
 }

@@ -5,11 +5,14 @@ on: push
 env:
   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
   AWS_REGION: ${{ secrets.AWS_REGION }}
-  # same as AWS_REGION
   AWS_DEFAULT_REGION: ${{ secrets.AWS_REGION }}
-  AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-  AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+  AWS_ROLE: ${{ secrets.AWS_ROLE }}
   WEBAPP_STACK_NAME: ${{ secrets.WEBAPP_STACK_NAME }}
+
+permissions:
+  id-token: write
+  contents: write
+  issues: write
 
 jobs:
   test-and-release:
@@ -23,6 +26,27 @@ jobs:
       - uses: actions/setup-node@v3
         with:
           node-version: "18.x"
+
+      - name: Cache AWS CLI (Linux)
+        id: cache-aws-cli
+        uses: actions/cache@v3
+        with:
+          path: aws/
+          key: cache-aws-cli
+
+      - name: Install AWS
+        if: steps.cache-aws-cli.outputs.cache-hit != 'true'
+        run: |
+          curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+          unzip -q awscliv2.zip
+          sudo ./aws/install --update
+
+      - name: configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v2
+        with:
+          role-to-assume: ${{ env.AWS_ROLE }}
+          role-session-name: web-app-ci
+          aws-region: ${{ env.AWS_REGION }}
 
       - name: Keep npm cache around to speed up installs
         uses: actions/cache@v3

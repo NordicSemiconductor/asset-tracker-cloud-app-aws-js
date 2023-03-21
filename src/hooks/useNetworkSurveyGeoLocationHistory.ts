@@ -1,8 +1,8 @@
 import {
-	fetchNeighboringCellMeasurementReports,
-	ParsedNCellMeasReport,
-} from 'api/fetchNeighboringCellMeasurementReports'
-import { geolocateNeighboringCellMeasurementReport } from 'api/geolocateNeighboringCellMeasurementReport'
+	fetchNetworkSurveys,
+	type ParsedNetworkSurvey,
+} from 'api/fetchNetworkSurveys'
+import { geolocateNetworkSurvey } from 'api/geolocateNetworkSurvey'
 import type { Asset } from 'asset/asset'
 import { useAppConfig } from 'hooks/useAppConfig'
 import { useAsset } from 'hooks/useAsset'
@@ -15,28 +15,31 @@ import { useCallback, useEffect, useState } from 'react'
 /**
  * Provides the cell geo location based on the asset's historical neighboring cell measurements.
  */
-export const useNeighboringCellGeoLocationHistory = (): AssetGeoLocation[] => {
+export const useNetworkSurveyGeoLocationHistory = (): AssetGeoLocation[] => {
 	const { settings } = useMapSettings()
-	const Limit = settings.history.maxNeighboringCellGeoLocationEntries
+	const Limit = settings.history.maxNetworkSurveyGeoLocationEntries
 	const enabled =
 		settings.enabledLayers.neighboringCellGeoLocations &&
 		settings.history.neighboringCell
-	const [neighboringCellGeoLocations, setNeighboringCellGeoLocations] =
-		useState<AssetGeoLocation[]>([])
+	const [neighboringCellGeoLocations, setNetworkSurveyGeoLocations] = useState<
+		AssetGeoLocation[]
+	>([])
 	const { asset } = useAsset()
 	const {
 		range: { start, end },
 	} = useChartDateRange()
 	const { dynamoDB } = useServices()
-	const { nCellMeasReportTableName, nCellMeasCellGeolocationApiEndpoint } =
+	const { networkSurveyTableName, networkSurveyGeolocationApiEndpoint } =
 		useAppConfig()
 
 	const geolocateReport = useCallback(
-		(report: ParsedNCellMeasReport, retryCount = 0, maxTries = 10) =>
-			geolocateNeighboringCellMeasurementReport(
-				nCellMeasCellGeolocationApiEndpoint,
-			)(report, retryCount, maxTries),
-		[nCellMeasCellGeolocationApiEndpoint],
+		(survey: ParsedNetworkSurvey, retryCount = 0, maxTries = 10) =>
+			geolocateNetworkSurvey(networkSurveyGeolocationApiEndpoint)(
+				survey,
+				retryCount,
+				maxTries,
+			),
+		[networkSurveyGeolocationApiEndpoint],
 	)
 
 	const fetchReport = useCallback(
@@ -48,17 +51,17 @@ export const useNeighboringCellGeoLocationHistory = (): AssetGeoLocation[] => {
 				end: Date
 			}
 		}) =>
-			fetchNeighboringCellMeasurementReports({
+			fetchNetworkSurveys({
 				dynamoDB,
-				nCellMeasReportTableName,
+				networkSurveyTableName,
 			})(args),
-		[dynamoDB, nCellMeasReportTableName],
+		[dynamoDB, networkSurveyTableName],
 	)
 
 	useEffect(() => {
 		let isMounted = true
 		if (!enabled) {
-			setNeighboringCellGeoLocations([])
+			setNetworkSurveyGeoLocations([])
 			return
 		}
 		if (asset === undefined) return
@@ -84,12 +87,12 @@ export const useNeighboringCellGeoLocationHistory = (): AssetGeoLocation[] => {
 			)
 			.then((locations) => {
 				if (!isMounted) return
-				setNeighboringCellGeoLocations(
+				setNetworkSurveyGeoLocations(
 					locations.filter((f) => f !== undefined) as AssetGeoLocation[],
 				)
 			})
 			.catch((err) =>
-				console.error(`[useNeighboringCellGeoLocationHistory]`, err),
+				console.error(`[useNetworkSurveyGeoLocationHistory]`, err),
 			)
 
 		return () => {

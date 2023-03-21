@@ -1,50 +1,52 @@
-import type { ParsedNCellMeasReport } from 'api/fetchNeighboringCellMeasurementReports'
-import { AssetGeoLocation, AssetGeoLocationSource } from 'hooks/useMapData'
+import type { ParsedNetworkSurvey } from 'api/fetchNetworkSurveys'
+import { AssetGeoLocationSource, type AssetGeoLocation } from 'hooks/useMapData'
 
-export const reportToLocation = (
-	report: ParsedNCellMeasReport &
-		Required<Pick<ParsedNCellMeasReport, 'position'>>,
+export const surveyToLocation = (
+	survey: ParsedNetworkSurvey & Required<Pick<ParsedNetworkSurvey, 'position'>>,
 ): AssetGeoLocation => {
-	return {
+	const loc: AssetGeoLocation = {
 		location: {
-			position: report.position,
-			ts: report.reportedAt,
-			source: AssetGeoLocationSource.NeighboringCell,
-		},
-		roaming: {
-			ts: report.reportedAt.getTime(),
-			v: {
-				area: report.area,
-				cell: report.cell,
-				mccmnc: parseInt(
-					`${report.mcc}${report.mnc.toString().padStart(2, '0')}`,
-					10,
-				),
-				rsrp: report.rsrp,
-				nw: report.nw,
-			},
+			position: survey.position,
+			ts: new Date(survey.timestamp),
+			source: AssetGeoLocationSource.NetworkSurvey,
 		},
 	}
+	if (survey.lte !== undefined && survey.nw !== undefined) {
+		loc.roaming = {
+			ts: new Date(survey.timestamp).getTime(),
+			v: {
+				area: survey.lte.area,
+				cell: survey.lte.cell,
+				mccmnc: parseInt(
+					`${survey.lte.mcc}${survey.lte.mnc.toString().padStart(2, '0')}`,
+					10,
+				),
+				rsrp: survey.lte.rsrp,
+				nw: survey.nw,
+			},
+		}
+	}
+	return loc
 }
 
-export const geolocateNeighboringCellMeasurementReport =
-	(nCellMeasCellGeolocationApiEndpoint: URL) =>
+export const geolocateNetworkSurvey =
+	(networkSurveyGeolocationApiEndpoint: URL) =>
 	(
-		report: ParsedNCellMeasReport,
+		survey: ParsedNetworkSurvey,
 		retryCount = 0,
 		maxTries = 10,
 	): {
 		promise: Promise<AssetGeoLocation | undefined>
 		cancel: () => void
 	} => {
-		if (report.unresolved !== undefined) {
-			const position = report.position
+		if (survey.unresolved !== undefined) {
+			const position = survey.position
 			if (position !== undefined)
 				// Already resolved
 				return {
 					promise: Promise.resolve(
-						reportToLocation({
-							...report,
+						surveyToLocation({
+							...survey,
 							position,
 						}),
 					),
@@ -56,13 +58,13 @@ export const geolocateNeighboringCellMeasurementReport =
 		let retryTimeout: NodeJS.Timeout
 		const promise = new Promise<AssetGeoLocation | undefined>(
 			(resolve, reject) => {
-				if (report === undefined) return reject(new Error(`No report defined`))
-				if (report.unresolved !== undefined) {
-					const position = report.position
+				if (survey === undefined) return reject(new Error(`No report defined`))
+				if (survey.unresolved !== undefined) {
+					const position = survey.position
 					return resolve(
 						position !== undefined
-							? reportToLocation({
-									...report,
+							? surveyToLocation({
+									...survey,
 									position,
 							  })
 							: undefined,
@@ -72,22 +74,20 @@ export const geolocateNeighboringCellMeasurementReport =
 					return reject(new Error(`Maximum retryCount reached (${retryCount})`))
 				}
 				console.debug(
-					'[geolocateNeighboringCellMeasurementReport]',
+					'[geolocateNetworkSurvey]',
 					`Locating report`,
-					report.reportId,
+					survey.surveyId,
 				)
-				fetch(
-					`${nCellMeasCellGeolocationApiEndpoint}/report/${report.reportId}/location`,
-				)
+				fetch(`${networkSurveyGeolocationApiEndpoint}/${survey.surveyId}`)
 					.then(async (res) => {
 						if (cancelled) return reject(new Error(`Cancelled.`))
 						if (res.status === 200) {
 							const location = await res.json()
-							console.debug('[geolocateNeighboringCellMeasurementReport]', {
+							console.debug('[geolocateNetworkSurvey]', {
 								location,
 							})
-							const cellGeoLocation: AssetGeoLocation = reportToLocation({
-								...report,
+							const cellGeoLocation: AssetGeoLocation = surveyToLocation({
+								...survey,
 								position:
 									location as unknown as AssetGeoLocation['location']['position'],
 							})
@@ -99,7 +99,7 @@ export const geolocateNeighboringCellMeasurementReport =
 									? Math.floor(new Date(expires).getTime() - Date.now())
 									: 60000
 							console.debug(
-								'[geolocateNeighboringCellMeasurementReport]',
+								'[geolocateNetworkSurvey]',
 								`Location currently not available, will try again in ${Math.round(
 									retryInMs / 1000,
 								)} seconds.`,
@@ -107,9 +107,9 @@ export const geolocateNeighboringCellMeasurementReport =
 							retryTimeout = setTimeout(async () => {
 								try {
 									resolve(
-										await geolocateNeighboringCellMeasurementReport(
-											nCellMeasCellGeolocationApiEndpoint,
-										)(report, retryCount + 1).promise,
+										await geolocateNetworkSurvey(
+											networkSurveyGeolocationApiEndpoint,
+										)(survey, retryCount + 1).promise,
 									)
 								} catch (err) {
 									return reject(err)
@@ -117,21 +117,21 @@ export const geolocateNeighboringCellMeasurementReport =
 							}, Math.max(retryInMs, 10000))
 						} else if (res.status === 404) {
 							console.error(
-								'[geolocateNeighboringCellMeasurementReport]',
+								'[geolocateNetworkSurvey]',
 								'Geolocation for neighboring cell report not found',
 								{
-									reportId: report.reportId,
+									surveyId: survey.surveyId,
 								},
 							)
 							console.error(
-								'[geolocateNeighboringCellMeasurementReport]',
+								'[geolocateNetworkSurvey]',
 								`Geolocation for neighboring cell report not found.`,
 							)
 							return resolve(undefined)
 						} else {
-							console.error('[geolocateNeighboringCellMeasurementReport]', res)
+							console.error('[geolocateNetworkSurvey]', res)
 							console.error(
-								'[geolocateNeighboringCellMeasurementReport]',
+								'[geolocateNetworkSurvey]',
 								`Request failed: ${res.status}.`,
 							)
 							return resolve(undefined)

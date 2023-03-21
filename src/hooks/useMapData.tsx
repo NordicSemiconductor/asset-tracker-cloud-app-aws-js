@@ -1,20 +1,27 @@
-import type { Static } from '@sinclair/typebox'
-import type { GNSS, Roaming } from 'asset/asset'
+import type {
+	GNSSData,
+	RoamingInfoData,
+} from '@nordicsemiconductor/asset-tracker-cloud-docs/protocol'
 import { useAsset } from 'hooks/useAsset'
 import { useCellGeoLocation } from 'hooks/useCellGeoLocation'
 import { useCellGeoLocationHistory } from 'hooks/useCellGeoLocationHistory'
 import { useGNSSLocationHistory } from 'hooks/useGNSSHistory'
 import { useMapSettings } from 'hooks/useMapSettings'
-import { useNeighboringCellGeoLocationHistory } from 'hooks/useNeighboringCellGeoLocationHistory'
-import { useNeighboringCellMeasurementReportGeoLocation } from 'hooks/useNeighboringCellMeasurementReportGeoLocation'
-import { createContext, FunctionComponent, ReactNode, useContext } from 'react'
+import { useNetworkSurveyGeoLocation } from 'hooks/useNetworkSurveyGeoLocation'
+import { useNetworkSurveyGeoLocationHistory } from 'hooks/useNetworkSurveyGeoLocationHistory'
+import {
+	createContext,
+	useContext,
+	type FunctionComponent,
+	type ReactNode,
+} from 'react'
 
 export type Position = { lat: number; lng: number; accuracy: number }
 
 export enum AssetGeoLocationSource {
 	GNSS = 'GNSS',
 	SingleCell = 'SingleCell',
-	NeighboringCell = 'NeighboringCell',
+	NetworkSurvey = 'NetworkSurvey',
 }
 
 export type AssetGeoLocation = {
@@ -29,15 +36,15 @@ export type AssetGeoLocation = {
 		source: AssetGeoLocationSource
 	}
 	/** Roaming information */
-	roaming?: Omit<Static<typeof Roaming>, 'v'> & {
-		v: Omit<Static<typeof Roaming>['v'], 'band' | 'ip'> &
-			Partial<Pick<Static<typeof Roaming>['v'], 'band' | 'ip'>>
+	roaming?: Omit<RoamingInfoData, 'v'> & {
+		v: Omit<RoamingInfoData['v'], 'band' | 'ip'> &
+			Partial<Pick<RoamingInfoData['v'], 'band' | 'ip'>>
 	}
 }
 
 const toLocation = (
-	gnss: Static<typeof GNSS>,
-	roam?: Static<typeof Roaming>,
+	gnss: GNSSData,
+	roam?: RoamingInfoData,
 ): AssetGeoLocation => ({
 	location: {
 		position: {
@@ -68,12 +75,11 @@ export const MapDataProvider: FunctionComponent<{ children: ReactNode }> = ({
 }) => {
 	const { settings } = useMapSettings()
 	const { twin } = useAsset()
-	const neighboringCellGeoLocation =
-		useNeighboringCellMeasurementReportGeoLocation()
+	const neighboringCellGeoLocation = useNetworkSurveyGeoLocation()
 	const cellGeoLocation = useCellGeoLocation()
 	const locationHistory = useGNSSLocationHistory()
 	const singleCellGeoLocations = useCellGeoLocationHistory()
-	const neighboringCellLocations = useNeighboringCellGeoLocationHistory()
+	const neighboringCellLocations = useNetworkSurveyGeoLocationHistory()
 
 	const locations: AssetGeoLocation[] = []
 

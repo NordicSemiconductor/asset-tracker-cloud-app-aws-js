@@ -2,7 +2,7 @@ import {
 	cellId,
 	NetworkMode,
 } from '@nordicsemiconductor/cell-geolocation-helpers'
-import { AssetGeoLocation, AssetGeoLocationSource } from 'hooks/useMapData'
+import { AssetGeoLocationSource, type AssetGeoLocation } from 'hooks/useMapData'
 
 /**
  * Looks up cell geolocation.

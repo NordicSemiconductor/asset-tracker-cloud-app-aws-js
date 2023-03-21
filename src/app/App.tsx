@@ -6,9 +6,9 @@ import { MapWithAllAssets } from 'app/pages/Map'
 import { Navbar } from 'components/Navbar'
 import { useAppConfig } from 'hooks/useAppConfig'
 import {
-	BrowserRouter as Router,
 	Navigate,
 	Route,
+	BrowserRouter as Router,
 	Routes,
 } from 'react-router-dom'
 

@@ -94,7 +94,7 @@
     "isolate-react": "2.4.2",
     "jest": "29.5.0",
     "jest-environment-jsdom": "29.5.0",
-    "tsx": "3.12.6",
+    "tsx": "3.12.7",
     "typescript": "5.0.4",
     "vite": "4.3.3"
   },

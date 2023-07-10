@@ -33,12 +33,21 @@ export const useNetworkSurveyGeoLocationHistory = (): AssetGeoLocation[] => {
 		useAppConfig()
 
 	const geolocateReport = useCallback(
-		(survey: ParsedNetworkSurvey, retryCount = 0, maxTries = 10) =>
-			geolocateNetworkSurvey(networkSurveyGeolocationApiEndpoint)(
+		(survey: ParsedNetworkSurvey, retryCount = 0, maxTries = 10) => {
+			if (networkSurveyGeolocationApiEndpoint === undefined)
+				return {
+					promise: Promise.reject(
+						new Error(`Network survey geolocation is not enabled.`),
+					),
+					cancel: () => undefined,
+				}
+
+			return geolocateNetworkSurvey(networkSurveyGeolocationApiEndpoint)(
 				survey,
 				retryCount,
 				maxTries,
-			),
+			)
+		},
 		[networkSurveyGeolocationApiEndpoint],
 	)
 

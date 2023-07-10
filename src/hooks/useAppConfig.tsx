@@ -16,7 +16,6 @@ const {
 	mqttEndpoint,
 	userIotPolicyName,
 	networkSurveyTableName,
-	networkSurveyGeolocationApiEndpoint,
 	geolocationApiEndpoint,
 	historicaldataTableInfo,
 	fotaBucketName,
@@ -34,12 +33,14 @@ const {
 	mqttEndpoint: 'PUBLIC_MQTT_ENDPOINT',
 	userIotPolicyName: 'PUBLIC_USER_IOT_POLICY_NAME',
 	networkSurveyTableName: 'PUBLIC_NETWORKSURVEY_STORAGE_TABLE_NAME',
-	networkSurveyGeolocationApiEndpoint:
-		'PUBLIC_NETWORK_SURVEY_GEOLOCATION_API_URL',
 	geolocationApiEndpoint: 'PUBLIC_GEOLOCATION_API_URL',
 	historicaldataTableInfo: 'PUBLIC_HISTORICALDATA_TABLE_INFO',
 	fotaBucketName: 'PUBLIC_FOTA_BUCKET_NAME',
 })(import.meta.env)
+
+// Optional features
+const networkSurveyGeolocationApiEndpoint =
+	process.env.PUBLIC_NETWORK_SURVEY_GEOLOCATION_API_URL
 
 Amplify.configure({
 	Auth: {
@@ -68,7 +69,7 @@ export const AppConfigContext = createContext<{
 	mqttEndpoint: string
 	userIotPolicyName: string
 	networkSurveyTableName: string
-	networkSurveyGeolocationApiEndpoint: URL
+	networkSurveyGeolocationApiEndpoint?: URL
 	geolocationApiEndpoint: URL
 	timestream: {
 		db: string
@@ -93,9 +94,10 @@ export const AppConfigContext = createContext<{
 	mqttEndpoint,
 	userIotPolicyName,
 	networkSurveyTableName,
-	networkSurveyGeolocationApiEndpoint: new URL(
-		networkSurveyGeolocationApiEndpoint.replace(/\/+$/, ''),
-	),
+	networkSurveyGeolocationApiEndpoint:
+		networkSurveyGeolocationApiEndpoint === undefined
+			? undefined
+			: new URL(networkSurveyGeolocationApiEndpoint.replace(/\/+$/, '')),
 	geolocationApiEndpoint: new URL(geolocationApiEndpoint.replace(/\/+$/, '')),
 	timestream: {
 		db: historicaldataTableInfo.split('|')[0],

@@ -17,12 +17,21 @@ export const useNetworkSurveyGeoLocation = (): AssetGeoLocation | undefined => {
 	const enabled = settings.enabledLayers.neighboringCellGeoLocations
 
 	const geolocateReport = useCallback(
-		(report: ParsedNetworkSurvey, retryCount = 0, maxTries = 10) =>
-			geolocateNetworkSurvey(networkSurveyGeolocationApiEndpoint)(
+		(report: ParsedNetworkSurvey, retryCount = 0, maxTries = 10) => {
+			if (networkSurveyGeolocationApiEndpoint === undefined)
+				return {
+					promise: Promise.reject(
+						new Error(`Network survey geolocation is not enabled.`),
+					),
+					cancel: () => undefined,
+				}
+
+			return geolocateNetworkSurvey(networkSurveyGeolocationApiEndpoint)(
 				report,
 				retryCount,
 				maxTries,
-			),
+			)
+		},
 		[networkSurveyGeolocationApiEndpoint],
 	)
 

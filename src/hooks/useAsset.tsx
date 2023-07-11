@@ -102,7 +102,7 @@ export const AssetProvider: FunctionComponent<{ children: ReactNode }> = ({
 	return (
 		<AssetContext.Provider
 			value={{
-				setAssetId: setAssetId,
+				setAssetId,
 				asset: currentAsset?.asset,
 				twin: currentAsset?.twin,
 				deleteAsset: async () => {

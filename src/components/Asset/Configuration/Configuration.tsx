@@ -64,7 +64,7 @@ const ConfigurationUI = ({
 				{...{
 					newDesiredConfig,
 					reportedConfig,
-					updateNewDesiredConfig: updateNewDesiredConfig,
+					updateNewDesiredConfig,
 					currentDesiredConfig,
 					onSave: (cfg) => {
 						update({

@@ -66,9 +66,9 @@ export const listFirmwareJobs =
 								jobId: `${jobId}`,
 								description: `${(job as Job).description}`,
 								status: status as JobExecutionStatus,
-								queuedAt: queuedAt,
-								startedAt: startedAt,
-								lastUpdatedAt: lastUpdatedAt,
+								queuedAt,
+								startedAt,
+								lastUpdatedAt,
 								document: {
 									size,
 									fwversion,

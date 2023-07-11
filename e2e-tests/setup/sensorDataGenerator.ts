@@ -112,7 +112,7 @@ export const storeSensorUpdate =
 						return toRecord({
 							name: `${sensor}.${k}`,
 							ts,
-							v: v,
+							v,
 							dimensions,
 						})
 					})

@@ -80,7 +80,7 @@ export const AssetsProvider: FunctionComponent<{ children: ReactNode }> = ({
 	return (
 		<AssetsContext.Provider
 			value={{
-				assets: assets,
+				assets,
 				next:
 					(hasNotYetFetched || hasNextPage) && !fetching
 						? () => {

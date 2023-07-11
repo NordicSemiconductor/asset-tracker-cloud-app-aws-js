@@ -39,8 +39,8 @@ const {
 })(import.meta.env)
 
 // Optional features
-const networkSurveyGeolocationApiEndpoint =
-	process.env.PUBLIC_NETWORK_SURVEY_GEOLOCATION_API_URL
+const networkSurveyGeolocationApiEndpoint = import.meta.env
+	.PUBLIC_NETWORK_SURVEY_GEOLOCATION_API_URL
 
 Amplify.configure({
 	Auth: {

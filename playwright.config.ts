@@ -20,6 +20,12 @@ const config: PlaywrightTestConfig = {
 	],
 	// Many tests operate on the Thing shadow of the same device, so we disable parallel test runs here globally
 	workers: 1,
+	webServer: {
+		command: 'npm start',
+		url: 'http://localhost:8080/',
+		timeout: 10 * 1000,
+		reuseExistingServer: process.env.CI === undefined,
+	},
 }
 
 export default config

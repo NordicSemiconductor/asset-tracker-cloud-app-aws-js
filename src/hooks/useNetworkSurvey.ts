@@ -15,6 +15,12 @@ export const useNetworkSurvey = (): ParsedNetworkSurvey | undefined => {
 
 	useEffect(() => {
 		if (asset === undefined) return
+		if (networkSurveyTableName === undefined) {
+			console.warn(
+				`[useNetworkSurvey] Network Survey geolocation is not enabled.`,
+			)
+			return
+		}
 
 		fetchNetworkSurveys({
 			dynamoDB,

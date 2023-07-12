@@ -15,7 +15,6 @@ const {
 	backgroundColor,
 	mqttEndpoint,
 	userIotPolicyName,
-	networkSurveyTableName,
 	geolocationApiEndpoint,
 	historicaldataTableInfo,
 	fotaBucketName,
@@ -32,7 +31,6 @@ const {
 	backgroundColor: 'PUBLIC_MANIFEST_BACKGROUND_COLOR',
 	mqttEndpoint: 'PUBLIC_MQTT_ENDPOINT',
 	userIotPolicyName: 'PUBLIC_USER_IOT_POLICY_NAME',
-	networkSurveyTableName: 'PUBLIC_NETWORKSURVEY_STORAGE_TABLE_NAME',
 	geolocationApiEndpoint: 'PUBLIC_GEOLOCATION_API_URL',
 	historicaldataTableInfo: 'PUBLIC_HISTORICALDATA_TABLE_INFO',
 	fotaBucketName: 'PUBLIC_FOTA_BUCKET_NAME',
@@ -41,6 +39,8 @@ const {
 // Optional features
 const networkSurveyGeolocationApiEndpoint = import.meta.env
 	.PUBLIC_NETWORK_SURVEY_GEOLOCATION_API_URL
+const networkSurveyTableName = import.meta.env
+	.PUBLIC_NETWORKSURVEY_STORAGE_TABLE_NAME
 
 Amplify.configure({
 	Auth: {
@@ -68,7 +68,7 @@ export const AppConfigContext = createContext<{
 	}
 	mqttEndpoint: string
 	userIotPolicyName: string
-	networkSurveyTableName: string
+	networkSurveyTableName?: string
 	networkSurveyGeolocationApiEndpoint?: URL
 	geolocationApiEndpoint: URL
 	timestream: {

@@ -59,11 +59,18 @@ export const useNetworkSurveyGeoLocationHistory = (): AssetGeoLocation[] => {
 				start: Date
 				end: Date
 			}
-		}) =>
-			fetchNetworkSurveys({
+		}) => {
+			if (networkSurveyTableName === undefined) {
+				console.warn(
+					`[useNetworkSurveyGeoLocationHistory] Network Survey geolocation is not enabled.`,
+				)
+				return []
+			}
+			return fetchNetworkSurveys({
 				dynamoDB,
 				networkSurveyTableName,
-			})(args),
+			})(args)
+		},
 		[dynamoDB, networkSurveyTableName],
 	)
 

@@ -28,7 +28,7 @@ describe('useChartDateRangePreset()', () => {
 		const useChartRange = () =>
 			({
 				setRange,
-			} as any)
+			}) as any
 		isolateComponent(
 			<ChartDateRangePresetProvider useChartRangeInjected={useChartRange}>
 				{null}
@@ -42,7 +42,7 @@ describe('useChartDateRangePreset()', () => {
 		const useChartRange = () =>
 			({
 				setRange,
-			} as any)
+			}) as any
 		const isolated = isolateComponent(
 			<ChartDateRangePresetProvider useChartRangeInjected={useChartRange}>
 				<ChartDateRangePresetContext.Consumer>
@@ -71,7 +71,7 @@ describe('useChartDateRangePreset()', () => {
 		const useChartRange = () =>
 			({
 				setRange,
-			} as any)
+			}) as any
 		const now = new Date()
 		const isolated = isolateComponent(
 			<ChartDateRangePresetProvider
@@ -120,7 +120,7 @@ describe('useChartDateRangePreset()', () => {
 		const useChartRange = () =>
 			({
 				setRange,
-			} as any)
+			}) as any
 		const isolated = isolateComponent(
 			<ChartDateRangePresetProvider
 				useChartRangeInjected={useChartRange}
@@ -159,7 +159,7 @@ describe('useChartDateRangePreset()', () => {
 		const useChartRange = () =>
 			({
 				setRange,
-			} as any)
+			}) as any
 		const isolated = isolateComponent(
 			<ChartDateRangePresetProvider
 				useChartRangeInjected={useChartRange}

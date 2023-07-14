@@ -17,27 +17,26 @@ type IconOptions = {
 }
 
 // Must be wrapped in an element: https://github.com/reactjs/rfcs/pull/129
-const wrapSvg = (options: IconOptions) => (f: FeatherIconType) =>
-	(
-		<span
-			className={`${options.className ?? ''} ${
-				styles.iconContainer
-			} feather-icon`}
-			style={{
-				height: `${options.size ?? 20}px`,
+const wrapSvg = (options: IconOptions) => (f: FeatherIconType) => (
+	<span
+		className={`${options.className ?? ''} ${
+			styles.iconContainer
+		} feather-icon`}
+		style={{
+			height: `${options.size ?? 20}px`,
+			width: `${options.size ?? 20}px`,
+			color: `${options.color ?? 'inherit'}`,
+		}}
+		aria-label={options.title}
+		dangerouslySetInnerHTML={{
+			__html: f.toSvg({
+				'stroke-width': `${options.strokeWidth ?? '1.5'}px`,
 				width: `${options.size ?? 20}px`,
-				color: `${options.color ?? 'inherit'}`,
-			}}
-			aria-label={options.title}
-			dangerouslySetInnerHTML={{
-				__html: f.toSvg({
-					'stroke-width': `${options.strokeWidth ?? '1.5'}px`,
-					width: `${options.size ?? 20}px`,
-					height: `${options.size ?? 20}px`,
-				}),
-			}}
-		/>
-	)
+				height: `${options.size ?? 20}px`,
+			}),
+		}}
+	/>
+)
 type FeatherIconIdentifier =
 	| 'activity'
 	| 'airplay'

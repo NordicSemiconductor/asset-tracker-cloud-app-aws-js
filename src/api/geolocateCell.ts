@@ -94,19 +94,22 @@ export const geolocateCell =
 									retryInMs / 1000,
 								)} seconds.`,
 							)
-							retryTimeout = setTimeout(async () => {
-								try {
-									resolve(
-										await geolocateCell({
-											geolocationApiEndpoint,
-											retryCount: (retryCount ?? 0) + 1,
-											maxTries,
-										})({ area, mccmnc, cell, nw, reportedAt }).promise,
-									)
-								} catch (err) {
-									return reject(err)
-								}
-							}, Math.max(retryInMs, 10000))
+							retryTimeout = setTimeout(
+								async () => {
+									try {
+										resolve(
+											await geolocateCell({
+												geolocationApiEndpoint,
+												retryCount: (retryCount ?? 0) + 1,
+												maxTries,
+											})({ area, mccmnc, cell, nw, reportedAt }).promise,
+										)
+									} catch (err) {
+										return reject(err)
+									}
+								},
+								Math.max(retryInMs, 10000),
+							)
 						} else if (res.status === 404) {
 							console.error(
 								'[geolocateCell]',

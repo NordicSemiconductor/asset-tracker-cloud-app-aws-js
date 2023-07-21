@@ -37,7 +37,7 @@ export const useAssetLocations = (): AssetLocation[] => {
 					things.map(async (asset) =>
 						iot
 							.getTwin(asset.id)
-							.then((twin) => ({ asset, twin } as AssetWithTwin)),
+							.then((twin) => ({ asset, twin }) as AssetWithTwin),
 					),
 				)
 					.then(

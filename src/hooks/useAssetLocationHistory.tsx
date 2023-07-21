@@ -62,14 +62,14 @@ export const AssetLocationHistoryProvider: FunctionComponent<{
 					FROM ${table}
 					WHERE deviceId='${asset.id}' 
 					AND substr(measure_name, 1, ${SensorProperties.GNSS.length + 1}) = '${
-				SensorProperties.GNSS
-			}.'
+						SensorProperties.GNSS
+					}.'
 					GROUP BY measureGroup, time
 					ORDER BY time DESC
 				)
 				AND substr(measure_name, 1, ${SensorProperties.GNSS.length + 1}) = '${
-				SensorProperties.GNSS
-			}.'
+					SensorProperties.GNSS
+				}.'
 				AND date_trunc('second', time) >= '${timeStreamFormatDate(startDate)}'
 				AND date_trunc('second', time) <= '${timeStreamFormatDate(endDate)}'
 				GROUP BY measureGroup, time

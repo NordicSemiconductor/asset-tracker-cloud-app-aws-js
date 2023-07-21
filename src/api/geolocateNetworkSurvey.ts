@@ -104,17 +104,20 @@ export const geolocateNetworkSurvey =
 									retryInMs / 1000,
 								)} seconds.`,
 							)
-							retryTimeout = setTimeout(async () => {
-								try {
-									resolve(
-										await geolocateNetworkSurvey(
-											networkSurveyGeolocationApiEndpoint,
-										)(survey, retryCount + 1).promise,
-									)
-								} catch (err) {
-									return reject(err)
-								}
-							}, Math.max(retryInMs, 10000))
+							retryTimeout = setTimeout(
+								async () => {
+									try {
+										resolve(
+											await geolocateNetworkSurvey(
+												networkSurveyGeolocationApiEndpoint,
+											)(survey, retryCount + 1).promise,
+										)
+									} catch (err) {
+										return reject(err)
+									}
+								},
+								Math.max(retryInMs, 10000),
+							)
 						} else if (res.status === 404) {
 							console.error(
 								'[geolocateNetworkSurvey]',

@@ -2,7 +2,10 @@ import type { Static, TSchema } from '@sinclair/typebox'
 import { validPassthrough } from 'utils/validPassthrough.js'
 
 type WithLocalStorage = {
-	<Schema extends TSchema>(_: { schema: Schema; key: string }): {
+	<Schema extends TSchema>(_: {
+		schema: Schema
+		key: string
+	}): {
 		set: (_: Static<Schema>) => void
 		get: () => Static<Schema> | undefined
 		destroy: () => void

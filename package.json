@@ -65,7 +65,7 @@
   },
   "devDependencies": {
     "@aws-sdk/client-cloudformation": "3.398.0",
-    "@aws-sdk/client-cognito-identity-provider": "3.402.0",
+    "@aws-sdk/client-cognito-identity-provider": "3.403.0",
     "@aws-sdk/client-ssm": "3.398.0",
     "@aws-sdk/client-timestream-write": "3.398.0",
     "@aws-sdk/types": "3.398.0",

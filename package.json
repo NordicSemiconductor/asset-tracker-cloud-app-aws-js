@@ -38,7 +38,7 @@
     "@aws-sdk/client-iot-data-plane": "3.410.0",
     "@aws-sdk/client-s3": "3.410.0",
     "@aws-sdk/util-dynamodb": "3.410.0",
-    "@nordicsemiconductor/asset-tracker-cloud-docs": "28.5.2",
+    "@nordicsemiconductor/asset-tracker-cloud-docs": "30.0.0",
     "@nordicsemiconductor/cell-geolocation-helpers": "6.0.0",
     "@nordicsemiconductor/from-env": "2.0.0",
     "@nordicsemiconductor/rsrp-bar": "6.0.0",

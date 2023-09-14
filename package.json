@@ -83,7 +83,7 @@
     "@types/leaflet": "1.9.4",
     "@types/react": "18.2.21",
     "@types/react-dom": "18.2.7",
-    "@types/semver": "7.5.1",
+    "@types/semver": "7.5.2",
     "@vitejs/plugin-react": "4.0.4",
     "chance": "1.1.11",
     "eslint-config-react-app": "7.0.1",

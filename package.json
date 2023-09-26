@@ -81,7 +81,7 @@
     "@types/intro.js": "5.1.1",
     "@types/jest": "29.5.5",
     "@types/leaflet": "1.9.6",
-    "@types/react": "18.2.22",
+    "@types/react": "18.2.23",
     "@types/react-dom": "18.2.7",
     "@types/semver": "7.5.3",
     "@vitejs/plugin-react": "4.1.0",

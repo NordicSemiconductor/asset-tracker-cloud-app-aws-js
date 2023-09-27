@@ -100,10 +100,10 @@ export const Navbar = () => {
 											close()
 											// Leave time for navbar to close
 											window.setTimeout(() => {
-												intro.start()
+												intro.start().catch(console.error)
 											}, 500)
 										} else {
-											intro.start()
+											intro.start().catch(console.error)
 										}
 									}}
 								>

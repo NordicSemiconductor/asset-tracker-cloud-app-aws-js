@@ -9,10 +9,11 @@ declare module '*.png' {
 
 declare module '*.css'
 
+/* eslint-disable @typescript-eslint/consistent-type-definitions */
 interface ImportMeta {
 	hot: {
-		accept: Function
-		dispose: Function
+		accept: () => unknown
+		dispose: () => unknown
 	}
 	env: {
 		// Vite built-in

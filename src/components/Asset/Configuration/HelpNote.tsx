@@ -28,7 +28,7 @@ export const HelpNote = () => {
 					className="btn btn-link"
 					onClick={() => {
 						window.requestAnimationFrame(() => {
-							intro.start()
+							intro.start().catch(console.error)
 						})
 					}}
 				>

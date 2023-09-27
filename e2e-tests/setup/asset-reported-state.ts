@@ -1,4 +1,4 @@
-import { type AWSReportedData } from '@nordicsemiconductor/asset-tracker-cloud-docs'
+import { type AWSReportedData } from '@nordicsemiconductor/asset-tracker-cloud-docs/protocol'
 import { defaultConfig } from '../../src/asset/config.js'
 
 const now = Date.now()

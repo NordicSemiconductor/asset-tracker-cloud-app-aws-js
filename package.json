@@ -69,7 +69,7 @@
     "@aws-sdk/client-ssm": "3.433.0",
     "@aws-sdk/client-timestream-write": "3.433.0",
     "@aws-sdk/types": "3.433.0",
-    "@commitlint/config-conventional": "17.8.1",
+    "@commitlint/config-conventional": "18.0.0",
     "@nordicsemiconductor/asset-tracker-cloud-code-style": "12.0.101",
     "@nordicsemiconductor/object-to-env": "5.0.0",
     "@nordicsemiconductor/random-words": "7.0.0",

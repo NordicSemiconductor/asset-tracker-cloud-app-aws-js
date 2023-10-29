@@ -101,7 +101,7 @@
     "jest-environment-jsdom": "29.7.0",
     "tsx": "3.14.0",
     "typescript": "5.2.2",
-    "vite": "4.4.11"
+    "vite": "4.5.0"
   },
   "lint-staged": {
     "*.{ts,tsx}": [

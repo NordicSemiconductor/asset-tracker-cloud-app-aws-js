@@ -70,7 +70,7 @@
     "@aws-sdk/client-timestream-write": "3.438.0",
     "@aws-sdk/types": "3.433.0",
     "@commitlint/config-conventional": "18.1.0",
-    "@nordicsemiconductor/asset-tracker-cloud-code-style": "12.0.103",
+    "@nordicsemiconductor/asset-tracker-cloud-code-style": "12.0.104",
     "@nordicsemiconductor/object-to-env": "5.0.0",
     "@nordicsemiconductor/random-words": "7.0.0",
     "@playwright/test": "1.39.0",

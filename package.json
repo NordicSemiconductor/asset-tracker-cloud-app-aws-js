@@ -80,7 +80,7 @@
     "@types/feather-icons": "4.29.4",
     "@types/intro.js": "5.1.4",
     "@types/jest": "29.5.7",
-    "@types/leaflet": "1.9.7",
+    "@types/leaflet": "1.9.8",
     "@types/react": "18.2.36",
     "@types/react-dom": "18.2.14",
     "@types/semver": "7.5.4",

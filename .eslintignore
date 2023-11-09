@@ -4,3 +4,4 @@ build/
 test-session/
 .swc/
 setup-jest.js
+aws/

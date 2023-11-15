@@ -72,7 +72,7 @@
     "@commitlint/config-conventional": "18.4.2",
     "@nordicsemiconductor/asset-tracker-cloud-code-style": "12.0.110",
     "@nordicsemiconductor/object-to-env": "5.0.0",
-    "@nordicsemiconductor/random-words": "7.0.0",
+    "@nordicsemiconductor/random-words": "8.0.0",
     "@playwright/test": "1.39.0",
     "@swc/core": "1.3.96",
     "@swc/jest": "0.2.29",

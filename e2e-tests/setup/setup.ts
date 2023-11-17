@@ -38,7 +38,7 @@ const {
 
 const globalSetup = async (type: AssetType) => {
 	// Create Asset Tracker
-	const words = await randomWords({ numWords: 3 })
+	const words = randomWords({ numWords: 3 })
 	const name = words.join('-')
 	const thingName = `web-app-ci-${name}`
 	console.debug(`Creating asset`, type, thingName)

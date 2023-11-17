@@ -29,7 +29,7 @@ test.beforeEach(selectCurrentAsset())
 test('Change asset name', async ({ page }) => {
 	await ensureCollapsableIsOpen(page)('asset:configuration')
 	const { name } = await loadSessionData(AssetType.Default)
-	const newName = `${name}-${(await randomWords()).join('-')}`
+	const newName = `${name}-${randomWords().join('-')}`
 	await page.fill('input[id="asset-name"]', newName)
 	await page.click('form[id="personalization-form"] button:has-text("Update")')
 	await page.screenshot({

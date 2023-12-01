@@ -6,7 +6,7 @@ const {
 	identityPoolId,
 	region,
 	userPoolId,
-	userPoolWebClientId,
+	userPoolClientId,
 	version,
 	homepage,
 	shortName,
@@ -24,7 +24,7 @@ const {
 	identityPoolId: 'PUBLIC_IDENTITY_POOL_ID',
 	region: 'PUBLIC_REGION',
 	userPoolId: 'PUBLIC_USER_POOL_ID',
-	userPoolWebClientId: 'PUBLIC_USER_POOL_CLIENT_ID',
+	userPoolClientId: 'PUBLIC_USER_POOL_CLIENT_ID',
 	version: 'PUBLIC_VERSION',
 	homepage: 'PUBLIC_HOMEPAGE',
 	shortName: 'PUBLIC_MANIFEST_SHORT_NAME',
@@ -43,11 +43,16 @@ const {
 
 Amplify.configure({
 	Auth: {
-		identityPoolId,
-		region,
-		userPoolId,
-		userPoolWebClientId,
-		mandatorySignIn: true,
+		Cognito: {
+			identityPoolId,
+			userPoolId,
+			userPoolClientId,
+			loginWith: {
+				username: false,
+				phone: false,
+				email: true,
+			},
+		},
 	},
 })
 
@@ -55,7 +60,7 @@ export const AppConfigContext = createContext<{
 	identityPoolId: string
 	region: string
 	userPoolId: string
-	userPoolWebClientId: string
+	userPoolClientId: string
 	basename: string
 	version: string
 	homepage: string
@@ -80,7 +85,7 @@ export const AppConfigContext = createContext<{
 	identityPoolId,
 	region,
 	userPoolId,
-	userPoolWebClientId,
+	userPoolClientId,
 	basename: import.meta.env.BASE_URL ?? '/',
 	version,
 	homepage,

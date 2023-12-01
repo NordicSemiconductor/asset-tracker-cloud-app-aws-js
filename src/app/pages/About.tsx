@@ -5,7 +5,7 @@ import React from 'react'
 
 export const About = () => {
 	const { version, homepage } = useAppConfig()
-	const { credentials, attributes } = useAuth()
+	const { attributes, credentials } = useAuth()
 
 	return (
 		<Main>

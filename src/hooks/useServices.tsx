@@ -1,4 +1,3 @@
-import type { ICredentials } from '@aws-amplify/core'
 import { DynamoDBClient } from '@aws-sdk/client-dynamodb'
 import { IoTClient } from '@aws-sdk/client-iot'
 import { IoTDataPlaneClient } from '@aws-sdk/client-iot-data-plane'
@@ -8,6 +7,8 @@ import { iotService } from 'api/iot'
 import type { TimestreamService } from 'api/timestream'
 import { timestreamService } from 'api/timestream'
 import { useAppConfig } from 'hooks/useAppConfig'
+import type { CredentialsAndIdentityId } from 'aws-amplify/auth'
+
 import {
 	createContext,
 	useContext,
@@ -29,7 +30,7 @@ export const ServicesContext = createContext<{
 export const useServices = () => useContext(ServicesContext)
 
 export const ServicesProvider: FunctionComponent<{
-	credentials: ICredentials
+	credentials: Required<CredentialsAndIdentityId>
 	children: ReactNode
 }> = ({ children, credentials }) => {
 	const {
@@ -42,16 +43,16 @@ export const ServicesProvider: FunctionComponent<{
 
 	const iot = iotService({
 		iot: new IoTClient({
-			credentials,
+			credentials: credentials.credentials,
 			region,
 		}),
 		iotData: new IoTDataPlaneClient({
-			credentials,
+			credentials: credentials.credentials,
 			endpoint: `https://${mqttEndpoint}`,
 			region,
 		}),
 		s3: new S3Client({
-			credentials,
+			credentials: credentials.credentials,
 			region,
 		}),
 		fotaBucketName,
@@ -72,7 +73,7 @@ export const ServicesProvider: FunctionComponent<{
 			value={{
 				iot,
 				dynamoDB: new DynamoDBClient({
-					credentials,
+					credentials: credentials.credentials,
 					region,
 				}),
 				timestream: timestreamService({

@@ -2,15 +2,11 @@ import { createRef } from 'react'
 
 export const FilePicker = ({
 	accept,
-	maxSize,
-	onError,
 	onFile,
 	...restProps
 }: {
 	[key: string]: any
 	accept: string
-	maxSize: number
-	onError: (result: Error) => void
 	onFile: (file: File) => void
 }) => {
 	const inputRef = createRef<HTMLInputElement>()

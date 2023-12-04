@@ -1,4 +1,4 @@
-import type { ICredentials } from '@aws-amplify/core'
+import type { CredentialsAndIdentityId } from '@aws-amplify/core'
 import { QueryCommand } from '@aws-sdk/client-timestream-query'
 import {
 	parseResult,
@@ -31,12 +31,12 @@ export const timestreamService = ({
 	db,
 	table,
 	region,
-	credentials,
+	credentials: { credentials },
 }: {
 	db: string
 	table: string
 	region: string
-	credentials: ICredentials
+	credentials: Required<CredentialsAndIdentityId>
 }): TimestreamService => {
 	const queryClientPromise = queryClient(
 		{

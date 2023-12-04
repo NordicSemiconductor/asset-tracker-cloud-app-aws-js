@@ -344,6 +344,7 @@ export const ConfigurationIcon = (options?: TypedIconOptions) => (
 )
 export const AlertIcon = (options?: TypedIconOptions) => (
 	<FeatherIcon
+		{...options}
 		title="Warning"
 		color="#b00000"
 		strokeWidth={2}

@@ -1,7 +1,11 @@
-import type { ICredentials } from '@aws-amplify/core'
-import type { CognitoUserAmplify } from '@aws-amplify/ui'
+import type { CredentialsAndIdentityId } from '@aws-amplify/core'
 import type { useAuthenticator } from '@aws-amplify/ui-react'
-import { Auth } from 'aws-amplify'
+import {
+	deleteUser,
+	fetchAuthSession,
+	fetchUserAttributes,
+	type AuthUser,
+} from 'aws-amplify/auth'
 import {
 	createContext,
 	useContext,
@@ -17,9 +21,9 @@ type CognitoUserAttributes = {
 }
 type AuthContextType = {
 	signOut: ReturnType<typeof useAuthenticator>['signOut']
-	user: CognitoUserAmplify
+	user: AuthUser
 	attributes?: CognitoUserAttributes
-	credentials?: ICredentials
+	credentials?: Required<CredentialsAndIdentityId>
 	deleteAccount: () => void
 }
 
@@ -28,39 +32,43 @@ export const AuthContext = createContext<AuthContextType>(undefined as any)
 export const useAuth = () => useContext(AuthContext)
 
 /**
- * This component loads the credentials neccessary to interact with AWS services and makes them available to children using a property. This way all child components can rely on the presence of these credentials.
+ * This component loads the credentials necessary to interact with AWS services and makes them available to children using a property. This way all child components can rely on the presence of these credentials.
  */
 export const AuthProvider: FunctionComponent<
 	Pick<AuthContextType, 'user' | 'signOut'> & {
-		children: ({ credentials }: { credentials: ICredentials }) => JSX.Element
+		children: ({
+			credentials,
+		}: {
+			credentials: Required<CredentialsAndIdentityId>
+		}) => JSX.Element
 		loadingScreen: JSX.Element
 	}
 > = ({ children, signOut, user, loadingScreen }) => {
 	const [attributes, setAttributes] = useState<CognitoUserAttributes>()
-	const [credentials, setCredentials] = useState<ICredentials>()
+	const [credentials, setCredentials] =
+		useState<Required<CredentialsAndIdentityId>>()
 
 	// Fetch user profile
 	useEffect(() => {
-		user.getUserAttributes((err, attributes) => {
-			if (err !== null) {
-				console.error(`Failed to fetch user attributes!`)
-				console.error(err)
-				return
-			}
-			setAttributes(
-				attributes?.reduce(
-					(attributes, { Name, Value }) => ({ ...attributes, [Name]: Value }),
-					{} as CognitoUserAttributes,
-				) ?? ({} as CognitoUserAttributes),
-			)
-		})
+		fetchUserAttributes()
+			.then((attributes) => {
+				console.log(`[useAuth]`, attributes)
+				setAttributes(attributes as unknown as CognitoUserAttributes)
+			})
+			.catch((error) => console.error('[useAuth]', error))
 	}, [user])
 
 	// Get API credentials
 	useEffect(() => {
-		Auth.currentCredentials()
-			.then(Auth.essentialCredentials)
-			.then(setCredentials)
+		fetchAuthSession()
+			.then(({ credentials, identityId }) => {
+				if (credentials === undefined || identityId === undefined)
+					throw new Error(`Failed to fetch credentials.`)
+				setCredentials({
+					credentials,
+					identityId,
+				})
+			})
 			.catch((error) => console.error('[useAuth]', error))
 	}, [user])
 
@@ -74,13 +82,11 @@ export const AuthProvider: FunctionComponent<
 				attributes,
 				credentials,
 				deleteAccount: () => {
-					user.deleteUser((error) => {
-						if (error !== undefined && error !== null) {
-							console.error(error)
-						} else {
+					deleteUser()
+						.then(() => {
 							signOut()
-						}
-					})
+						})
+						.catch((error) => console.error('[useAuth]', error))
 				},
 			}}
 		>

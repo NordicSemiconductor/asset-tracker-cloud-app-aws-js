@@ -53,4 +53,13 @@ export const state: Required<AWSReportedData> = {
 		},
 		ts: now,
 	},
+	fg: {
+		ts: now,
+		v: {
+			I: 250,
+			SoC: 80,
+			T: 215,
+			V: 3300,
+		},
+	},
 }

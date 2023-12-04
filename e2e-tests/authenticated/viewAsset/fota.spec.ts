@@ -87,7 +87,7 @@ test('Create firmware update from file', async ({ page }) => {
 
 	// Compare sizes
 	expect(fs.statSync(updateFileWithVersion).size).toEqual(
-		fs.statSync(downloadedPath as string).size,
+		fs.statSync(downloadedPath).size,
 	)
 
 	await page.screenshot({

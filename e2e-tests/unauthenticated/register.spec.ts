@@ -27,7 +27,7 @@ test('Register a new account', async ({ page }) => {
 	await page.screenshot({ fullPage: true, path: `./test-session/login.png` })
 
 	// find registration link
-	await page.click('text=Create Account')
+	await page.getByRole('tab', { name: 'Create Account' }).click()
 	await page.screenshot({
 		fullPage: true,
 		path: `./test-session/register.png`,
@@ -37,7 +37,7 @@ test('Register a new account', async ({ page }) => {
 	await page.fill('[placeholder="Enter your Email"]', email)
 	await page.fill('[placeholder="Enter your Password"]', password)
 	await page.fill('[placeholder="Please confirm your Password"]', password)
-	await page.click('form button:has-text("Create Account")')
+	await page.getByRole('button', { name: 'Create Account' }).click()
 	await expect(page.locator('div#root')).toContainText('We Emailed You')
 	await page.screenshot({
 		fullPage: true,
@@ -48,13 +48,12 @@ test('Register a new account', async ({ page }) => {
 	await confirmSignUp(email)
 
 	// confirm user account
-	await page.goto('http://localhost:8080/')
+	await page.reload()
 
 	// log in
-	await page.click('text=Sign In')
 	await page.fill('[placeholder="Enter your Email"]', email)
 	await page.fill('[placeholder="Enter your Password"]', password)
-	await page.click('form button:has-text("Sign in")')
+	await page.getByRole('button', { name: 'Sign in' }).click()
 	await page.waitForURL('http://localhost:8080/assets')
 	await expect(page.locator('main')).toContainText(`Assets`)
 

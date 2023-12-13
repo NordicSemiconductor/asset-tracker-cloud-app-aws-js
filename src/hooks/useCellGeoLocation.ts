@@ -43,7 +43,7 @@ export const useCellGeoLocation = (): AssetGeoLocation | undefined => {
 						: {
 								...location,
 								roaming: twin.reported.roam,
-						  },
+							},
 				)
 			})
 			.catch((err) => {

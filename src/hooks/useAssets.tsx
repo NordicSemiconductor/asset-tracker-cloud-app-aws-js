@@ -88,7 +88,7 @@ export const AssetsProvider: FunctionComponent<{ children: ReactNode }> = ({
 									...state,
 									currentPage: state.currentPage + 1,
 								}))
-						  }
+							}
 						: undefined,
 				reload: () => {
 					setAssets([])

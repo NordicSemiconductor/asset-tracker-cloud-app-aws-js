@@ -76,7 +76,7 @@ export const listWebAppCIThings =
 							.filter(({ shadow }) =>
 								shadow?.payload !== undefined
 									? JSON.parse(toUtf8(shadow.payload))?.timestamp ??
-									  Date.now() / 1000 > Date.now() - ageInHours * 60 * 60 * 1000
+										Date.now() / 1000 > Date.now() - ageInHours * 60 * 60 * 1000
 									: false,
 							)
 							.map(({ thing: { thingName } }) => thingName as string),

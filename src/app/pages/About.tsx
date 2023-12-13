@@ -82,8 +82,8 @@ export const About = () => {
 										{v === undefined
 											? 'N/A'
 											: typeof v === 'string'
-											  ? v
-											  : JSON.stringify(v)}
+												? v
+												: JSON.stringify(v)}
 									</code>
 								</dd>
 							</React.Fragment>

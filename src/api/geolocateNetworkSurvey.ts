@@ -66,7 +66,7 @@ export const geolocateNetworkSurvey =
 							? surveyToLocation({
 									...survey,
 									position,
-							  })
+								})
 							: undefined,
 					)
 				}

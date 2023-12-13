@@ -55,14 +55,14 @@ export const AMChart = ({
 						valueYField: 'value',
 						valueXField: 'date',
 						tooltip,
-				  })
+					})
 				: am5xy.LineSeries.new(root, {
 						xAxis: dateAxis,
 						yAxis: valueAxes,
 						valueYField: 'value',
 						valueXField: 'date',
 						tooltip,
-				  }),
+					}),
 		)
 
 		series.data.setAll(

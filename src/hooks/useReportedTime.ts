@@ -24,11 +24,11 @@ export const useReportedTime = ({
 			: formatDistanceToNow(new Date(receivedAtSeconds * 1000), {
 					includeSeconds: true,
 					addSuffix: true,
-			  }) !==
-			  formatDistanceToNow(new Date(reportedAtSeconds * 1000), {
+				}) !==
+				formatDistanceToNow(new Date(reportedAtSeconds * 1000), {
 					includeSeconds: true,
 					addSuffix: true,
-			  })
+				})
 	const reportIsOld =
 		(Date.now() - reportedAtSeconds * 1000) / 1000 >
 		(staleAfterSeconds ?? Number.MAX_SAFE_INTEGER)

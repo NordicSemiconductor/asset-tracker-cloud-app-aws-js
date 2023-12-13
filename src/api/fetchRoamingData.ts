@@ -116,7 +116,7 @@ export const fetchRoamingData = async ({
 					objectValuesVarchar: string[]
 					objectKeys: string[]
 					date: Date
-			  }>((table) =>
+				}>((table) =>
 					[
 						`SELECT`,
 						`array_agg(measure_value::double) AS objectValuesDouble,`,
@@ -137,7 +137,7 @@ export const fetchRoamingData = async ({
 						// Sort descending so we can build the roaming object back starting with the latest update
 						`ORDER BY time ASC`,
 					].join('\n'),
-			  )
+				)
 			: []
 
 	// Build up the roaming reading by adding properties from updates to the object, until it is valid

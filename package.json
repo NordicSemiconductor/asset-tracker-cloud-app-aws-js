@@ -95,7 +95,7 @@
     "eslint-plugin-jsx-a11y": "6.8.0",
     "eslint-plugin-no-restricted-imports": "0.0.0",
     "eslint-plugin-prefer-arrow": "1.2.3",
-    "eslint-plugin-unicorn": "49.0.0",
+    "eslint-plugin-unicorn": "50.0.0",
     "handlebars": "4.7.8",
     "id128": "1.6.6",
     "identity-obj-proxy": "3.0.0",

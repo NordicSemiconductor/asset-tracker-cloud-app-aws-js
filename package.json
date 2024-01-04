@@ -71,7 +71,7 @@
     "@aws-sdk/client-timestream-write": "3.485.0",
     "@aws-sdk/types": "3.485.0",
     "@aws-sdk/util-dynamodb": "3.485.0",
-    "@commitlint/config-conventional": "18.4.3",
+    "@commitlint/config-conventional": "18.4.4",
     "@nordicsemiconductor/asset-tracker-cloud-code-style": "13.1.5",
     "@nordicsemiconductor/object-to-env": "7.0.3",
     "@nordicsemiconductor/random-words": "8.0.0",

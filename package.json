@@ -39,7 +39,7 @@
     "@aws-sdk/client-iot": "3.490.0",
     "@aws-sdk/client-iot-data-plane": "3.490.0",
     "@aws-sdk/client-s3": "3.490.0",
-    "@nordicsemiconductor/asset-tracker-cloud-docs": "36.0.1",
+    "@nordicsemiconductor/asset-tracker-cloud-docs": "36.0.2",
     "@nordicsemiconductor/cell-geolocation-helpers": "6.0.0",
     "@nordicsemiconductor/from-env": "3.0.0",
     "@nordicsemiconductor/rsrp-bar": "8.0.1",

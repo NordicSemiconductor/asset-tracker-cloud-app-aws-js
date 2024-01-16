@@ -36,7 +36,7 @@
     "@aws-amplify/ui": "6.0.7",
     "@aws-amplify/ui-react": "6.1.1",
     "@aws-sdk/client-dynamodb": "3.490.0",
-    "@aws-sdk/client-iot": "3.490.0",
+    "@aws-sdk/client-iot": "3.493.0",
     "@aws-sdk/client-iot-data-plane": "3.490.0",
     "@aws-sdk/client-s3": "3.490.0",
     "@nordicsemiconductor/asset-tracker-cloud-docs": "36.0.2",

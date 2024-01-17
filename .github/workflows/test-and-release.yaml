@@ -29,7 +29,7 @@ jobs:
 
       - name: Cache AWS CLI (Linux)
         id: cache-aws-cli
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         with:
           path: aws/
           key: cache-aws-cli
@@ -49,7 +49,7 @@ jobs:
           aws-region: ${{ env.AWS_REGION }}
 
       - name: Keep npm cache around to speed up installs
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         with:
           path: ~/.npm
           key: ${{ runner.OS }}-build-${{ hashFiles('**/package-lock.json') }}

@@ -20,8 +20,8 @@
       "asset/*": ["asset/*"],
       "hooks/*": ["hooks/*"],
       "components/*": ["components/*"],
-      "utils/*": ["utils/*"]
-    }
+      "utils/*": ["utils/*"],
+    },
   },
-  "include": ["src", "vite.config.ts", "e2e-tests"]
+  "include": ["src", "vite.config.ts", "e2e-tests"],
 }

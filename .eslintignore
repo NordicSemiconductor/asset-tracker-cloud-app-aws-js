@@ -1,7 +1,0 @@
-playwright.config.ts
-node_modules
-build/
-test-session/
-.swc/
-setup-jest.js
-aws/

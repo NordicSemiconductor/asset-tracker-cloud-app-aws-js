@@ -1,7 +1,0 @@
-.assetName {
-  text-overflow: ellipsis;
-  display: inline-block;
-  max-width: calc(100vw - 2rem - 100px);
-  overflow: hidden;
-  white-space: nowrap;
-}

@@ -139,7 +139,7 @@
       ]
     ]
   },
-  "prettier": "@nordicsemiconductor/asset-tracker-cloud-code-style/.prettierrc",
+  "prettier": "@bifravst/prettier-config",
   "jest": {
     "testRegex": ".+\\.spec\\.tsx?$",
     "testPathIgnorePatterns": [

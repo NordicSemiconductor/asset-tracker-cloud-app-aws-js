@@ -42,7 +42,7 @@
     "@nordicsemiconductor/asset-tracker-cloud-docs": "36.0.2",
     "@nordicsemiconductor/cell-geolocation-helpers": "6.0.0",
     "@nordicsemiconductor/from-env": "3.0.0",
-    "@nordicsemiconductor/rsrp-bar": "8.0.1",
+    "@nordicsemiconductor/rsrp-bar": "8.0.2",
     "@nordicsemiconductor/timestream-helpers": "6.0.1",
     "@sentry/react": "7.101.1",
     "@sentry/tracing": "7.101.1",

@@ -43,7 +43,7 @@
     "@nordicsemiconductor/cell-geolocation-helpers": "6.0.0",
     "@nordicsemiconductor/from-env": "3.0.0",
     "@nordicsemiconductor/rsrp-bar": "8.0.2",
-    "@nordicsemiconductor/timestream-helpers": "6.0.1",
+    "@nordicsemiconductor/timestream-helpers": "6.0.2",
     "@sentry/react": "7.105.0",
     "@sentry/tracing": "7.105.0",
     "@sinclair/typebox": "0.32.9",

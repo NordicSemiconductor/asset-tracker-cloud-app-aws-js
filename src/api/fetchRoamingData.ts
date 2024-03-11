@@ -190,7 +190,7 @@ export const fetchRoamingData = async ({
 				SensorProperties.Roaming
 			}.'`,
 			`AND date_trunc('second', time) >= '${timeStreamFormatDate(
-				new Date((firstRoam as RoamingInfoData).ts),
+				new Date(firstRoam.ts),
 			)}'`,
 			`AND date_trunc('second', time) <= '${timeStreamFormatDate(end)}'`,
 			`GROUP BY measureGroup, time`,

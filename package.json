@@ -72,7 +72,7 @@
     "@aws-sdk/types": "3.523.0",
     "@aws-sdk/util-dynamodb": "3.529.1",
     "@bifravst/prettier-config": "1.0.0",
-    "@commitlint/config-conventional": "19.0.3",
+    "@commitlint/config-conventional": "19.1.0",
     "@nordicsemiconductor/object-to-env": "7.0.7",
     "@nordicsemiconductor/random-words": "8.0.1",
     "@playwright/test": "1.42.1",

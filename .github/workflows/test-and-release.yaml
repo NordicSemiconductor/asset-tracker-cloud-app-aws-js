@@ -48,7 +48,6 @@ jobs:
           role-session-name: web-app-ci
           aws-region: ${{ env.AWS_REGION }}
 
-
       - name: Install dependencies
         run: npm ci --no-audit
 

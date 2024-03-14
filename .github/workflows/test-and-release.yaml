@@ -26,7 +26,7 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: "20.x"
-
+          cache: "npm"
       - name: Cache AWS CLI (Linux)
         id: cache-aws-cli
         uses: actions/cache@v4
@@ -48,11 +48,6 @@ jobs:
           role-session-name: web-app-ci
           aws-region: ${{ env.AWS_REGION }}
 
-      - name: Keep npm cache around to speed up installs
-        uses: actions/cache@v4
-        with:
-          path: ~/.npm
-          key: ${{ runner.OS }}-build-${{ hashFiles('**/package-lock.json') }}
 
       - name: Install dependencies
         run: npm ci --no-audit

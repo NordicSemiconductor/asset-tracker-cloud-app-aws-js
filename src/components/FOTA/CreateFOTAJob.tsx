@@ -1,8 +1,8 @@
-import type { Asset } from 'asset/asset'
-import { FilePicker } from 'components/FOTA/FilePicker'
-import { useAsset } from 'hooks/useAsset'
-import { useFOTA } from 'hooks/useFOTA'
-import { useServices } from 'hooks/useServices'
+import type { Asset } from 'asset/asset.js'
+import { FilePicker } from 'components/FOTA/FilePicker.js'
+import { useAsset } from 'hooks/useAsset.js'
+import { useFOTA } from 'hooks/useFOTA.js'
+import { useServices } from 'hooks/useServices.js'
 import { useState } from 'react'
 import semver from 'semver'
 

@@ -1,5 +1,5 @@
-import { SensorProperties } from 'asset/asset'
-import { useAssetHistory } from 'hooks/useAssetHistory'
+import { SensorProperties } from 'asset/asset.js'
+import { useAssetHistory } from 'hooks/useAssetHistory.js'
 import { useCallback } from 'react'
 
 export const useAssetButtonPressesHistory = () =>

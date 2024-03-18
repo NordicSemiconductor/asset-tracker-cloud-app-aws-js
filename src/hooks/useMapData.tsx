@@ -2,13 +2,13 @@ import type {
 	GNSSData,
 	RoamingInfoData,
 } from '@nordicsemiconductor/asset-tracker-cloud-docs/protocol'
-import { useAsset } from 'hooks/useAsset'
-import { useCellGeoLocation } from 'hooks/useCellGeoLocation'
-import { useCellGeoLocationHistory } from 'hooks/useCellGeoLocationHistory'
-import { useGNSSLocationHistory } from 'hooks/useGNSSHistory'
-import { useMapSettings } from 'hooks/useMapSettings'
-import { useNetworkSurveyGeoLocation } from 'hooks/useNetworkSurveyGeoLocation'
-import { useNetworkSurveyGeoLocationHistory } from 'hooks/useNetworkSurveyGeoLocationHistory'
+import { useAsset } from 'hooks/useAsset.js'
+import { useCellGeoLocation } from 'hooks/useCellGeoLocation.js'
+import { useCellGeoLocationHistory } from 'hooks/useCellGeoLocationHistory.js'
+import { useGNSSLocationHistory } from 'hooks/useGNSSHistory.js'
+import { useMapSettings } from 'hooks/useMapSettings.js'
+import { useNetworkSurveyGeoLocation } from 'hooks/useNetworkSurveyGeoLocation.js'
+import { useNetworkSurveyGeoLocationHistory } from 'hooks/useNetworkSurveyGeoLocationHistory.js'
 import {
 	createContext,
 	useContext,

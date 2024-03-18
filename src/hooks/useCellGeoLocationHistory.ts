@@ -3,14 +3,14 @@ import {
 	cellId,
 	NetworkMode,
 } from '@nordicsemiconductor/cell-geolocation-helpers'
-import { fetchRoamingData } from 'api/fetchRoamingData'
-import { geolocateCell } from 'api/geolocateCell'
-import { useAppConfig } from 'hooks/useAppConfig'
-import { useAsset } from 'hooks/useAsset'
-import { useChartDateRange } from 'hooks/useChartDateRange'
-import type { AssetGeoLocation } from 'hooks/useMapData'
-import { useMapSettings } from 'hooks/useMapSettings'
-import { useServices } from 'hooks/useServices'
+import { fetchRoamingData } from 'api/fetchRoamingData.js'
+import { geolocateCell } from 'api/geolocateCell.js'
+import { useAppConfig } from 'hooks/useAppConfig.js'
+import { useAsset } from 'hooks/useAsset.js'
+import { useChartDateRange } from 'hooks/useChartDateRange.js'
+import type { AssetGeoLocation } from 'hooks/useMapData.js'
+import { useMapSettings } from 'hooks/useMapSettings.js'
+import { useServices } from 'hooks/useServices.js'
 import { useCallback, useEffect, useState } from 'react'
 
 /**

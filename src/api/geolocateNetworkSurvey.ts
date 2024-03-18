@@ -1,5 +1,8 @@
-import type { ParsedNetworkSurvey } from 'api/fetchNetworkSurveys'
-import { AssetGeoLocationSource, type AssetGeoLocation } from 'hooks/useMapData'
+import type { ParsedNetworkSurvey } from 'api/fetchNetworkSurveys.js'
+import {
+	AssetGeoLocationSource,
+	type AssetGeoLocation,
+} from 'hooks/useMapData.js'
 
 export const surveyToLocation = (
 	survey: ParsedNetworkSurvey & Required<Pick<ParsedNetworkSurvey, 'position'>>,

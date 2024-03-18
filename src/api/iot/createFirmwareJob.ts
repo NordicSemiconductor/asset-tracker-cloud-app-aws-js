@@ -5,7 +5,7 @@ import {
 	JobExecutionStatus,
 } from '@aws-sdk/client-iot'
 import { PutObjectCommand, S3Client } from '@aws-sdk/client-s3'
-import { ulid } from 'utils/ulid'
+import { ulid } from 'utils/ulid.js'
 
 export const createFirmwareJob =
 	({

@@ -1,7 +1,8 @@
-import cx from 'classnames'
-import { CloseIcon, IconWithText } from 'components/FeatherIcon'
-import { useChartDateRange } from 'hooks/useChartDateRange'
-import { useChartDateRangePreset } from 'hooks/useChartDateRangePreset'
+import classnames from 'classnames'
+const cx = classnames.default
+import { CloseIcon, IconWithText } from 'components/FeatherIcon.js'
+import { useChartDateRange } from 'hooks/useChartDateRange.js'
+import { useChartDateRangePreset } from 'hooks/useChartDateRangePreset.js'
 
 export const CustomDateRange = ({
 	onClose,

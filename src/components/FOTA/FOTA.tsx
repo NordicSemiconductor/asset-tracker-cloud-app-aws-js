@@ -1,8 +1,8 @@
-import { ReloadIcon } from 'components/FeatherIcon'
-import { CreateFOTAJob } from 'components/FOTA/CreateFOTAJob'
-import { Jobs } from 'components/FOTA/Jobs'
-import { useAsset } from 'hooks/useAsset'
-import { useFOTA } from 'hooks/useFOTA'
+import { ReloadIcon } from 'components/FeatherIcon.js'
+import { CreateFOTAJob } from 'components/FOTA/CreateFOTAJob.js'
+import { Jobs } from 'components/FOTA/Jobs.js'
+import { useAsset } from 'hooks/useAsset.js'
+import { useFOTA } from 'hooks/useFOTA.js'
 import { useEffect } from 'react'
 
 export const FOTA = () => {

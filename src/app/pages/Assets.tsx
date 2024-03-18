@@ -1,9 +1,13 @@
-import type { Asset } from 'asset/asset'
-import { IconWithText, LoadMoreIcon, ReloadIcon } from 'components/FeatherIcon'
-import { Loading } from 'components/Loading'
-import { Main } from 'components/Main'
-import { NoData } from 'components/NoData'
-import { useAssets } from 'hooks/useAssets'
+import type { Asset } from 'asset/asset.js'
+import {
+	IconWithText,
+	LoadMoreIcon,
+	ReloadIcon,
+} from 'components/FeatherIcon.js'
+import { Loading } from 'components/Loading.js'
+import { Main } from 'components/Main.js'
+import { NoData } from 'components/NoData.js'
+import { useAssets } from 'hooks/useAssets.js'
 import { Link } from 'react-router-dom'
 
 export const Assets = () => {

@@ -1,9 +1,9 @@
-import type { DeviceUpgradeFirmwareJob } from 'api/iot/createFirmwareJob'
-import { CollapsableCard } from 'components/CollapsableCard'
-import { DangerIcon, IconWithText } from 'components/FeatherIcon'
-import { RelativeTime } from 'components/RelativeTime'
-import { useFOTA } from 'hooks/useFOTA'
-import { useServices } from 'hooks/useServices'
+import type { DeviceUpgradeFirmwareJob } from 'api/iot/createFirmwareJob.js'
+import { CollapsableCard } from 'components/CollapsableCard.js'
+import { DangerIcon, IconWithText } from 'components/FeatherIcon.js'
+import { RelativeTime } from 'components/RelativeTime.js'
+import { useFOTA } from 'hooks/useFOTA.js'
+import { useServices } from 'hooks/useServices.js'
 import { useState } from 'react'
 
 export const Job = ({ job }: { job: DeviceUpgradeFirmwareJob }) => {

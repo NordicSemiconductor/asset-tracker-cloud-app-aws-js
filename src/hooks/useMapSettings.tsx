@@ -7,7 +7,7 @@ import {
 	type FunctionComponent,
 	type ReactNode,
 } from 'react'
-import { withLocalStorage } from 'utils/withLocalStorage'
+import { withLocalStorage } from 'utils/withLocalStorage.js'
 
 export type Settings = {
 	enabledLayers: {

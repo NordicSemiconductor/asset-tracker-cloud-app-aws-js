@@ -1,8 +1,8 @@
-import { geolocateCell } from 'api/geolocateCell'
-import { useAppConfig } from 'hooks/useAppConfig'
-import { useAsset } from 'hooks/useAsset'
-import type { AssetGeoLocation } from 'hooks/useMapData'
-import { useMapSettings } from 'hooks/useMapSettings'
+import { geolocateCell } from 'api/geolocateCell.js'
+import { useAppConfig } from 'hooks/useAppConfig.js'
+import { useAsset } from 'hooks/useAsset.js'
+import type { AssetGeoLocation } from 'hooks/useMapData.js'
+import { useMapSettings } from 'hooks/useMapSettings.js'
 import { useCallback, useEffect, useState } from 'react'
 
 /**

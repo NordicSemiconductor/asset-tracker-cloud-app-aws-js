@@ -1,8 +1,8 @@
-import { timeStreamFormatDate } from 'api/timestream'
-import type { Asset } from 'asset/asset'
-import { useAsset } from 'hooks/useAsset'
-import { useChartDateRange } from 'hooks/useChartDateRange'
-import { useServices } from 'hooks/useServices'
+import { timeStreamFormatDate } from 'api/timestream.js'
+import type { Asset } from 'asset/asset.js'
+import { useAsset } from 'hooks/useAsset.js'
+import { useChartDateRange } from 'hooks/useChartDateRange.js'
+import { useServices } from 'hooks/useServices.js'
 import { useCallback, useEffect, useState } from 'react'
 
 type QueryFnArgs = {

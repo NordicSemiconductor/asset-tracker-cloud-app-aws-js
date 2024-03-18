@@ -1,5 +1,5 @@
-import { AssetHistoryChart } from 'components/HistoricalData/AssetHistoryChart'
-import { useAssetTemperatureHistory } from 'hooks/useAssetTemperatureHistory'
+import { AssetHistoryChart } from 'components/HistoricalData/AssetHistoryChart.js'
+import { useAssetTemperatureHistory } from 'hooks/useAssetTemperatureHistory.js'
 
 export const TemperatureChart = () => (
 	<AssetHistoryChart

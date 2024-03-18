@@ -1,5 +1,5 @@
 import { CancelJobExecutionCommand, IoTClient } from '@aws-sdk/client-iot'
-import type { DeviceUpgradeFirmwareJob } from 'api/iot/createFirmwareJob'
+import type { DeviceUpgradeFirmwareJob } from 'api/iot/createFirmwareJob.js'
 
 export const cancelUpgradeFirmwareJob =
 	({ iot }: { iot: IoTClient }) =>

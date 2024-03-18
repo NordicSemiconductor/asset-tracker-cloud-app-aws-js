@@ -1,7 +1,7 @@
 import { Authenticator } from '@aws-amplify/ui-react'
-import type { AuthenticatorProps } from '@aws-amplify/ui-react/dist/types/components/Authenticator/Authenticator'
+import type { AuthenticatorProps } from '@aws-amplify/ui-react'
 import '@aws-amplify/ui-react/styles.css'
-import { useAppConfig } from 'hooks/useAppConfig'
+import { useAppConfig } from 'hooks/useAppConfig.js'
 import logo from '/logo-stroke-width-1.svg'
 
 export const Auth = ({

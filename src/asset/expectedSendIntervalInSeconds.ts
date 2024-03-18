@@ -1,4 +1,4 @@
-import type { AssetTwin } from 'asset/asset'
+import type { AssetTwin } from 'asset/asset.js'
 
 const defaultExpectedIntervalInSeconds = 120
 

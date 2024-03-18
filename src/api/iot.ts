@@ -18,15 +18,15 @@ import {
 } from '@aws-sdk/client-iot-data-plane'
 import type { S3Client } from '@aws-sdk/client-s3'
 import { fromUtf8 } from '@aws-sdk/util-utf8-browser'
-import { cancelUpgradeFirmwareJob } from 'api/iot/cancelUpgradeFirmwareJob'
+import { cancelUpgradeFirmwareJob } from 'api/iot/cancelUpgradeFirmwareJob.js'
 import {
 	createFirmwareJob,
 	type DeviceUpgradeFirmwareJob,
-} from 'api/iot/createFirmwareJob'
-import { deleteUpgradeFirmwareJob } from 'api/iot/deleteUpgradeFirmwareJob'
-import { getTwin } from 'api/iot/getTwin'
-import { listFirmwareJobs } from 'api/iot/listFirmwareJobs'
-import type { Asset, AssetTwin, AssetWithTwin } from 'asset/asset'
+} from 'api/iot/createFirmwareJob.js'
+import { deleteUpgradeFirmwareJob } from 'api/iot/deleteUpgradeFirmwareJob.js'
+import { getTwin } from 'api/iot/getTwin.js'
+import { listFirmwareJobs } from 'api/iot/listFirmwareJobs.js'
+import type { Asset, AssetTwin, AssetWithTwin } from 'asset/asset.js'
 
 const filterTestThings = (things: ThingAttribute[]): ThingAttribute[] =>
 	things.filter((thing) => thing.attributes?.test === undefined)

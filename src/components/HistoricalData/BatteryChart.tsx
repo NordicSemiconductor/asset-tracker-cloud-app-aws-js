@@ -1,5 +1,5 @@
-import { AssetHistoryChart } from 'components/HistoricalData/AssetHistoryChart'
-import { useAssetBatteryHistory } from 'hooks/useAssetBatteryHistory'
+import { AssetHistoryChart } from 'components/HistoricalData/AssetHistoryChart.js'
+import { useAssetBatteryHistory } from 'hooks/useAssetBatteryHistory.js'
 
 export const BatteryChart = () => (
 	<AssetHistoryChart

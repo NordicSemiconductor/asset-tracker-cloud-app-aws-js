@@ -1,6 +1,6 @@
-import * as am5 from '@amcharts/amcharts5'
-import * as am5xy from '@amcharts/amcharts5/xy'
-import { useChartDateRange } from 'hooks/useChartDateRange'
+import am5 from '@amcharts/amcharts5'
+import am5xy from '@amcharts/amcharts5/xy.js'
+import { useChartDateRange } from 'hooks/useChartDateRange.js'
 import { nanoid } from 'nanoid'
 import { useLayoutEffect, useRef } from 'react'
 

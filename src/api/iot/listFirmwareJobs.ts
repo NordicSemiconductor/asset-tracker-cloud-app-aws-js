@@ -8,8 +8,8 @@ import {
 	type Job,
 	type JobExecutionSummary,
 } from '@aws-sdk/client-iot'
-import type { DeviceUpgradeFirmwareJob } from 'api/iot/createFirmwareJob'
-import { paginate } from 'utils/paginate'
+import type { DeviceUpgradeFirmwareJob } from 'api/iot/createFirmwareJob.js'
+import { paginate } from 'utils/paginate.js'
 
 export const listFirmwareJobs =
 	({ iot }: { iot: IoTClient }) =>

@@ -1,5 +1,5 @@
-import type { Asset } from 'asset/asset'
-import { useAsset } from 'hooks/useAsset'
+import type { Asset } from 'asset/asset.js'
+import { useAsset } from 'hooks/useAsset.js'
 import { useState } from 'react'
 
 const pattern = '^[a-zA-Z0-9_.,@/:#-]+$'

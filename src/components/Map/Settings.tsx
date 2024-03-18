@@ -1,7 +1,7 @@
-import { ChartDateRange } from 'components/ChartDateRange/ChartDateRange'
+import { ChartDateRange } from 'components/ChartDateRange/ChartDateRange.js'
 import styles from 'components/Map/Settings.module.css'
-import { SwitchWithNumber } from 'components/Map/SwitchWithNumber'
-import { useMapSettings } from 'hooks/useMapSettings'
+import { SwitchWithNumber } from 'components/Map/SwitchWithNumber.js'
+import { useMapSettings } from 'hooks/useMapSettings.js'
 
 export const MapSettings = () => {
 	const { settings, update: updateSettings } = useMapSettings()

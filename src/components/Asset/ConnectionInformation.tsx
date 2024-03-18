@@ -1,12 +1,12 @@
 import { RSRP, SignalQualityTriangle } from '@nordicsemiconductor/rsrp-bar'
-import type { UnixTimeInSeconds } from 'asset/asset'
+import type { UnixTimeInSeconds } from 'asset/asset.js'
 import {
 	CellularIcon,
 	IconWithText,
 	SmartphoneIcon,
 	XSquareIcon,
-} from 'components/FeatherIcon'
-import { ReportedTime } from 'components/ReportedTime'
+} from 'components/FeatherIcon.js'
+import { ReportedTime } from 'components/ReportedTime.js'
 import { identifyIssuer } from 'e118-iin-list'
 import { filter as filterOperator } from 'mcc-mnc-list'
 

@@ -2,10 +2,10 @@ import {
 	RoamingInfo,
 	type RoamingInfoData,
 } from '@nordicsemiconductor/asset-tracker-cloud-docs/protocol'
-import { timeStreamFormatDate, type TimestreamService } from 'api/timestream'
-import { SensorProperties, type Asset } from 'asset/asset'
-import { validateWithJSONSchema } from 'utils/validateWithJSONSchema'
-import { validFilter } from 'utils/validFilter'
+import { timeStreamFormatDate, type TimestreamService } from 'api/timestream.js'
+import { SensorProperties, type Asset } from 'asset/asset.js'
+import { validateWithJSONSchema } from 'utils/validateWithJSONSchema.js'
+import { validFilter } from 'utils/validFilter.js'
 
 const validateRoamingReading = validateWithJSONSchema(RoamingInfo)
 const validRoamingReadingFilter = validFilter(RoamingInfo)

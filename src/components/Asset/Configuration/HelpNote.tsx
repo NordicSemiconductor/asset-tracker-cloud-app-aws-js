@@ -1,10 +1,10 @@
 import { Type } from '@sinclair/typebox'
-import { HelpIcon, IconWithText } from 'components/FeatherIcon'
+import { HelpIcon, IconWithText } from 'components/FeatherIcon.js'
 import introJs from 'intro.js'
 import { useState } from 'react'
-import { withLocalStorage } from 'utils/withLocalStorage'
+import { withLocalStorage } from 'utils/withLocalStorage.js'
 
-const intro = introJs()
+const intro = introJs.default()
 
 const storedHidden = withLocalStorage({
 	schema: Type.Boolean(),

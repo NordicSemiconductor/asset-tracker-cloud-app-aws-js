@@ -1,4 +1,4 @@
-import { ChevronDownIcon, ConfigurationIcon } from 'components/FeatherIcon'
+import { ChevronDownIcon, ConfigurationIcon } from 'components/FeatherIcon.js'
 import styles from 'components/Map/ShowSettingsButton.module.css'
 import { useState } from 'react'
 

@@ -1,9 +1,9 @@
-import type { ParsedNetworkSurvey } from 'api/fetchNetworkSurveys'
-import { geolocateNetworkSurvey } from 'api/geolocateNetworkSurvey'
-import { useAppConfig } from 'hooks/useAppConfig'
-import type { AssetGeoLocation } from 'hooks/useMapData'
-import { useMapSettings } from 'hooks/useMapSettings'
-import { useNetworkSurvey } from 'hooks/useNetworkSurvey'
+import type { ParsedNetworkSurvey } from 'api/fetchNetworkSurveys.js'
+import { geolocateNetworkSurvey } from 'api/geolocateNetworkSurvey.js'
+import { useAppConfig } from 'hooks/useAppConfig.js'
+import type { AssetGeoLocation } from 'hooks/useMapData.js'
+import { useMapSettings } from 'hooks/useMapSettings.js'
+import { useNetworkSurvey } from 'hooks/useNetworkSurvey.js'
 import { useCallback, useEffect, useState } from 'react'
 
 export const useNetworkSurveyGeoLocation = (): AssetGeoLocation | undefined => {

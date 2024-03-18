@@ -1,5 +1,6 @@
-import cx from 'classnames'
-import { useChartDateRange } from 'hooks/useChartDateRange'
+import classnames from 'classnames'
+const cx = classnames.default
+import { useChartDateRange } from 'hooks/useChartDateRange.js'
 
 export const BinIntervalSelector = ({ border }: { border?: boolean }) => {
 	const {

@@ -1,4 +1,4 @@
-import { IconWithText, XIcon } from 'components/FeatherIcon'
+import { IconWithText, XIcon } from 'components/FeatherIcon.js'
 
 export const NoMap = () => (
 	<div

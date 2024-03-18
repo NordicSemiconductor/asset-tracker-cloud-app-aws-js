@@ -1,9 +1,9 @@
-import type { AssetTwin } from 'asset/asset'
-import { expectedSendIntervalInSeconds } from 'asset/expectedSendIntervalInSeconds'
+import type { AssetTwin } from 'asset/asset.js'
+import { expectedSendIntervalInSeconds } from 'asset/expectedSendIntervalInSeconds.js'
 import styles from 'components/Asset/AssetInformation.module.css'
-import { NoData } from 'components/NoData'
-import { ReportedTime } from 'components/ReportedTime'
-import { useNetworkSurvey } from 'hooks/useNetworkSurvey'
+import { NoData } from 'components/NoData.js'
+import { ReportedTime } from 'components/ReportedTime.js'
+import { useNetworkSurvey } from 'hooks/useNetworkSurvey.js'
 
 export const NeighborCellMeasurementsReport = ({
 	twin,

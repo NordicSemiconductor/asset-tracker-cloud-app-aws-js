@@ -1,7 +1,7 @@
-import { ChartDateRange } from 'components/ChartDateRange/ChartDateRange'
-import { NoData } from 'components/NoData'
-import { RelativeTime } from 'components/RelativeTime'
-import { useAssetButtonPressesHistory } from 'hooks/useAssetButtonPressesHistory'
+import { ChartDateRange } from 'components/ChartDateRange/ChartDateRange.js'
+import { NoData } from 'components/NoData.js'
+import { RelativeTime } from 'components/RelativeTime.js'
+import { useAssetButtonPressesHistory } from 'hooks/useAssetButtonPressesHistory.js'
 
 export const ButtonPresses = () => {
 	const history = useAssetButtonPressesHistory()

@@ -38,7 +38,7 @@
     "@aws-sdk/client-dynamodb": "3.535.0",
     "@aws-sdk/client-iot": "3.536.0",
     "@aws-sdk/client-iot-data-plane": "3.535.0",
-    "@aws-sdk/client-s3": "3.536.0",
+    "@aws-sdk/client-s3": "3.537.0",
     "@nordicsemiconductor/asset-tracker-cloud-docs": "36.0.9",
     "@nordicsemiconductor/cell-geolocation-helpers": "6.0.0",
     "@nordicsemiconductor/from-env": "3.0.1",
@@ -65,7 +65,7 @@
     "semver": "7.6.0"
   },
   "devDependencies": {
-    "@aws-sdk/client-cloudformation": "3.536.0",
+    "@aws-sdk/client-cloudformation": "3.537.0",
     "@aws-sdk/client-cognito-identity-provider": "3.535.0",
     "@aws-sdk/client-ssm": "3.535.0",
     "@aws-sdk/client-timestream-write": "3.535.0",

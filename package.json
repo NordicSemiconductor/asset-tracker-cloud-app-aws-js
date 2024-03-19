@@ -34,7 +34,7 @@
     "@amcharts/amcharts5": "5.8.5",
     "@aws-amplify/core": "6.0.19",
     "@aws-amplify/ui": "6.0.12",
-    "@aws-amplify/ui-react": "6.1.5",
+    "@aws-amplify/ui-react": "6.1.6",
     "@aws-sdk/client-dynamodb": "3.535.0",
     "@aws-sdk/client-iot": "3.536.0",
     "@aws-sdk/client-iot-data-plane": "3.535.0",

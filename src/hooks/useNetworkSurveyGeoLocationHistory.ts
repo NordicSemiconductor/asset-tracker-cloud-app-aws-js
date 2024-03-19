@@ -1,15 +1,15 @@
 import {
 	fetchNetworkSurveys,
 	type ParsedNetworkSurvey,
-} from 'api/fetchNetworkSurveys'
-import { geolocateNetworkSurvey } from 'api/geolocateNetworkSurvey'
-import type { Asset } from 'asset/asset'
-import { useAppConfig } from 'hooks/useAppConfig'
-import { useAsset } from 'hooks/useAsset'
-import { useChartDateRange } from 'hooks/useChartDateRange'
-import type { AssetGeoLocation } from 'hooks/useMapData'
-import { useMapSettings } from 'hooks/useMapSettings'
-import { useServices } from 'hooks/useServices'
+} from 'api/fetchNetworkSurveys.js'
+import { geolocateNetworkSurvey } from 'api/geolocateNetworkSurvey.js'
+import type { Asset } from 'asset/asset.js'
+import { useAppConfig } from 'hooks/useAppConfig.js'
+import { useAsset } from 'hooks/useAsset.js'
+import { useChartDateRange } from 'hooks/useChartDateRange.js'
+import type { AssetGeoLocation } from 'hooks/useMapData.js'
+import { useMapSettings } from 'hooks/useMapSettings.js'
+import { useServices } from 'hooks/useServices.js'
 import { useCallback, useEffect, useState } from 'react'
 
 /**

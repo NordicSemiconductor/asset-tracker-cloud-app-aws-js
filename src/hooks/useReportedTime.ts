@@ -1,4 +1,4 @@
-import type { UnixTimeInSeconds } from 'asset/asset'
+import type { UnixTimeInSeconds } from 'asset/asset.js'
 import { formatDistanceToNow } from 'date-fns'
 
 export const useReportedTime = ({

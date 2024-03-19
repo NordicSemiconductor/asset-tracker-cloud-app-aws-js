@@ -1,6 +1,10 @@
-import cx from 'classnames'
-import { useChartDateRange } from 'hooks/useChartDateRange'
-import { presets, useChartDateRangePreset } from 'hooks/useChartDateRangePreset'
+import classnames from 'classnames'
+const cx = classnames.default
+import { useChartDateRange } from 'hooks/useChartDateRange.js'
+import {
+	presets,
+	useChartDateRangePreset,
+} from 'hooks/useChartDateRangePreset.js'
 import { useState } from 'react'
 
 export const QuickDateRange = ({

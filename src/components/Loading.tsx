@@ -1,4 +1,4 @@
-import { IconWithText, LoadingIcon } from 'components/FeatherIcon'
+import { IconWithText, LoadingIcon } from 'components/FeatherIcon.js'
 import type { FunctionComponent, PropsWithChildren } from 'react'
 
 export const Loading: FunctionComponent<PropsWithChildren<any>> = ({

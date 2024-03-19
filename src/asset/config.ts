@@ -1,5 +1,5 @@
 import { type ConfigData } from '@nordicsemiconductor/asset-tracker-cloud-docs/protocol'
-import type { DataModules } from 'asset/asset'
+import type { DataModules } from 'asset/asset.js'
 export const defaultConfig: ConfigData = {
 	act: false, // Whether to enable the active mode
 	actwt: 300, // In active mode: wait this amount of seconds until sending the next update. The actual interval will be this time plus the time it takes to get a GNSS fix.

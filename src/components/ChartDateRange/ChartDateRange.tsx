@@ -1,6 +1,6 @@
-import { BinIntervalSelector } from 'components/ChartDateRange/BinIntervalSelector'
-import { CustomDateRange } from 'components/ChartDateRange/CustomDateRange'
-import { QuickDateRange } from 'components/ChartDateRange/QuickDateRange'
+import { BinIntervalSelector } from 'components/ChartDateRange/BinIntervalSelector.js'
+import { CustomDateRange } from 'components/ChartDateRange/CustomDateRange.js'
+import { QuickDateRange } from 'components/ChartDateRange/QuickDateRange.js'
 import { useState } from 'react'
 
 export const ChartDateRange = ({

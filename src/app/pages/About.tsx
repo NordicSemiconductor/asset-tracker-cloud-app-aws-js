@@ -1,6 +1,6 @@
-import { Main } from 'components/Main'
-import { useAppConfig } from 'hooks/useAppConfig'
-import { useAuth } from 'hooks/useAuth'
+import { Main } from 'components/Main.js'
+import { useAppConfig } from 'hooks/useAppConfig.js'
+import { useAuth } from 'hooks/useAuth.js'
 import React from 'react'
 
 export const About = () => {

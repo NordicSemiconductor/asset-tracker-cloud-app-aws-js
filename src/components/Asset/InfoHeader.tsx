@@ -5,9 +5,9 @@ import {
 	type GNSSData,
 	type RoamingInfoData,
 } from '@nordicsemiconductor/asset-tracker-cloud-docs/protocol'
-import type { AssetWithTwin, UnixTimeInSeconds } from 'asset/asset'
-import { expectedSendIntervalInSeconds } from 'asset/expectedSendIntervalInSeconds'
-import { ConnectionInformation } from 'components/Asset/ConnectionInformation'
+import type { AssetWithTwin, UnixTimeInSeconds } from 'asset/asset.js'
+import { expectedSendIntervalInSeconds } from 'asset/expectedSendIntervalInSeconds.js'
+import { ConnectionInformation } from 'components/Asset/ConnectionInformation.js'
 import styles from 'components/Asset/InfoHeader.module.css'
 import {
 	AltitudeIcon,
@@ -17,9 +17,9 @@ import {
 	IconWithText,
 	SpeedIcon,
 	ThermometerIcon,
-} from 'components/FeatherIcon'
-import { ReportedTime } from 'components/ReportedTime'
-import { Toggle } from 'components/Toggle'
+} from 'components/FeatherIcon.js'
+import { ReportedTime } from 'components/ReportedTime.js'
+import { Toggle } from 'components/Toggle.js'
 
 const RoamInfo = ({
 	roam,

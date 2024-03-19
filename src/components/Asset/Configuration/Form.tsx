@@ -4,7 +4,8 @@ import {
 } from '@nordicsemiconductor/asset-tracker-cloud-docs/protocol'
 import { DataModules } from 'asset/asset.js'
 import { validateConfig } from 'asset/validateConfig.js'
-import cx from 'classnames'
+import classnames from 'classnames'
+const cx = classnames.default
 import styles from 'components/Asset/Configuration/Configuration.module.css'
 import { ConfigurationExplainer } from 'components/Asset/Configuration/ConfigurationExplainer.js'
 import { NumberConfigSetting } from 'components/Asset/Configuration/NumberConfigSetting.js'

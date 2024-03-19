@@ -7,7 +7,7 @@ import {
 	RoamingInfo,
 	type AWSReportedData,
 } from '@nordicsemiconductor/asset-tracker-cloud-docs/protocol'
-import { validPassthrough } from 'utils/validPassthrough'
+import { validPassthrough } from 'utils/validPassthrough.js'
 
 const validPassthroughRoam = validPassthrough(RoamingInfo)
 const validPassthroughGNSS = validPassthrough(GNSS)

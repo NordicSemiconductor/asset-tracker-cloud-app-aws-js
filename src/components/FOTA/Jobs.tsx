@@ -1,6 +1,6 @@
-import { Job } from 'components/FOTA/Job'
-import { NoData } from 'components/NoData'
-import { useFOTA } from 'hooks/useFOTA'
+import { Job } from 'components/FOTA/Job.js'
+import { NoData } from 'components/NoData.js'
+import { useFOTA } from 'hooks/useFOTA.js'
 
 export const Jobs = () => {
 	const { jobs } = useFOTA()

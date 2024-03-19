@@ -1,10 +1,10 @@
 import {
 	fetchNetworkSurveys,
 	type ParsedNetworkSurvey,
-} from 'api/fetchNetworkSurveys'
-import { useAppConfig } from 'hooks/useAppConfig'
-import { useAsset } from 'hooks/useAsset'
-import { useServices } from 'hooks/useServices'
+} from 'api/fetchNetworkSurveys.js'
+import { useAppConfig } from 'hooks/useAppConfig.js'
+import { useAsset } from 'hooks/useAsset.js'
+import { useServices } from 'hooks/useServices.js'
 import { useEffect, useState } from 'react'
 
 export const useNetworkSurvey = (): ParsedNetworkSurvey | undefined => {

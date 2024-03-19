@@ -1,5 +1,5 @@
-import { DangerIcon, IconWithText } from 'components/FeatherIcon'
-import { useAsset } from 'hooks/useAsset'
+import { DangerIcon, IconWithText } from 'components/FeatherIcon.js'
+import { useAsset } from 'hooks/useAsset.js'
 import { useState } from 'react'
 
 export const DeleteAsset = ({ onDeleted }: { onDeleted: () => void }) => {

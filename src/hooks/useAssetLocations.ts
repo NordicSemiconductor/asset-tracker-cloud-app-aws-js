@@ -2,10 +2,10 @@ import {
 	GNSS,
 	type GNSSData,
 } from '@nordicsemiconductor/asset-tracker-cloud-docs/protocol'
-import type { Asset, AssetTwin, AssetWithTwin } from 'asset/asset'
-import { useServices } from 'hooks/useServices'
+import type { Asset, AssetTwin, AssetWithTwin } from 'asset/asset.js'
+import { useServices } from 'hooks/useServices.js'
 import { useEffect, useState } from 'react'
-import { validFilter } from 'utils/validFilter'
+import { validFilter } from 'utils/validFilter.js'
 
 type AssetLocation = {
 	asset: Asset

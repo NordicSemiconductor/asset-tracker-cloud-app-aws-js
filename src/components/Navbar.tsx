@@ -6,17 +6,15 @@ import {
 	MapIcon,
 	ParcelIcon,
 	UserIcon,
-} from 'components/FeatherIcon'
+} from 'components/FeatherIcon.js'
 import styles from 'components/Navbar.module.css'
-import { useAppConfig } from 'hooks/useAppConfig'
-import { useAsset } from 'hooks/useAsset'
-import { useAuth } from 'hooks/useAuth'
-import introJs from 'intro.js'
+import { useAppConfig } from 'hooks/useAppConfig.js'
+import { useAsset } from 'hooks/useAsset.js'
+import { useAuth } from 'hooks/useAuth.js'
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import logo from '/logo-white-outline.svg'
-
-const intro = introJs()
+import { intro } from 'utils/intro.js'
 
 export const Navbar = () => {
 	const { signOut: logout } = useAuth()

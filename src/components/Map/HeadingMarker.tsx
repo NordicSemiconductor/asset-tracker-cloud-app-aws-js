@@ -1,4 +1,4 @@
-import type { Position } from 'hooks/useMapData'
+import type { Position } from 'hooks/useMapData.js'
 import { Polyline, useMap } from 'react-leaflet'
 
 export const HeadingMarker = ({

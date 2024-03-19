@@ -9,8 +9,8 @@ import {
 	NetworkSurvey,
 	type NetworkSurveyData,
 } from '@nordicsemiconductor/asset-tracker-cloud-docs/protocol'
-import { type Asset } from 'asset/asset'
-import { validPassthrough } from 'utils/validPassthrough'
+import { type Asset } from 'asset/asset.js'
+import { validPassthrough } from 'utils/validPassthrough.js'
 
 const validPassthroughNetworkSurvey = validPassthrough(NetworkSurvey)
 

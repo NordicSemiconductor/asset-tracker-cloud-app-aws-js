@@ -1,6 +1,6 @@
 import { DeleteJobExecutionCommand, IoTClient } from '@aws-sdk/client-iot'
 import { DeleteObjectCommand, S3Client } from '@aws-sdk/client-s3'
-import type { DeviceUpgradeFirmwareJob } from 'api/iot/createFirmwareJob'
+import type { DeviceUpgradeFirmwareJob } from 'api/iot/createFirmwareJob.js'
 
 export const deleteUpgradeFirmwareJob =
 	({

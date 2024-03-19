@@ -1,4 +1,5 @@
-import cx from 'classnames'
+import classnames from 'classnames'
+const cx = classnames.default
 
 export const SwitchWithNumber = ({
 	checked,

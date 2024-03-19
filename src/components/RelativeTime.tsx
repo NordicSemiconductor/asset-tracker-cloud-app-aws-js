@@ -1,4 +1,4 @@
-import { useRelativeTime } from 'hooks/useRelativeTime'
+import { useRelativeTime } from 'hooks/useRelativeTime.js'
 
 export const RelativeTime = ({ ts }: { ts: Date }) => {
 	const label = useRelativeTime({ ts })

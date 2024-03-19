@@ -1,6 +1,6 @@
-import { ChartDateRange } from 'components/ChartDateRange/ChartDateRange'
-import { AMChart } from 'components/HistoricalData/AMChart'
-import { NoData } from 'components/NoData'
+import { ChartDateRange } from 'components/ChartDateRange/ChartDateRange.js'
+import { AMChart } from 'components/HistoricalData/AMChart.js'
+import { NoData } from 'components/NoData.js'
 
 export const AssetHistoryChart = ({
 	history,

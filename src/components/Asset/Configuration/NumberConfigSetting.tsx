@@ -1,4 +1,5 @@
-import cx from 'classnames'
+import classnames from 'classnames'
+const cx = classnames.default
 import { OutDatedWarning } from 'components/Asset/Configuration/OutDatedWarning.js'
 import { OutdatedConfigValueIcon, UnknownIcon } from 'components/FeatherIcon.js'
 import { forwardRef, useState } from 'react'

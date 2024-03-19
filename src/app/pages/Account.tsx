@@ -1,6 +1,6 @@
-import { DangerIcon, IconWithText } from 'components/FeatherIcon'
-import { Main } from 'components/Main'
-import { useAuth } from 'hooks/useAuth'
+import { DangerIcon, IconWithText } from 'components/FeatherIcon.js'
+import { Main } from 'components/Main.js'
+import { useAuth } from 'hooks/useAuth.js'
 import { useState } from 'react'
 
 export const Account = () => {

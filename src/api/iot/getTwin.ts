@@ -3,8 +3,8 @@ import {
 	IoTDataPlaneClient,
 } from '@aws-sdk/client-iot-data-plane'
 import { toUtf8 } from '@aws-sdk/util-utf8-browser'
-import { toReported } from 'api/toReported'
-import type { AssetTwin } from 'asset/asset'
+import { toReported } from 'api/toReported.js'
+import type { AssetTwin } from 'asset/asset.js'
 
 const noTwin = (): AssetTwin => ({
 	reported: {},

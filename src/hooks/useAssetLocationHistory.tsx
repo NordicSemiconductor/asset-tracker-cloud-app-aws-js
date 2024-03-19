@@ -1,17 +1,20 @@
 import { GNSS } from '@nordicsemiconductor/asset-tracker-cloud-docs/protocol'
-import { fetchRoamingData } from 'api/fetchRoamingData'
-import { timeStreamFormatDate } from 'api/timestream'
-import { SensorProperties, type Asset } from 'asset/asset'
-import type { DateRange } from 'hooks/useChartDateRange'
-import { AssetGeoLocationSource, type AssetGeoLocation } from 'hooks/useMapData'
-import { useServices } from 'hooks/useServices'
+import { fetchRoamingData } from 'api/fetchRoamingData.js'
+import { timeStreamFormatDate } from 'api/timestream.js'
+import { SensorProperties, type Asset } from 'asset/asset.js'
+import type { DateRange } from 'hooks/useChartDateRange.js'
+import {
+	AssetGeoLocationSource,
+	type AssetGeoLocation,
+} from 'hooks/useMapData.js'
+import { useServices } from 'hooks/useServices.js'
 import {
 	createContext,
 	useContext,
 	type FunctionComponent,
 	type ReactNode,
 } from 'react'
-import { validFilter } from 'utils/validFilter'
+import { validFilter } from 'utils/validFilter.js'
 
 const validGNSSReadingFilter = validFilter(GNSS)
 

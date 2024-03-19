@@ -1,5 +1,5 @@
-import type { Asset } from 'asset/asset'
-import { useServices } from 'hooks/useServices'
+import type { Asset } from 'asset/asset.js'
+import { useServices } from 'hooks/useServices.js'
 import {
 	createContext,
 	useCallback,

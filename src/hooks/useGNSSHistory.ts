@@ -1,8 +1,8 @@
-import { useAsset } from 'hooks/useAsset'
-import { useAssetLocationHistory } from 'hooks/useAssetLocationHistory'
-import { useChartDateRange } from 'hooks/useChartDateRange'
-import type { AssetGeoLocation } from 'hooks/useMapData'
-import { useMapSettings } from 'hooks/useMapSettings'
+import { useAsset } from 'hooks/useAsset.js'
+import { useAssetLocationHistory } from 'hooks/useAssetLocationHistory.js'
+import { useChartDateRange } from 'hooks/useChartDateRange.js'
+import type { AssetGeoLocation } from 'hooks/useMapData.js'
+import { useMapSettings } from 'hooks/useMapSettings.js'
 import { useEffect, useState } from 'react'
 
 /**

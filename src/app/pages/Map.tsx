@@ -1,4 +1,4 @@
-import { AllAssetsMap } from 'components/Map/AllAssetsMap'
+import { AllAssetsMap } from 'components/Map/AllAssetsMap.js'
 
 export const MapWithAllAssets = () => {
 	return <AllAssetsMap />

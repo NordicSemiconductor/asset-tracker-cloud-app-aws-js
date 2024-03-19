@@ -1,5 +1,5 @@
-import { AssetHistoryChart } from 'components/HistoricalData/AssetHistoryChart'
-import { useAssetRSRPHistory } from 'hooks/useAssetRSRPHistory'
+import { AssetHistoryChart } from 'components/HistoricalData/AssetHistoryChart.js'
+import { useAssetRSRPHistory } from 'hooks/useAssetRSRPHistory.js'
 
 export const RSRPChart = () => (
 	<AssetHistoryChart

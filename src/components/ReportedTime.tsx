@@ -3,10 +3,10 @@ import {
 	ClockIcon,
 	CloudUploadIcon,
 	IconWithText,
-} from 'components/FeatherIcon'
-import { RelativeTime } from 'components/RelativeTime'
+} from 'components/FeatherIcon.js'
+import { RelativeTime } from 'components/RelativeTime.js'
 import { formatDuration } from 'date-fns'
-import { useReportedTime } from 'hooks/useReportedTime'
+import { useReportedTime } from 'hooks/useReportedTime.js'
 import type { HTMLProps } from 'react'
 
 const OldWarning = ({

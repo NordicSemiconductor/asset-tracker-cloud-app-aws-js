@@ -1,10 +1,10 @@
-import { About } from 'app/pages/About'
-import { Account } from 'app/pages/Account'
-import { Asset } from 'app/pages/Asset'
-import { Assets } from 'app/pages/Assets'
-import { MapWithAllAssets } from 'app/pages/Map'
-import { Navbar } from 'components/Navbar'
-import { useAppConfig } from 'hooks/useAppConfig'
+import { About } from 'app/pages/About.js'
+import { Account } from 'app/pages/Account.js'
+import { Asset } from 'app/pages/Asset.js'
+import { Assets } from 'app/pages/Assets.js'
+import { MapWithAllAssets } from 'app/pages/Map.js'
+import { Navbar } from 'components/Navbar.js'
+import { useAppConfig } from 'hooks/useAppConfig.js'
 import {
 	Navigate,
 	Route,

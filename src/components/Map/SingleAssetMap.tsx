@@ -1,18 +1,18 @@
-import type { Asset } from 'asset/asset'
-import { SignalQuality } from 'components/Asset/SignalQuality'
-import { CenterIcon } from 'components/FeatherIcon'
-import { EventHandler } from 'components/Map/EventHandler'
-import { HeadingMarker } from 'components/Map/HeadingMarker'
-import { markerIcon } from 'components/Map/MarkerIcon'
-import { NoMap } from 'components/Map/NoMap'
+import type { Asset } from 'asset/asset.js'
+import { SignalQuality } from 'components/Asset/SignalQuality.js'
+import { CenterIcon } from 'components/FeatherIcon.js'
+import { EventHandler } from 'components/Map/EventHandler.js'
+import { HeadingMarker } from 'components/Map/HeadingMarker.js'
+import { markerIcon } from 'components/Map/MarkerIcon.js'
+import { NoMap } from 'components/Map/NoMap.js'
 import styles from 'components/Map/SingleAssetMap.module.css'
 import { formatDistanceToNow } from 'date-fns'
 import {
 	AssetGeoLocationSource,
 	useMapData,
 	type Position,
-} from 'hooks/useMapData'
-import { useMapSettings } from 'hooks/useMapSettings'
+} from 'hooks/useMapData.js'
+import { useMapSettings } from 'hooks/useMapSettings.js'
 import { nanoid } from 'nanoid'
 import React from 'react'
 import {
@@ -25,8 +25,8 @@ import {
 	TileLayer,
 	useMap,
 } from 'react-leaflet'
-import { nullOrUndefined } from 'utils/nullOrUndefined'
-import { toFixed } from 'utils/toFixed'
+import { nullOrUndefined } from 'utils/nullOrUndefined.js'
+import { toFixed } from 'utils/toFixed.js'
 
 const baseColors = {
 	[AssetGeoLocationSource.NetworkSurvey]: '#E56399',

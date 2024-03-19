@@ -1,9 +1,9 @@
 import { type ConfigData } from '@nordicsemiconductor/asset-tracker-cloud-docs/protocol'
-import type { Asset, AssetTwin, AssetWithTwin } from 'asset/asset'
-import { defaultConfig } from 'asset/config'
+import type { Asset, AssetTwin, AssetWithTwin } from 'asset/asset.js'
+import { defaultConfig } from 'asset/config.js'
 import equal from 'fast-deep-equal'
-import { useAppConfig } from 'hooks/useAppConfig'
-import { useServices } from 'hooks/useServices'
+import { useAppConfig } from 'hooks/useAppConfig.js'
+import { useServices } from 'hooks/useServices.js'
 import {
 	createContext,
 	useContext,

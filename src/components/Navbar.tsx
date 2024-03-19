@@ -11,12 +11,10 @@ import styles from 'components/Navbar.module.css'
 import { useAppConfig } from 'hooks/useAppConfig.js'
 import { useAsset } from 'hooks/useAsset.js'
 import { useAuth } from 'hooks/useAuth.js'
-import introJs from 'intro.js'
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import logo from '/logo-white-outline.svg'
-
-const intro = introJs.default()
+import { intro } from 'utils/intro.js'
 
 export const Navbar = () => {
 	const { signOut: logout } = useAuth()

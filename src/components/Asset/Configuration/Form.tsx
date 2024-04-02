@@ -318,8 +318,7 @@ export const Form = ({
 							type="button"
 							className={buttonClass(
 								'danger',
-								newDesiredConfig.nod === undefined ||
-									!newDesiredConfig.nod?.includes(DataModules.GNSS),
+								!newDesiredConfig.nod?.includes(DataModules.GNSS),
 							)}
 							data-intro={
 								'In <em>Disabled</em> mode, the asset will not use GNSS to send location data to the cloud.'
@@ -411,10 +410,9 @@ export const Form = ({
 							type="button"
 							className={buttonClass(
 								'danger',
-								newDesiredConfig.nod === undefined ||
-									!newDesiredConfig.nod?.includes(
-										DataModules.NeigboringCellMeasurements,
-									),
+								!newDesiredConfig.nod?.includes(
+									DataModules.NeigboringCellMeasurements,
+								),
 							)}
 							data-intro={
 								'In <em>Disabled</em> mode, the asset will not use Neighbor Cell Measurements to send location data to the cloud.'

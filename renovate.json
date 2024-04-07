@@ -1,4 +1,10 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
-  "extends": ["github>bifravst/renovate-config"]
+  "extends": ["github>bifravst/renovate-config"],
+  "packageRules": [
+    {
+      "matchPackagePatterns": ["aws-amplify", "@aws-amplify/core"],
+      "groupName": "aws-amplify"
+    }
+  ]
 }

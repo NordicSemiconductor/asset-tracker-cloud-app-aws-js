@@ -5,6 +5,13 @@
     {
       "matchPackagePatterns": ["aws-amplify", "@aws-amplify/core"],
       "groupName": "aws-amplify"
+    },
+    {
+      "matchPackagePatterns": [
+        "@nordicsemiconductor/asset-tracker-cloud-docs",
+        "@sinclair/typebox"
+      ],
+      "groupName": "typebox"
     }
   ]
 }

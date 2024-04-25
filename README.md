@@ -71,7 +71,7 @@ The frontend provides [end-to-end tests](./e2e-tests) using
 The end-to-end tests run against an instance of the
 [nRF Asset Tracker for AWS](https://github.com/NordicSemiconductor/asset-tracker-cloud-aws-js).
 
-Either, use the credentials you created, when setting up the solution, or enable
+Either, use the existing authentication from setting up the solution, or enable
 the Web App CI feature and use the dedicated credentials created for this task.
 The latter option is the recommended approach since it limits the permission
 scope to only the needed ones. They can also be used to

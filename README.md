@@ -24,7 +24,7 @@ allow re-use when changing the UI framework.
 [Vite](https://vitejs.dev/) is used as the frontend toolchain.
 
 > :information_source:
-> [Read the complete nRF Asset Tracker documentation](https://nordicsemiconductor.github.io/asset-tracker-cloud-docs/).
+> [Read the complete nRF Asset Tracker documentation](https://docs.nordicsemi.com/bundle/nrf-asset-tracker-saga/).
 
 ## Set up
 

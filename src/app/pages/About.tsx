@@ -32,7 +32,7 @@ export const About = () => {
 						Please also consider the{' '}
 						<a
 							href={
-								'https://nordicsemiconductor.github.io/asset-tracker-cloud-docs/'
+								'https://docs.nordicsemi.com/bundle/nrf-asset-tracker-saga/'
 							}
 							target="_blank"
 							rel="noopener noreferrer"

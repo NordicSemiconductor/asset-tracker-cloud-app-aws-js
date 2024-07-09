@@ -61,7 +61,7 @@
     "react": "18.3.1",
     "react-dom": "18.3.1",
     "react-leaflet": "4.2.1",
-    "react-router-dom": "6.23.1",
+    "react-router-dom": "6.24.1",
     "semver": "7.6.2"
   },
   "devDependencies": {

@@ -1,3 +1,7 @@
+> [!NOTE]  
+>
+> This repository has been archived, because [it is considered feature-complete](https://github.com/NordicSemiconductor/asset-tracker-cloud-docs/discussions/1068). ✔️ 
+
 # nRF Asset Tracker Web Application for AWS
 
 [![GitHub Actions](https://github.com/NordicSemiconductor/asset-tracker-cloud-app-aws-js/workflows/Test%20and%20Release/badge.svg)](https://github.com/NordicSemiconductor/asset-tracker-cloud-app-aws-js/actions)

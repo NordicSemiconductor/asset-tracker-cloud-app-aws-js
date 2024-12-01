@@ -96,7 +96,7 @@
     "eslint-plugin-jsx-a11y": "6.9.0",
     "eslint-plugin-no-restricted-imports": "0.0.0",
     "eslint-plugin-prefer-arrow": "1.2.3",
-    "eslint-plugin-unicorn": "53.0.0",
+    "eslint-plugin-unicorn": "54.0.0",
     "handlebars": "4.7.8",
     "husky": "9.0.11",
     "id128": "1.6.6",
